@@ -1,9 +1,8 @@
-import { config } from 'dotenv'
-import express from "express";
-import userRoutes from "./routes/userRoutes";
-import academyRoutes from "./routes/academyRoutes";
+import { config } from 'dotenv';
+import express from 'express';
+import userRoutes from './routes/userRoutes';
+import academyRoutes from './routes/academyRoutes';
 import { MongooseClient } from './database/mongooseClient';
-
 
 const main = async () => {
   config();
@@ -19,16 +18,20 @@ const main = async () => {
 
   app.use('/user', userRoutes);
   app.use('/academy', academyRoutes);
-  app.use("/test", (req, res) => {
-    res.status(200).json({
-      message: "Hello World"
-    })
-  })
+
+  app.get('/ping', (_, res) => {
+    res.status(200).json({ message: 'pong 🏓' });
+  });
+
+  app.get('/test', (_, res) => {
+    res.status(200).json({ message: 'Hello World' });
+  });
 
   app.listen(port, () => console.log(`🚀 Server is running on port ${port}`));
 };
 
 main();
+
 
 // config();
 
