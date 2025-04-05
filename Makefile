@@ -13,7 +13,7 @@ help:	      # This help
 ############################################################################### Project support
 
 dev:     # run api // http://localhost:3000/api-docs/S
-	@npm run start:dev
+	@npm run dev
 
 commit:
 	@read -p "Enter commit message: " message; \
