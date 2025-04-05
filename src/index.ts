@@ -40,6 +40,11 @@ const main = async () => {
     res.status(200).json({ message: 'Hello World' });
   });
 
+  app.use((err: any ,req: any, res: any, next: any) => {
+    console.error('❌ Global Error:', err);
+    res.status(500).json({ error: 'Internal Server Error', details: err.message });
+  });
+
   app.listen(port, () => console.log(`🚀 Server is running on port ${port}`));
 };
 
