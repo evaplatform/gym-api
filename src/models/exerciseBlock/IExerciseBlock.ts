@@ -1,10 +1,10 @@
-import { Types } from "mongoose";
-import { BlockTypeEnum } from "../../shared/enums/BlockTypeEnum";
-import { IdType } from "../../shared/types/IdType";
+import { Types } from 'mongoose';
+import { BlockTypeEnum } from '../../shared/enums/BlockTypeEnum';
+import { IdType } from '../../shared/types/IdType';
 
 export interface IExerciseBlock {
   id: string;
-  name: string;  // unique
+  name: string; // unique
   imagePath: string;
   academyId: IdType;
   exerciseType: BlockTypeEnum;

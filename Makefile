@@ -26,3 +26,6 @@ startDocker:
 
 killPort:
 	@sudo fuser -k 3000/tcp
+
+format: # format code
+	@npm run format
