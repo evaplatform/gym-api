@@ -1,6 +1,6 @@
-import { IBodyBuildingInfoByUser } from "./IBodyBuildingInfoByUser";
-import { IPaymentInfo } from "./IPaymentInfo";
-import { ICardioByUser as ICardioPlan } from "./ICardioByUser";
+import { IBodyBuildingByUser } from "../boduyBuildingByUser/IBodyBuildingByUser";
+import { ICardioByUser } from "../cardioByUser/ICardioByUser";
+import { IPaymentInfo } from "../paymentInfo/IPaymentInfo";
 
 export interface IUser {
     id: string;
@@ -11,8 +11,8 @@ export interface IUser {
     profilePhoto?: string;
 
     groupId?: string; // point to group collection
-    bodyBuildingInfoByUser?: IBodyBuildingInfoByUser[];
-    cardioPlan?: ICardioPlan[];
+    bodyBuildingInfoByUser?: IBodyBuildingByUser[];
+    cardioByUser?: ICardioByUser[];
     academyId?: string;
     paymentInfo?: IPaymentInfo
     createdAt: Date;
