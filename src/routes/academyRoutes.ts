@@ -1,9 +1,9 @@
 import express from "express";
-import { UserController } from "../controllers/UserController";
+import { AcademyController } from "../controllers/AcademyController";
 
 const router = express.Router();
 
-router.get("/", UserController.getAll);
-router.post("/", UserController.create);
+router.get("/", AcademyController.getAll);
+router.post("/", AcademyController.create);
 
 export default router;
