@@ -1,4 +1,4 @@
-import { IBodyBuildingByUser } from "../boduyBuildingByUser/IBodyBuildingByUser";
+import { IBodyBuildingByUser } from "../bodyBuildingByUser/IBodyBuildingByUser";
 import { ICardioByUser } from "../cardioByUser/ICardioByUser";
 import { IPaymentInfo } from "../paymentInfo/IPaymentInfo";
 
@@ -11,7 +11,7 @@ export interface IUser {
     profilePhoto?: string;
 
     groupId?: string; // point to group collection
-    bodyBuildingInfoByUser?: IBodyBuildingByUser[];
+    bodyBuildingByUser?: IBodyBuildingByUser[];
     cardioByUser?: ICardioByUser[];
     academyId?: string;
     paymentInfo?: IPaymentInfo
