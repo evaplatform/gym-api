@@ -1,6 +1,6 @@
 // src/services/UserService.ts
-import { IUser } from "../models/user/IUser";
-import { IUserRepository } from "../repositories/user/IUserRepository";
+import { IUser } from "../../models/user/IUser";
+import { IUserRepository } from "../../repositories/user/IUserRepository";
 import { IUserService } from "./IUserService";
 
 export class UserService implements IUserService {

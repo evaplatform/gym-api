@@ -1,5 +1,5 @@
 // src/controllers/UserController.ts
-import { Request, Response } from "express";import { UserService } from "../services/UserServiceImpl";
+import { Request, Response } from "express";import { UserService } from "../services/user/UserServiceImpl";
 import { UserRepositoryImpl } from "../repositories/user/UserRepositoryImpl";
 ;
 

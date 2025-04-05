@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon --watch 'src/' --exec 'ts-node src/index.ts' -e ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "start": "node build/index.js",
     "build": "tsc --project tsconfig.json",
     "format": "prettier --write .",
