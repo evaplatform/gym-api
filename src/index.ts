@@ -1,5 +1,6 @@
 import { config } from 'dotenv';
 import express from 'express';
+import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes';
 import academyRoutes from './routes/academyRoutes';
 import { MongooseClient } from './database/mongooseClient';
@@ -19,8 +20,20 @@ const main = async () => {
   app.use('/user', userRoutes);
   app.use('/academy', academyRoutes);
 
-  app.get('/ping', (_, res) => {
-    res.status(200).json({ message: 'pong 🏓' });
+  app.get('/ping', async (_, res) => {
+    const dbState = mongoose.connection.readyState;
+
+    // Estados possíveis:
+    // 0 = disconnected
+    // 1 = connected
+    // 2 = connecting
+    // 3 = disconnecting
+
+    if (dbState === 1) {
+      res.status(200).json({ message: 'pong 🏓', database: 'connected' });
+    } else {
+      res.status(500).json({ message: 'pong 🏓', database: 'not connected', state: dbState });
+    }
   });
 
   app.get('/test', (_, res) => {
@@ -31,6 +44,7 @@ const main = async () => {
 };
 
 main();
+
 
 
 // config();
