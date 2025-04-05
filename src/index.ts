@@ -19,6 +19,11 @@ const main = async () => {
 
   app.use('/user', userRoutes);
   app.use('/academy', academyRoutes);
+  app.use("/test", (req, res) => {
+    res.status(200).json({
+      message: "Hello World"
+    })
+  })
 
   app.listen(port, () => console.log(`🚀 Server is running on port ${port}`));
 };
