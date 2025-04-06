@@ -1,8 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../errors/AppError';
 
-export function errorHandler(err: Error & { keyValue: Record<string, string>; code: number }, req: Request, res: Response, next: NextFunction) {
-
+export function errorHandler(
+  err: Error & { keyValue: Record<string, string>; code: number },
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   // 1. Erro de duplicidade MongoDB (code 11000)
   if (err.code === 11000) {
     const field = Object.keys(err.keyValue)[0];

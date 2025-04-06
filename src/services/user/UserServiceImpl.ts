@@ -5,12 +5,15 @@ import { encrypt } from '../../shared/utils/encrypt';
 import { AppError } from '../../errors/AppError';
 
 export class UserService implements IUserService {
+  // Constructor
   constructor(private readonly userRepository: IUserRepository) { }
 
+  async getUserById(id: string): Promise<IUser | null> {
+    return this.userRepository.getById(id);
+  }
+
   async getUsers(): Promise<IUser[]> {
-
     return this.userRepository.getAll();
-
   }
 
   async createUser(user: IUser): Promise<IUser> {
@@ -18,7 +21,6 @@ export class UserService implements IUserService {
     user.password = encryptedPassword;
 
     return this.userRepository.create(user);
-
   }
 
   async updateUser(id: string, body: Partial<IUser>): Promise<IUser | null> {
@@ -31,6 +33,5 @@ export class UserService implements IUserService {
     }
 
     return this.userRepository.update(id, body);
-
   }
 }
