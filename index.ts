@@ -1,8 +1,9 @@
 import { config } from 'dotenv'
 import express from "express";
-import userRoutes from "./routes/userRoutes";
-import academyRoutes from "./routes/academyRoutes";
-import { MongooseClient } from './database/mongooseClient';
+import { MongooseClient } from './src/database/mongooseClient';
+import academyRoutes from './src/routes/academyRoutes';
+import userRoutes from './src/routes/userRoutes';
+
 
 
 const main = async () => {

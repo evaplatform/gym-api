@@ -13,8 +13,9 @@ export const MongooseClient = {
     const password = encodeURIComponent(process.env.MONGODB_PASSWORD || '');
     const host = process.env.MONGODB_HOST || '';
     const db = process.env.MONGODB_DB || 'gym-db';
+    const localHost = process.env.MONGODB_LOCAL_HOST;
 
-    const connectionString = `mongodb+srv://${username}:${password}@${host}/${db}?retryWrites=true&w=majority`;
+    const connectionString = localHost ? `mongodb://${localHost}/${db}` : `mongodb+srv://${username}:${password}@${host}/${db}?retryWrites=true&w=majority`;
 
     try {
       await mongoose.connect(connectionString);
@@ -26,3 +27,4 @@ export const MongooseClient = {
     }
   }
 };
+
