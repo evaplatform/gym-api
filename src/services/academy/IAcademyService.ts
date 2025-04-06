@@ -1,4 +1,4 @@
-import { IAcademy } from "../../models/academy/IAcademy";
+import { IAcademy } from '../../models/academy/IAcademy';
 
 export interface IAcademyService {
   getAcademies(): Promise<IAcademy[]>;

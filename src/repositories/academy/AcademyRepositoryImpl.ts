@@ -1,7 +1,7 @@
 // src/repositories/UserRepository.ts
-import { IAcademy } from "../../models/academy/IAcademy";
-import { AcademyModel } from "../../models/academy/mongo-schema";
-import { IAcademyRepository } from "./IAcademyRepository";
+import { IAcademy } from '../../models/academy/IAcademy';
+import { AcademyModel } from '../../models/academy/mongo-schema';
+import { IAcademyRepository } from './IAcademyRepository';
 
 export class AcademyRepositoryImpl implements IAcademyRepository {
   async getAll(): Promise<IAcademy[]> {

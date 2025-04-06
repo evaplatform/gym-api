@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes';
 import academyRoutes from './routes/academyRoutes';
 import { MongooseClient } from './database/mongooseClient';
+import { errorHandler } from './middlewares/error.middleware';
 
 const main = async () => {
   config();
@@ -36,14 +37,12 @@ const main = async () => {
     }
   });
 
-  app.use((err: any ,req: any, res: any, next: any) => {
-    console.error('❌ Global Error:', err);
-    res.status(500).json({ error: 'Internal Server Error', details: err.message });
+  // middleware global de erros
+  app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    errorHandler(err, req, res, next);
   });
 
   app.listen(port, () => console.log(`🚀 Server is running on port ${port}`));
 };
 
 main();
-
-

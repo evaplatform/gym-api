@@ -15,7 +15,9 @@ export const MongooseClient = {
     const db = process.env.MONGODB_DB || 'gym-db';
     const localHost = process.env.MONGODB_LOCAL_HOST;
 
-    const connectionString = localHost ? `mongodb://${localHost}/${db}` : `mongodb+srv://${username}:${password}@${host}/${db}?retryWrites=true&w=majority`;
+    const connectionString = localHost
+      ? `mongodb://${localHost}/${db}`
+      : `mongodb+srv://${username}:${password}@${host}/${db}?retryWrites=true&w=majority`;
 
     try {
       await mongoose.connect(connectionString);
@@ -25,6 +27,5 @@ export const MongooseClient = {
       console.error('❌ Mongoose connection error:', error);
       throw error;
     }
-  }
+  },
 };
-

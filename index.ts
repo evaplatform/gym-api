@@ -1,10 +1,8 @@
-import { config } from 'dotenv'
-import express from "express";
+import { config } from 'dotenv';
+import express from 'express';
 import { MongooseClient } from './src/database/mongooseClient';
 import academyRoutes from './src/routes/academyRoutes';
 import userRoutes from './src/routes/userRoutes';
-
-
 
 const main = async () => {
   config();
@@ -30,7 +28,6 @@ main();
 
 // const app = express();
 
-
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 
@@ -38,7 +35,6 @@ main();
 
 // app.use("/user", userRoutes);
 // app.use("/academy", academyRoutes)
-
 
 // mongoose.connect("mongodb://localhost:27017/repository-pattern")
 //   .then(() => {
