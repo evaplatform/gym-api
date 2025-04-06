@@ -1,4 +1,5 @@
 // src/repositories/UserRepository.ts
+import { AppError } from '../../errors/AppError';
 import { IUser } from '../../models/user/IUser';
 import { UserModel } from '../../models/user/mongo-schema';
 import { IUserRepository } from './IUserRepository';
