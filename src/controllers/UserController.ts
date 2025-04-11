@@ -4,7 +4,9 @@ import { UserServiceImpl } from '../services/user/UserServiceImpl';
 import { UserRepositoryImpl } from '../repositories/user/UserRepositoryImpl';
 import { CatchErrors } from '../shared/decorators/catch-errors';
 import { Authenticate } from '../shared/decorators/authenticate';
-import { HttpStatusCode } from '../shared/enums/HttpStatusCodeEnum';
+import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
+
+
 
 const userService = new UserServiceImpl(new UserRepositoryImpl());
 export class UserController {
@@ -22,7 +24,7 @@ export class UserController {
     if (user) {
       res.json(user);
     } else {
-      res.status(HttpStatusCode.NOT_FOUND).send('User not found');
+      res.status(HttpStatusCodeEnum.NOT_FOUND).send('User not found');
     }
   }
 
@@ -30,7 +32,7 @@ export class UserController {
   @Authenticate
   static async create(req: Request, res: Response) {
     const user = await userService.createUser(req.body);
-    res.status(HttpStatusCode.CREATED).json(user);
+    res.status(HttpStatusCodeEnum.CREATED).json(user);
   }
 
   @CatchErrors()
@@ -40,7 +42,7 @@ export class UserController {
     if (user) {
       res.json(user);
     } else {
-      res.status(HttpStatusCode.NOT_FOUND).send('User not found');
+      res.status(HttpStatusCodeEnum.NOT_FOUND).send('User not found');
     }
   }
 }

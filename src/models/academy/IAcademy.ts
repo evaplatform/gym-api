@@ -14,3 +14,5 @@ export interface IAcademy {
   createdAt: Date;
   updatedAt?: Date;
 }
+
+

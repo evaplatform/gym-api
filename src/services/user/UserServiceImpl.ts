@@ -3,7 +3,8 @@ import { IUserRepository } from '../../repositories/user/IUserRepository';
 import { IUserService } from './IUserService';
 import { encrypt } from '../../shared/utils/encrypt';
 import { AppError } from '../../errors/AppError';
-import { HttpStatusCode } from '../../shared/enums/HttpStatusCodeEnum';
+import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
+
 
 export class UserServiceImpl implements IUserService {
   // Constructor
@@ -26,7 +27,7 @@ export class UserServiceImpl implements IUserService {
 
   async updateUser(id: string, body: Partial<IUser>): Promise<IUser | null> {
     if (body.email) {
-      throw new AppError('Email cannot be updated', HttpStatusCode.BAD_REQUEST);
+      throw new AppError('Email cannot be updated', HttpStatusCodeEnum.BAD_REQUEST);
     }
 
     if (body.password) {

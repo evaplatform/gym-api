@@ -3,7 +3,7 @@ import { AcademyServiceImpl } from '../services/academy/AcademyServiceImpl';
 import { AcademyRepositoryImpl } from '../repositories/academy/AcademyRepositoryImpl';
 import { CatchErrors } from '../shared/decorators/catch-errors';
 import { Authenticate } from '../shared/decorators/authenticate';
-import { HttpStatusCode } from '../shared/enums/HttpStatusCodeEnum';
+import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
 
 const academyService = new AcademyServiceImpl(new AcademyRepositoryImpl());
 
@@ -19,6 +19,6 @@ export class AcademyController {
   @Authenticate
   static async create(req: Request, res: Response) {
     const user = await academyService.createAcademy(req.body);
-    res.status(HttpStatusCode.CREATED).json(user);
+    res.status(HttpStatusCodeEnum.CREATED).json(user);
   }
 }

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { AppError } from '../../errors/AppError';
-import { HttpStatusCode } from '../enums/HttpStatusCodeEnum';
+import { HttpStatusCodeEnum } from '../enums/HttpStatusCodeEnum';
 import { Request } from 'express';
 
 export function Authenticate(
@@ -14,18 +14,18 @@ export function Authenticate(
     const token = request.headers?.authorization?.split(' ')[1];
 
     if (!token) {
-      throw new AppError('Email cannot be updated', HttpStatusCode.BAD_REQUEST);
+      throw new AppError('Email cannot be updated', HttpStatusCodeEnum.BAD_REQUEST);
     }
 
     let decodedToken;
     try {
       const jwtSecret = process.env.JWT_SECRET;
       if (!jwtSecret) {
-        throw new AppError('JWT secret is not defined', HttpStatusCode.UNAUTHORIZED);
+        throw new AppError('JWT secret is not defined', HttpStatusCodeEnum.UNAUTHORIZED);
       }
       decodedToken = jwt.verify(token, jwtSecret);
     } catch (err) {
-      throw new AppError('Invalid token', HttpStatusCode.UNAUTHORIZED);
+      throw new AppError('Invalid token', HttpStatusCodeEnum.UNAUTHORIZED);
     }
 
     return originalMethod.apply(this, [request, ...args]);

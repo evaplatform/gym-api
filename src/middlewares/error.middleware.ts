@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../errors/AppError';
-import { HttpStatusCode } from '../shared/enums/HttpStatusCodeEnum';
+import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
 
 export function errorHandler(
   err: Error & { keyValue: Record<string, string>; code: number },
@@ -13,7 +13,7 @@ export function errorHandler(
     const field = Object.keys(err.keyValue)[0];
     const value = err.keyValue[field];
 
-    return res.status(HttpStatusCode.CONFLICT).json({
+    return res.status(HttpStatusCodeEnum.CONFLICT).json({
       error: `Duplicated value: '${value}' already exists for field '${field}'`,
     });
   }
@@ -24,7 +24,7 @@ export function errorHandler(
 
   console.error(err);
 
-  return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+  return res.status(HttpStatusCodeEnum.INTERNAL_SERVER_ERROR).json({
     error: 'Internal server error',
   });
 }

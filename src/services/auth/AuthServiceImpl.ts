@@ -3,28 +3,29 @@ import jwt from 'jsonwebtoken';
 import { AppError } from '../../errors/AppError';
 import { IUser } from '../../models/user/IUser';
 import { IUserRepository } from '../../repositories/user/IUserRepository';
-import { HttpStatusCode } from '../../shared/enums/HttpStatusCodeEnum';
+
 import { AuthResponseType } from '../../shared/types/AuthResponse';
 import { IAuthService } from './IAuthService';
+import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
 
 export class AuthServiceImpl implements IAuthService {
-  constructor(private readonly userRepository: IUserRepository) {}
+  constructor(private readonly userRepository: IUserRepository) { }
 
   async signin(userInput: IUser): Promise<AuthResponseType> {
-    const foundUser = await this.userRepository.getById(userInput.id);
+    const foundUser = await this.userRepository.getByEmail(userInput.email);
 
     if (!foundUser) {
-      throw new AppError('Invalid credentials', HttpStatusCode.UNAUTHORIZED);
+      throw new AppError('Invalid credentials', HttpStatusCodeEnum.UNAUTHORIZED);
     }
 
-    if (foundUser.academyId !== userInput.academyId) {
-      throw new AppError('Invalid credentials', HttpStatusCode.UNAUTHORIZED);
+    if (foundUser.academyId?.toString() !== userInput.academyId) {
+      throw new AppError('Invalid credentials', HttpStatusCodeEnum.UNAUTHORIZED);
     }
 
     const isPasswordValid = await bcrypt.compare(userInput.password, foundUser.password);
 
     if (!isPasswordValid) {
-      throw new AppError('Invalid credentials', HttpStatusCode.UNAUTHORIZED);
+      throw new AppError('Invalid credentials', HttpStatusCodeEnum.UNAUTHORIZED);
     }
 
     // create a JWT token

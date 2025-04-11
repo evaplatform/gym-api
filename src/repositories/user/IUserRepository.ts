@@ -5,4 +5,5 @@ export interface IUserRepository {
   getAll(): Promise<IUser[]>;
   create(user: IUser): Promise<IUser>;
   update(id: string, user: Partial<IUser>): Promise<IUser | null>;
+  getByEmail(email: string): Promise<IUser | null>;
 }
