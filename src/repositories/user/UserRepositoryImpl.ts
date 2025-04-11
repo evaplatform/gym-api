@@ -5,6 +5,8 @@ import { UserModel } from '../../models/user/mongo-schema';
 import { IUserRepository } from './IUserRepository';
 
 export class UserRepositoryImpl implements IUserRepository {
+
+
   async getByEmail(email: string): Promise<IUser | null> {
     return UserModel.findOne({ email }).lean();
   }
@@ -23,5 +25,9 @@ export class UserRepositoryImpl implements IUserRepository {
 
   async create(user: IUser): Promise<IUser> {
     return UserModel.create(user);
+  }
+
+  async delete(id: string): Promise<void | null> {
+    return UserModel.findByIdAndDelete(id);
   }
 }

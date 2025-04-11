@@ -40,7 +40,7 @@ export class UserController {
   static async update(req: Request, res: Response) {
     const user = await userService.updateUser(req.params.id, req.body);
     if (user) {
-      res.json(user);
+      res.status(HttpStatusCodeEnum.OK).json(user);
     } else {
       res.status(HttpStatusCodeEnum.NOT_FOUND).send('User not found');
     }
@@ -49,11 +49,7 @@ export class UserController {
   @CatchErrors
   @Authenticate
   static async delete(req: Request, res: Response) {
-    // const user = await userService.updateUser(req.params.id, req.body);
-    // if (user) {
-    //   res.json(user);
-    // } else {
-    //   res.status(HttpStatusCodeEnum.NOT_FOUND).send('User not found');
-    // }
+    await userService.delete(req.params.id);
+    res.status(HttpStatusCodeEnum.OK).json({ message: 'User deleted successfully' }); 
   }
 }

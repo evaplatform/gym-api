@@ -18,7 +18,28 @@ export class AcademyController {
   @CatchErrors
   @Authenticate
   static async create(req: Request, res: Response) {
-    const user = await academyService.createAcademy(req.body);
+    const user = await academyService.create(req.body);
     res.status(HttpStatusCodeEnum.CREATED).json(user);
+  }
+
+  @CatchErrors
+  @Authenticate
+  static async update(req: Request, res: Response) {
+    const user = await academyService.update(req.body);
+    res.status(HttpStatusCodeEnum.OK).json(user);
+  }
+
+  @CatchErrors
+  @Authenticate
+  static async delete(req: Request, res: Response) {
+    await academyService.delete(req.params.id);
+    res.status(HttpStatusCodeEnum.OK).json({ message: 'User deleted successfully' });
+  }
+
+  @CatchErrors
+  @Authenticate
+  static async getById(req: Request, res: Response) {
+    const user = await academyService.getById(req.params.id);
+    res.status(HttpStatusCodeEnum.OK).json(user);
   }
 }

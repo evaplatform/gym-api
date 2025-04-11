@@ -8,7 +8,8 @@ import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
 
 export class UserServiceImpl implements IUserService {
   // Constructor
-  constructor(private readonly userRepository: IUserRepository) {}
+  constructor(private readonly userRepository: IUserRepository) { }
+  // Methods
 
   async getUserById(id: string): Promise<IUser | null> {
     return this.userRepository.getById(id);
@@ -36,4 +37,9 @@ export class UserServiceImpl implements IUserService {
 
     return this.userRepository.update(id, body);
   }
+
+  async delete(id: string): Promise<void | null> {
+    return this.userRepository.delete(id);
+  }
+
 }
