@@ -3,10 +3,11 @@ import { IUserRepository } from '../../repositories/user/IUserRepository';
 import { IUserService } from './IUserService';
 import { encrypt } from '../../shared/utils/encrypt';
 import { AppError } from '../../errors/AppError';
+import { HttpStatusCode } from '../../shared/enums/HttpStatusCodeEnum';
 
-export class UserService implements IUserService {
+export class UserServiceImpl implements IUserService {
   // Constructor
-  constructor(private readonly userRepository: IUserRepository) { }
+  constructor(private readonly userRepository: IUserRepository) {}
 
   async getUserById(id: string): Promise<IUser | null> {
     return this.userRepository.getById(id);
@@ -25,7 +26,7 @@ export class UserService implements IUserService {
 
   async updateUser(id: string, body: Partial<IUser>): Promise<IUser | null> {
     if (body.email) {
-      throw new AppError('Email cannot be updated', 400);
+      throw new AppError('Email cannot be updated', HttpStatusCode.BAD_REQUEST);
     }
 
     if (body.password) {

@@ -1,7 +1,9 @@
+import { HttpStatusCode } from '../shared/enums/HttpStatusCodeEnum';
+
 export class AppError extends Error {
   public readonly statusCode: number;
 
-  constructor(message: string, statusCode = 400) {
+  constructor(message: string, statusCode = HttpStatusCode.BAD_REQUEST) {
     super(message);
     this.statusCode = statusCode;
     this.name = 'AppError';
