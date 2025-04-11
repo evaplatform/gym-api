@@ -7,13 +7,13 @@ import { UserRepositoryImpl } from '../repositories/user/UserRepositoryImpl';
 const authService = new AuthServiceImpl(new UserRepositoryImpl());
 
 export class AuthController {
-  @CatchErrors()
+  @CatchErrors
   static async signin(req: Request, res: Response) {
     const response = await authService.signin(req.body);
     res.json(response);
   }
 
-  @CatchErrors()
+  @CatchErrors
   @Authenticate
   static async signout(req: Request, res: Response) {
     // const user = await authService.createAcademy(req.body);

@@ -10,14 +10,14 @@ import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
 
 const userService = new UserServiceImpl(new UserRepositoryImpl());
 export class UserController {
-  @CatchErrors()
+  @CatchErrors
   @Authenticate
   static async getAll(req: Request, res: Response) {
     const users = await userService.getUsers();
     res.json(users);
   }
 
-  @CatchErrors()
+  @CatchErrors
   @Authenticate
   static async getById(req: Request, res: Response) {
     const user = await userService.getUserById(req.params.id);
@@ -28,14 +28,14 @@ export class UserController {
     }
   }
 
-  @CatchErrors()
+  @CatchErrors
   @Authenticate
   static async create(req: Request, res: Response) {
     const user = await userService.createUser(req.body);
     res.status(HttpStatusCodeEnum.CREATED).json(user);
   }
 
-  @CatchErrors()
+  @CatchErrors
   @Authenticate
   static async update(req: Request, res: Response) {
     const user = await userService.updateUser(req.params.id, req.body);
@@ -44,5 +44,16 @@ export class UserController {
     } else {
       res.status(HttpStatusCodeEnum.NOT_FOUND).send('User not found');
     }
+  }
+
+  @CatchErrors
+  @Authenticate
+  static async delete(req: Request, res: Response) {
+    // const user = await userService.updateUser(req.params.id, req.body);
+    // if (user) {
+    //   res.json(user);
+    // } else {
+    //   res.status(HttpStatusCodeEnum.NOT_FOUND).send('User not found');
+    // }
   }
 }

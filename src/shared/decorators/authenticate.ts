@@ -14,7 +14,7 @@ export function Authenticate(
     const token = request.headers?.authorization?.split(' ')[1];
 
     if (!token) {
-      throw new AppError('Email cannot be updated', HttpStatusCodeEnum.BAD_REQUEST);
+      throw new AppError('user is unauthorized to access', HttpStatusCodeEnum.UNAUTHORIZED);
     }
 
     let decodedToken;
