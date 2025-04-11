@@ -29,3 +29,8 @@ killPort:
 
 format: # format code
 	@npm run format
+
+reset: # reset packages
+	@rm -rf node_modules/ package-lock.json 
+	@npm i
+	

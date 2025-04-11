@@ -5,6 +5,8 @@ import userRoutes from './routes/userRoutes';
 import academyRoutes from './routes/academyRoutes';
 import { MongooseClient } from './database/mongooseClient';
 import { errorHandler } from './middlewares/error.middleware';
+import authRoutes from './routes/authRoutes';
+import { HttpStatusCode } from './shared/enums/HttpStatusCodeEnum';
 
 const main = async () => {
   config();
@@ -20,6 +22,7 @@ const main = async () => {
 
   app.use('/user', userRoutes);
   app.use('/academy', academyRoutes);
+  app.use('/auth', authRoutes)
 
   app.get('/ping', async (_, res) => {
     const dbState = mongoose.connection.readyState;
@@ -31,9 +34,9 @@ const main = async () => {
     // 3 = disconnecting
 
     if (dbState === 1) {
-      res.status(200).json({ message: 'pong 🏓', database: 'connected' });
+      res.status(HttpStatusCode.OK).json({ message: 'pong 🏓', database: 'connected' });
     } else {
-      res.status(500).json({ message: 'pong 🏓', database: 'not connected', state: dbState });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ message: 'pong 🏓', database: 'not connected', state: dbState });
     }
   });
 

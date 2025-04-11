@@ -1,5 +1,4 @@
-// src/services/UserService.ts
-import bcrypt from 'bcryptjs/umd/types';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { AppError } from '../../errors/AppError';
 import { IUser } from '../../models/user/IUser';
