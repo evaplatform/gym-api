@@ -9,7 +9,7 @@ import { IAuthService } from './IAuthService';
 import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
 
 export class AuthServiceImpl implements IAuthService {
-  constructor(private readonly userRepository: IUserRepository) { }
+  constructor(private readonly userRepository: IUserRepository) {}
 
   async signin(userInput: IUser): Promise<AuthResponseType> {
     const foundUser = await this.userRepository.getByEmail(userInput.email);

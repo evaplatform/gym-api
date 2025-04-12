@@ -5,8 +5,6 @@ import { UserModel } from '../../models/user/mongo-schema';
 import { IUserRepository } from './IUserRepository';
 
 export class UserRepositoryImpl implements IUserRepository {
-
-
   async getByEmail(email: string): Promise<IUser | null> {
     return UserModel.findOne({ email }).lean();
   }

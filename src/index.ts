@@ -8,7 +8,6 @@ import { errorHandler } from './middlewares/error.middleware';
 import authRoutes from './routes/authRoutes';
 import { HttpStatusCodeEnum } from './shared/enums/HttpStatusCodeEnum';
 
-
 const main = async () => {
   config();
 
@@ -23,7 +22,7 @@ const main = async () => {
 
   app.use('/user', userRoutes);
   app.use('/academy', academyRoutes);
-  app.use('/auth', authRoutes)
+  app.use('/auth', authRoutes);
 
   app.get('/ping', async (_, res) => {
     const dbState = mongoose.connection.readyState;
@@ -37,7 +36,9 @@ const main = async () => {
     if (dbState === 1) {
       res.status(HttpStatusCodeEnum.OK).json({ message: 'pong 🏓', database: 'connected' });
     } else {
-      res.status(HttpStatusCodeEnum.INTERNAL_SERVER_ERROR).json({ message: 'pong 🏓', database: 'not connected', state: dbState });
+      res
+        .status(HttpStatusCodeEnum.INTERNAL_SERVER_ERROR)
+        .json({ message: 'pong 🏓', database: 'not connected', state: dbState });
     }
   });
 

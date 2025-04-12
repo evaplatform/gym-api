@@ -15,12 +15,12 @@ export const MongooseClient = {
     const host = process.env.MONGODB_HOST || '';
     const db = process.env.MONGODB_DB || 'gym-db';
 
-    if(process.env.NODE_ENV === 'development') {
-      connectionString  = `mongodb://${host}/${db}`
+    if (process.env.NODE_ENV === 'development') {
+      connectionString = `mongodb://${host}/${db}`;
     }
 
-    if(process.env.NODE_ENV === 'production') {
-      connectionString = `mongodb+srv://${username}:${password}@${host}/${db}?retryWrites=true&w=majority`
+    if (process.env.NODE_ENV === 'production') {
+      connectionString = `mongodb+srv://${username}:${password}@${host}/${db}?retryWrites=true&w=majority`;
     }
 
     try {

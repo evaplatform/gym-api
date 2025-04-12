@@ -6,8 +6,6 @@ import { CatchErrors } from '../shared/decorators/catch-errors';
 import { Authenticate } from '../shared/decorators/authenticate';
 import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
 
-
-
 const userService = new UserServiceImpl(new UserRepositoryImpl());
 export class UserController {
   @CatchErrors
@@ -50,6 +48,6 @@ export class UserController {
   @Authenticate
   static async delete(req: Request, res: Response) {
     await userService.delete(req.params.id);
-    res.status(HttpStatusCodeEnum.OK).json({ message: 'User deleted successfully' }); 
+    res.status(HttpStatusCodeEnum.OK).json({ message: 'User deleted successfully' });
   }
 }

@@ -4,7 +4,7 @@ import { IUserService } from './IUserService';
 import { encrypt } from '../../shared/utils/encrypt';
 import { AppError } from '../../errors/AppError';
 import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
-
+import { deleteAWSFile } from '../../middlewares/multer-s3';
 
 export class UserServiceImpl implements IUserService {
   // Constructor
@@ -39,7 +39,16 @@ export class UserServiceImpl implements IUserService {
   }
 
   async delete(id: string): Promise<void | null> {
-    return this.userRepository.delete(id);
-  }
+    const user = await this.userRepository.getById(id);
 
+    if (!user) {
+      throw new AppError('User not found', HttpStatusCodeEnum.NOT_FOUND);
+    }
+
+    await this.userRepository.delete(id);
+
+    if (user.profilePhoto) {
+      await deleteAWSFile(user.profilePhoto)
+    }
+  }
 }

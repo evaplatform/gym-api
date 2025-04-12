@@ -1,9 +1,9 @@
 /**
  * Enum representing HTTP status codes.
- * 
+ *
  * Each member of this enum corresponds to a standard HTTP status code
  * and its associated numeric value.
- * 
+ *
  * @enum {number}
  */
 

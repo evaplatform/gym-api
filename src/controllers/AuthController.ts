@@ -16,7 +16,6 @@ export class AuthController {
   @CatchErrors
   @Authenticate
   static async signout(req: Request, res: Response) {
-    // const user = await authService.createAcademy(req.body);
-    // res.status(201).json(user);
+    // Signout logic can be implemented here
   }
 }
