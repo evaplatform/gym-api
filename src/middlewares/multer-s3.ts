@@ -2,7 +2,6 @@ import multer from 'multer';
 import { s3 } from '../config/aws';
 import multerS3 from 'multer-s3';
 import { DeleteObjectCommand, ListObjectsV2Command, PutObjectCommand } from '@aws-sdk/client-s3';
-import { ImageType } from '../shared/types/ImageType';
 
 const bucketName = process.env.AWS_BUCKET_NAME || 'meu-bucket-api';
 

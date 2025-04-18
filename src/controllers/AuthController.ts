@@ -8,8 +8,8 @@ const authService = new AuthServiceImpl(new UserRepositoryImpl());
 
 export class AuthController {
   @CatchErrors
-  static async signin(req: Request, res: Response) {
-    const response = await authService.signin(req.body);
+  static async signinOurCreate(req: Request, res: Response) {
+    const response = await authService.signinOurCreate(req.body);
     res.json(response);
   }
 

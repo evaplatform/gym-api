@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema<IUser>(
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, default: null },
     profilePhoto: { type: String, default: null },
     groupId: { type: mongoose.Schema.Types.ObjectId, ref: 'Group', default: null },
     bodyBuildingByUser: [BodyBuildingByUserSchema],

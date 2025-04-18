@@ -42,4 +42,6 @@ export class AcademyController {
     const user = await academyService.getById(req.params.id);
     res.status(HttpStatusCodeEnum.OK).json(user);
   }
+
+  
 }

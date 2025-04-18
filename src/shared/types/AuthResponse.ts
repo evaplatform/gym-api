@@ -1,3 +1,3 @@
 import { IUser } from '../../models/user/IUser';
 
-export type AuthResponseType = Partial<IUser> & { token: string };
+export type UserWithToken = Partial<IUser> & { token: string };

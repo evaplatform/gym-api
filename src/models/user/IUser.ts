@@ -7,7 +7,7 @@ export interface IUser {
   firstName: string;
   lastName: string;
   email: string; // unique
-  password: string;
+  password?: string;
   profilePhoto?: string;
 
   groupId?: string; // point to group collection

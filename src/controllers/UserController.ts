@@ -26,12 +26,12 @@ export class UserController {
     }
   }
 
-  @CatchErrors
-  @Authenticate
-  static async create(req: Request, res: Response) {
-    const user = await userService.createUser(req.body);
-    res.status(HttpStatusCodeEnum.CREATED).json(user);
-  }
+  // @CatchErrors
+  // @Authenticate
+  // static async create(req: Request, res: Response) {
+  //   const user = await userService.createUser(req.body);
+  //   res.status(HttpStatusCodeEnum.CREATED).json(user);
+  // }
 
   @CatchErrors
   @Authenticate

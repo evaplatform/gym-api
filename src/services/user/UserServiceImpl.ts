@@ -5,6 +5,7 @@ import { encrypt } from '../../shared/utils/encrypt';
 import { AppError } from '../../errors/AppError';
 import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
 import { deleteAWSFile } from '../../middlewares/multer-s3';
+import { UserWithToken } from '../../shared/types/AuthResponse';
 
 export class UserServiceImpl implements IUserService {
   // Constructor
@@ -19,12 +20,12 @@ export class UserServiceImpl implements IUserService {
     return this.userRepository.getAll();
   }
 
-  async createUser(user: IUser): Promise<IUser> {
-    const encryptedPassword = await encrypt(user.password);
-    user.password = encryptedPassword;
+  // async createUser(user: UserWithToken): Promise<IUser> {
+  //   const encryptedPassword = await encrypt(user.password);
+  //   user.password = encryptedPassword;
 
-    return this.userRepository.create(user);
-  }
+  //   return this.userRepository.create(user);
+  // }
 
   async updateUser(id: string, body: Partial<IUser>): Promise<IUser | null> {
     if (body.email) {
@@ -47,8 +48,12 @@ export class UserServiceImpl implements IUserService {
 
     await this.userRepository.delete(id);
 
-    if (user.profilePhoto) {
-      await deleteAWSFile(user.profilePhoto)
-    }
+    // try {
+    //   if (user.profilePhoto) {
+    //     await deleteAWSFile(user.profilePhoto)
+    //   }
+    // } catch (error) {
+    //   throw new AppError('Image delete on database. Failed to delete image on AWS', HttpStatusCodeEnum.INTERNAL_SERVER_ERROR);
+    // }
   }
 }
