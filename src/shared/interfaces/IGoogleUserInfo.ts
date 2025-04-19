@@ -1,10 +1,9 @@
 export interface IGoogleUserInfo {
-    sub: string;
-    name: string;
-    given_name?: string;
-    family_name?: string;
-    picture?: string;
-    email: string;
-    email_verified?: boolean;
-    locale?: string;
-  }
+  email: string;
+  familyName?: string;
+  givenName?: string;
+  id: string;
+  name: string;
+  photo?: string;
+}
+

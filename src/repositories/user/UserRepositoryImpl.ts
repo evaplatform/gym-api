@@ -22,7 +22,7 @@ export class UserRepositoryImpl implements IUserRepository {
   }
 
   async create(user: IUser): Promise<IUser> {
-    return UserModel.create(user);
+    return (await UserModel.create(user)).toObject();
   }
 
   async delete(id: string): Promise<void | null> {

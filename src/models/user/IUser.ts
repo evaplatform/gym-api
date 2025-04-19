@@ -1,3 +1,4 @@
+import { IGoogleUserInfo } from '../../shared/interfaces/IGoogleUserInfo';
 import { IBodyBuildingByUser } from '../bodyBuildingByUser/IBodyBuildingByUser';
 import { ICardioByUser } from '../cardioByUser/ICardioByUser';
 import { IPaymentInfo } from '../paymentInfo/IPaymentInfo';
