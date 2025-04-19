@@ -22,7 +22,6 @@ export class AcademyServiceImpl implements IAcademyService {
     return this.academyRepository.update(user.id, user);
   }
 
-
   async getById(id: string): Promise<IAcademy | null> {
     return this.academyRepository.getById(id);
   }
@@ -42,5 +41,13 @@ export class AcademyServiceImpl implements IAcademyService {
     // } catch (error) {
     //   throw new AppError('Image delete on database. Failed to delete image on AWS', HttpStatusCodeEnum.INTERNAL_SERVER_ERROR);
     // }
+  }
+
+  async hasAcademy(name: string): Promise<boolean> {
+    const hasAcademy = !!(await this.academyRepository.hasAcademy(name));
+    if (!hasAcademy) {
+      throw new AppError('Academy not found', HttpStatusCodeEnum.NOT_FOUND);
+    }
+    return hasAcademy;
   }
 }

@@ -29,13 +29,10 @@ export function Authenticate(
       });
 
       (request as any).user = response.data;
-
     } catch (err) {
       // se o token expirar, tenta renovar com o refresh token
       if (refreshToken) {
-
         try {
-
           const tokenResponse = await axios.post(
             'https://oauth2.googleapis.com/token',
             qs.stringify({
@@ -61,7 +58,6 @@ export function Authenticate(
           });
 
           (request as any).user = userInfo.data;
-
         } catch (refreshErr) {
           throw new AppError('Failed to refresh Google token', HttpStatusCodeEnum.UNAUTHORIZED);
         }

@@ -6,4 +6,5 @@ export interface IAcademyRepository {
   update(id: string, user: Partial<IAcademy>): Promise<IAcademy | null>;
   getById(id: string): Promise<IAcademy | null>;
   delete(id: string): Promise<void | null>;
+  hasAcademy(name: string): Promise<IAcademy | null>;
 }

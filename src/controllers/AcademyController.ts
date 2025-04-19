@@ -43,5 +43,9 @@ export class AcademyController {
     res.status(HttpStatusCodeEnum.OK).json(user);
   }
 
-  
+  @CatchErrors
+  static async hasAcademy(req: Request, res: Response) {
+    await academyService.hasAcademy(req.params.name);
+    res.status(HttpStatusCodeEnum.OK).json({ message: 'Academy exists' });
+  }
 }

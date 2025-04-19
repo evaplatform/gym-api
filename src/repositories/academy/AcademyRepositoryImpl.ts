@@ -23,4 +23,8 @@ export class AcademyRepositoryImpl implements IAcademyRepository {
   async create(user: IAcademy): Promise<IAcademy> {
     return AcademyModel.create(user);
   }
+
+  async hasAcademy(name: string): Promise<IAcademy | null> {
+    return AcademyModel.findOne({ name });
+  }
 }

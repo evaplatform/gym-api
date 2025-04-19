@@ -6,4 +6,3 @@ export interface IGoogleUserInfo {
   name: string;
   photo?: string;
 }
-

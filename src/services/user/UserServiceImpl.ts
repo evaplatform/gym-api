@@ -9,7 +9,7 @@ import { UserWithToken } from '../../shared/types/AuthResponse';
 
 export class UserServiceImpl implements IUserService {
   // Constructor
-  constructor(private readonly userRepository: IUserRepository) { }
+  constructor(private readonly userRepository: IUserRepository) {}
   // Methods
 
   async getUserById(id: string): Promise<IUser | null> {
