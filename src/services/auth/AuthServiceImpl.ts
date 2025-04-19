@@ -7,6 +7,8 @@ import { UserWithToken } from '../../shared/types/AuthResponse';
 import { IAuthService } from './IAuthService';
 import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
 import { OAuth2Client } from 'google-auth-library';
+import { getTokensFromAuthCode } from '../../shared/utils/getTokensFromAuthCode';
+import { IGoogleTokens } from '../../shared/interfaces/IGoogleTokens';
 
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -15,7 +17,7 @@ export class AuthServiceImpl implements IAuthService {
     constructor(private readonly userRepository: IUserRepository) { }
 
     // Aqui o parâmetro pode ser o token do Google recebido do front
-    async signinOurCreate(user: UserWithToken): Promise<UserWithToken> {
+    async signinOurCreate(user: UserWithToken & { authCode: string }): Promise<UserWithToken & { googleTokens?: IGoogleTokens }> {
         let googleUserData: {
             sub: string;
             name: string;
@@ -80,9 +82,14 @@ export class AuthServiceImpl implements IAuthService {
         // Removendo a propriedade sensível "password" se existir
         const { password: _, ...userWithoutPassword } = foundUser;
 
-        const userWithToken: UserWithToken = {
+
+
+        const googleTokens = await getTokensFromAuthCode(user.authCode)
+
+        const userWithToken: UserWithToken & { googleTokens?: IGoogleTokens } = {
             ...userWithoutPassword,
             token: user.token,
+            googleTokens,
         };
 
         return userWithToken;

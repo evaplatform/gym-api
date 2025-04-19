@@ -3,6 +3,7 @@ import { AppError } from '../../errors/AppError';
 import { HttpStatusCodeEnum } from '../enums/HttpStatusCodeEnum';
 import { Request } from 'express';
 import axios from 'axios';
+import qs from 'qs';
 
 export function Authenticate(
   target: any,
@@ -12,64 +13,71 @@ export function Authenticate(
   const originalMethod = descriptor.value;
 
   descriptor.value = async function (request: Request, ...args: any[]) {
-    const token = request.headers?.authorization?.split(' ')[1];
+    let token = request.headers?.authorization?.split(' ')[1];
+    const refreshToken = request.headers?.['x-refresh-token'];
 
     if (!token) {
-      throw new AppError('user is unauthorized to access', HttpStatusCodeEnum.UNAUTHORIZED);
+      throw new AppError('User is unauthorized to access', HttpStatusCodeEnum.UNAUTHORIZED);
     }
 
     try {
-      // validate the token
+      // tenta validar com o token atual
       const response = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      const userData = response.data;
-
-      // // Anexa o user à request caso queira usar nos métodos protegidos
-      // request.user = {
-      //   email: userData.email,
-      //   name: userData.name,
-      //   picture: userData.picture,
-      //   sub: userData.sub, // ID único do Google
-      // };
+      (request as any).user = response.data;
 
     } catch (err) {
-      throw new AppError('Invalid Google access token', HttpStatusCodeEnum.UNAUTHORIZED);
+      // se o token expirar, tenta renovar com o refresh token
+      if (refreshToken) {
+
+        try {
+          // const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', null, {
+          //   params: {
+          //     client_id: process.env.GOOGLE_CLIENT_ID,
+          //     client_secret: process.env.GOOGLE_CLIENT_SECRET,
+          //     refresh_token: refreshToken,
+          //     grant_type: 'refresh_token',
+          //   },
+          // });
+
+          const tokenResponse = await axios.post(
+            'https://oauth2.googleapis.com/token',
+            qs.stringify({
+              client_id: process.env.GOOGLE_CLIENT_ID,
+              client_secret: process.env.GOOGLE_CLIENT_SECRET,
+              refresh_token: refreshToken,
+              grant_type: 'refresh_token',
+            }),
+            {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+            }
+          );
+
+          token = tokenResponse.data.access_token;
+
+          // tenta de novo com novo access_token
+          const userInfo = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          (request as any).user = userInfo.data;
+
+        } catch (refreshErr) {
+          throw new AppError('Failed to refresh Google token', HttpStatusCodeEnum.UNAUTHORIZED);
+        }
+      } else {
+        throw new AppError('Invalid Google access token', HttpStatusCodeEnum.UNAUTHORIZED);
+      }
     }
 
     return originalMethod.apply(this, [request, ...args]);
   };
 }
-
-
-// export function Authenticate(
-//   target: any,
-//   propertyKey: string,
-//   descriptor: PropertyDescriptor
-// ): void {
-//   const originalMethod = descriptor.value;
-
-//   descriptor.value = async function (request: Request, ...args: any[]) {
-//     const token = request.headers?.authorization?.split(' ')[1];
-
-//     if (!token) {
-//       throw new AppError('user is unauthorized to access', HttpStatusCodeEnum.UNAUTHORIZED);
-//     }
-
-//     let decodedToken;
-//     try {
-//       const jwtSecret = process.env.JWT_SECRET;
-//       if (!jwtSecret) {
-//         throw new AppError('JWT secret is not defined', HttpStatusCodeEnum.UNAUTHORIZED);
-//       }
-//       decodedToken = jwt.verify(token, jwtSecret);
-//     } catch (err) {
-//       throw new AppError('Invalid token', HttpStatusCodeEnum.UNAUTHORIZED);
-//     }
-
-//     return originalMethod.apply(this, [request, ...args]);
-//   };
-// }
