@@ -4,8 +4,8 @@ import { IExercise } from './IExercise';
 const ExerciseSchema = new mongoose.Schema<IExercise>(
   {
     name: { type: String, required: true, unique: true },
-    academyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Academy', required: true },
-    exerciseBlockId: { type: mongoose.Schema.Types.ObjectId, ref: 'ExerciseBlock', required: true },
+    academyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Academy', required: false },
+    exerciseBlockId: { type: mongoose.Schema.Types.ObjectId, ref: 'ExerciseBlock', required: false },
     description: { type: String, default: null },
     video: { type: String, default: null },
     imagePath: { type: String, default: null },
