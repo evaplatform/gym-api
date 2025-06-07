@@ -6,7 +6,9 @@ import academyRoutes from './routes/academyRoutes';
 import { MongooseClient } from './database/mongooseClient';
 import { errorHandler } from './middlewares/error.middleware';
 import authRoutes from './routes/authRoutes';
+import groupRoutes from './routes/groupRoutes';
 import { HttpStatusCodeEnum } from './shared/enums/HttpStatusCodeEnum';
+import exerciseRoutes from './routes/exerciseRoutes';
 
 const main = async () => {
   config();
@@ -23,6 +25,8 @@ const main = async () => {
   app.use('/user', userRoutes);
   app.use('/academy', academyRoutes);
   app.use('/auth', authRoutes);
+  app.use('/group', groupRoutes)
+  app.use('/exercise', exerciseRoutes);
 
   app.get('/ping', async (_, res) => {
     const dbState = mongoose.connection.readyState;

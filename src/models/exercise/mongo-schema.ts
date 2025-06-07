@@ -16,4 +16,4 @@ const ExerciseSchema = new mongoose.Schema<IExercise>(
   }
 );
 
-const ExerciseModel = mongoose.model<IExercise>('Exercise', ExerciseSchema);
+export const ExerciseModel = mongoose.model<IExercise>('Exercise', ExerciseSchema);
