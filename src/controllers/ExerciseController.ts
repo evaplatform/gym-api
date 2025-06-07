@@ -16,6 +16,7 @@ export class ExerciseController {
     }
 
     @CatchErrors
+    @Authenticate
     static async create(req: Request, res: Response) {
         const user = await exerciseService.create(req.body);
         res.status(HttpStatusCodeEnum.CREATED).json(user);
