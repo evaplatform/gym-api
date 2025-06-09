@@ -11,35 +11,35 @@ export class ExerciseController {
     @CatchErrors
     @Authenticate
     static async getAll(req: Request, res: Response) {
-        const users = await exerciseService.getAll();
-        res.json(users);
+        const exercises = await exerciseService.getAll();
+        res.json(exercises);
     }
 
     @CatchErrors
     @Authenticate
     static async create(req: Request, res: Response) {
-        const user = await exerciseService.create(req.body);
-        res.status(HttpStatusCodeEnum.CREATED).json(user);
+        const exercise = await exerciseService.create(req.body);
+        res.status(HttpStatusCodeEnum.CREATED).json(exercise);
     }
 
     @CatchErrors
     @Authenticate
     static async update(req: Request, res: Response) {
-        const user = await exerciseService.update(req.body);
-        res.status(HttpStatusCodeEnum.OK).json(user);
+        const exercise = await exerciseService.update(req.body);
+        res.status(HttpStatusCodeEnum.OK).json(exercise);
     }
 
     @CatchErrors
     @Authenticate
     static async delete(req: Request, res: Response) {
         await exerciseService.delete(req.params.id);
-        res.status(HttpStatusCodeEnum.OK).json({ message: 'User deleted successfully' });
+        res.status(HttpStatusCodeEnum.OK).json({ message: 'Exercise deleted successfully' });
     }
 
     @CatchErrors
     @Authenticate
     static async getById(req: Request, res: Response) {
-        const user = await exerciseService.getById(req.params.id);
-        res.status(HttpStatusCodeEnum.OK).json(user);
+        const exercise = await exerciseService.getById(req.params.id);
+        res.status(HttpStatusCodeEnum.OK).json(exercise);
     }
 }

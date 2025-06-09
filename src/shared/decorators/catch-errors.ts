@@ -4,7 +4,9 @@ export function CatchErrors(target: any, propertyKey: string, descriptor: Proper
   const originalMethod = descriptor.value;
 
   descriptor.value = function (req: Request, res: Response, next: NextFunction) {
-    Promise.resolve(originalMethod.call(this, req, res, next)).catch(next);
+    Promise.resolve(originalMethod.call(this, req, res, next)).catch(() => {
+       next() 
+      });
   };
 
   return descriptor;

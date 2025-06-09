@@ -12,12 +12,12 @@ export class ExerciseServiceImpl implements IExerciseService {
     return this.exerciseRepository.getAll();
   }
 
-  async create(user: IExercise): Promise<IExercise> {
-    return this.exerciseRepository.create(user);
+  async create(exercise: IExercise): Promise<IExercise> {
+    return this.exerciseRepository.create(exercise);
   }
 
-  async update(user: IExercise): Promise<IExercise | null> {
-    return this.exerciseRepository.update(user.id, user);
+  async update(exercise: IExercise): Promise<IExercise | null> {
+    return this.exerciseRepository.update(exercise.id, exercise);
   }
 
   async getById(id: string): Promise<IExercise | null> {

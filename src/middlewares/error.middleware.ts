@@ -14,7 +14,7 @@ export function errorHandler(
     const value = err.keyValue[field];
 
     return res.status(HttpStatusCodeEnum.CONFLICT).json({
-      error: `Duplicated value: '${value}' already exists for field '${field}'`,
+      error: `Valor duplicado: '${value}' já existe para o campo '${field}'`,
     });
   }
 
