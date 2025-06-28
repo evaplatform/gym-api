@@ -9,6 +9,7 @@ import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
 import { OAuth2Client } from 'google-auth-library';
 import { getTokensFromAuthCode } from '../../shared/utils/getTokensFromAuthCode';
 import { IGoogleTokens } from '../../shared/interfaces/IGoogleTokens';
+import { log } from '../../shared/utils/log';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -19,6 +20,10 @@ export class AuthServiceImpl implements IAuthService {
   async signinOurCreate(
     user: UserWithToken & { authCode: string }
   ): Promise<UserWithToken & { googleTokens?: IGoogleTokens }> {
+
+
+    log("Starting Google Signin/Signup process");
+
     let googleUserData: {
       sub: string;
       name: string;
@@ -43,6 +48,7 @@ export class AuthServiceImpl implements IAuthService {
       //    ...
       // }
     } catch (error) {
+      log("Starting Google Signin/Signup process");
       throw new AppError('Invalid Google token', HttpStatusCodeEnum.UNAUTHORIZED);
     }
 
@@ -92,6 +98,7 @@ export class AuthServiceImpl implements IAuthService {
 
       return userWithToken;
     } catch (error) {
+      log("Starting Google Signin/Signup process");
       throw new AppError('Error processing user data', HttpStatusCodeEnum.INTERNAL_SERVER_ERROR);
     }
   }
