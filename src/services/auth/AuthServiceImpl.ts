@@ -98,7 +98,12 @@ export class AuthServiceImpl implements IAuthService {
 
       return userWithToken;
     } catch (error) {
-      log("Starting Google Signin/Signup process");
+      
+      error instanceof Error ?
+        log("Error processing user data" + error.message)
+        :
+        log("Error processing user data: Unknown error");
+
       throw new AppError('Error processing user data', HttpStatusCodeEnum.INTERNAL_SERVER_ERROR);
     }
   }
