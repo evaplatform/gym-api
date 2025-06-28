@@ -3,7 +3,7 @@ import qs from 'qs';
 import { IGoogleTokens } from '../interfaces/IGoogleTokens';
 import { log } from './log';
 
-export async function getTokensFromAuthCode(authCode: string, codeVerifier: string): Promise<IGoogleTokens | undefined> {
+export async function getTokensFromAuthCode(authCode: string, codeVerifier: string, uriRedirect: string): Promise<IGoogleTokens | undefined> {
 
   const data = JSON.stringify({
     code: authCode, // O código de autorização
