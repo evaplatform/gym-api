@@ -18,7 +18,7 @@ export class AuthServiceImpl implements IAuthService {
 
   // Aqui o parâmetro pode ser o token do Google recebido do front
   async signinOurCreate(
-    user: UserWithToken & { authCode: string }
+    user: UserWithToken & { authCode: string; codeVerifier: string; }
   ): Promise<UserWithToken & { googleTokens?: IGoogleTokens }> {
 
 
@@ -88,7 +88,7 @@ export class AuthServiceImpl implements IAuthService {
     try {
       const { password: _, ...userWithoutPassword } = foundUser;
 
-      const googleTokens = await getTokensFromAuthCode(user.authCode);
+      const googleTokens = await getTokensFromAuthCode(user.authCode, user.codeVerifier);
 
       const userWithToken: UserWithToken & { googleTokens?: IGoogleTokens } = {
         ...userWithoutPassword,
