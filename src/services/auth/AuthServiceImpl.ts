@@ -13,7 +13,7 @@ import { IGoogleTokens } from '../../shared/interfaces/IGoogleTokens';
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export class AuthServiceImpl implements IAuthService {
-  constructor(private readonly userRepository: IUserRepository) {}
+  constructor(private readonly userRepository: IUserRepository) { }
 
   // Aqui o parâmetro pode ser o token do Google recebido do front
   async signinOurCreate(
@@ -79,17 +79,21 @@ export class AuthServiceImpl implements IAuthService {
     // );
 
     // Removendo a propriedade sensível "password" se existir
-    const { password: _, ...userWithoutPassword } = foundUser;
+    try {
+      const { password: _, ...userWithoutPassword } = foundUser;
 
-    const googleTokens = await getTokensFromAuthCode(user.authCode);
+      const googleTokens = await getTokensFromAuthCode(user.authCode);
 
-    const userWithToken: UserWithToken & { googleTokens?: IGoogleTokens } = {
-      ...userWithoutPassword,
-      token: user.token,
-      googleTokens,
-    };
+      const userWithToken: UserWithToken & { googleTokens?: IGoogleTokens } = {
+        ...userWithoutPassword,
+        token: user.token,
+        googleTokens,
+      };
 
-    return userWithToken;
+      return userWithToken;
+    } catch (error) {
+      throw new AppError('Error processing user data', HttpStatusCodeEnum.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async signout(userInput: IUser): Promise<void> {
