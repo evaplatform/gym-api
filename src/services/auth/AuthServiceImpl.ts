@@ -98,13 +98,18 @@ export class AuthServiceImpl implements IAuthService {
 
       return userWithToken;
     } catch (error) {
-      
-      error instanceof Error ?
-        log("Error processing user data" + error.message)
-        :
-        log("Error processing user data: Unknown error");
 
-      throw new AppError('Error processing user data', HttpStatusCodeEnum.INTERNAL_SERVER_ERROR);
+      if (error instanceof AppError) {
+        
+        log("Error processing user data " + error.message)
+        throw new AppError('Error processing user data', error.statusCode);
+      } else {
+
+        log("Error processing user data: Unknown error");
+        throw new AppError('Error processing user data', HttpStatusCodeEnum.INTERNAL_SERVER_ERROR);
+      }
+
+
     }
   }
 
