@@ -11,7 +11,7 @@ export async function getTokensFromAuthCode(authCode: string, codeVerifier: stri
     client_secret: process.env.GOOGLE_CLIENT_SECRET,
     redirect_uri: uriRedirect, // O mesmo redirect_uri usado na solicitação inicial
     grant_type: 'authorization_code',
-    // code_verifier: codeVerifier,
+    // code_verifier: codeVerifier,-
   })
 
   log(data)
