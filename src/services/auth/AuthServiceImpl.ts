@@ -102,12 +102,12 @@ export class AuthServiceImpl implements IAuthService {
       if (error instanceof AppError) {
 
         log("Error processing user data " + error.message)
-        log((error as any)?.response?.data || error.message)
+        log(JSON.stringify((error as any)?.response?.data, null, 2) || error.message)
 
         throw new AppError('Error processing user data', error.statusCode);
       } else {
 
-        log((error as any)?.response?.data || (error as any)?.message || 'Unknown error');
+        log(JSON.stringify((error as any)?.response?.data, null, 2) || (error as any)?.message || 'Unknown error');
         log("Error processing user data: Unknown error");
         throw new AppError('Error processing user data', HttpStatusCodeEnum.INTERNAL_SERVER_ERROR);
       }
