@@ -88,7 +88,7 @@ export class AuthServiceImpl implements IAuthService {
     try {
       const { password: _, ...userWithoutPassword } = foundUser;
 
-      const googleTokens = await getTokensFromAuthCode(user.authCode);
+      const googleTokens = {} as any; //await getTokensFromAuthCode(user.authCode);
 
       const userWithToken: UserWithToken & { googleTokens?: IGoogleTokens } = {
         ...userWithoutPassword,
