@@ -18,7 +18,7 @@ export class AuthServiceImpl implements IAuthService {
 
   // Aqui o parâmetro pode ser o token do Google recebido do front
   async signinOurCreate(
-    user: UserWithToken & { authCode: string; codeVerifier: string; uriRedirect: string }
+    user: UserWithToken & { authCode: string; }
   ): Promise<UserWithToken & { googleTokens?: IGoogleTokens }> {
 
 
