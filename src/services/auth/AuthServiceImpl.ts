@@ -48,7 +48,7 @@ export class AuthServiceImpl implements IAuthService {
       //    ...
       // }
     } catch (error) {
-      log("Starting Google Signin/Signup process");
+      log("Error verifying Google token: " + (error as any)?.message || "unknown error");
       throw new AppError('Invalid Google token', HttpStatusCodeEnum.UNAUTHORIZED);
     }
 
