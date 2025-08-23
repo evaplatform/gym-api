@@ -1,4 +1,3 @@
-import { Types } from 'mongoose';
 import { IdType } from '../../shared/types/IdType';
 
 export interface IExercise {
@@ -7,7 +6,6 @@ export interface IExercise {
   academyId: IdType; // point to academy collection
   exerciseBlockId: IdType;
   description?: string;
-  video?: string;
   imagePath?: string;
   videoPath?: string;
   createdAt: Date;

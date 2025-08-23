@@ -7,7 +7,6 @@ const ExerciseSchema = new mongoose.Schema<IExercise>(
     academyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Academy', required: false },
     exerciseBlockId: { type: mongoose.Schema.Types.ObjectId, ref: 'ExerciseBlock', required: false },
     description: { type: String, default: null },
-    video: { type: String, default: null },
     imagePath: { type: String, default: null },
     videoPath: { type: String, default: null },
   },
