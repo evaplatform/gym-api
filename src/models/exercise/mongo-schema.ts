@@ -3,7 +3,7 @@ import { IExercise } from './IExercise';
 
 const ExerciseSchema = new mongoose.Schema<IExercise>(
   {
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     academyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Academy', required: false },
     exerciseBlockId: { type: mongoose.Schema.Types.ObjectId, ref: 'ExerciseBlock', required: false },
     description: { type: String, default: null },

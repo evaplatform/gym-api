@@ -9,6 +9,7 @@ import authRoutes from './routes/authRoutes';
 import groupRoutes from './routes/groupRoutes';
 import { HttpStatusCodeEnum } from './shared/enums/HttpStatusCodeEnum';
 import exerciseRoutes from './routes/exerciseRoutes';
+import exerciseBlockRoutes from './routes/exerciseBlockRoutes';
 
 const main = async () => {
   config();
@@ -27,6 +28,7 @@ const main = async () => {
   app.use('/auth', authRoutes);
   app.use('/group', groupRoutes)
   app.use('/exercise', exerciseRoutes);
+  app.use('/exercise-block', exerciseBlockRoutes)
 
   app.get('/ping', async (_, res) => {
     const dbState = mongoose.connection.readyState;

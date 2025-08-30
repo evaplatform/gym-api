@@ -4,9 +4,9 @@ import { BlockTypeEnum } from '../../shared/enums/BlockTypeEnum';
 
 const ExerciseBlockSchema = new mongoose.Schema<IExerciseBlock>(
   {
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     imagePath: { type: String, required: true },
-    academyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Academy', required: true },
+    academyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Academy', required: false },
     exerciseType: { type: String, enum: Object.values(BlockTypeEnum), required: true },
   },
   {
@@ -14,4 +14,4 @@ const ExerciseBlockSchema = new mongoose.Schema<IExerciseBlock>(
   }
 );
 
-export const ExerciseBlock = mongoose.model<IExerciseBlock>('ExerciseBlock', ExerciseBlockSchema);
+export const ExerciseBlockModel = mongoose.model<IExerciseBlock>('ExerciseBlock', ExerciseBlockSchema);
