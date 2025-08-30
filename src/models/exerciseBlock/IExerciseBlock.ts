@@ -5,7 +5,7 @@ import { IdType } from '../../shared/types/IdType';
 export interface IExerciseBlock {
   id: string;
   name: string; 
-  imagePath: string;
+  imagePath?: string;
   academyId: IdType;
   exerciseType: BlockTypeEnum;
   createdAt: Date;
