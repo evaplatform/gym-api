@@ -12,7 +12,7 @@ const AcademySchema = new mongoose.Schema<IAcademy>(
     // exerciseBlockIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ExerciseBlock' }],
     // groupIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }],
     userLimit: { type: Number, required: true },
-    paymentInfo: paymentInfoSchema,
+    // paymentInfo: paymentInfoSchema,
   },
   { timestamps: true }
 );

@@ -10,7 +10,7 @@ export interface IAcademy {
   // exerciseBlockIds?: string[]; // point to exerciseBlock collection
   // groupIds?: string[]; // point to group collection
   userLimit: number;
-  paymentInfo?: IPaymentInfo;
+  // paymentInfo?: IPaymentInfo;
   createdAt: Date;
   updatedAt?: Date;
 }
