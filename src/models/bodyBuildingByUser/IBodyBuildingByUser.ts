@@ -1,6 +1,7 @@
 import { WeekDaysEnum } from '../../shared/enums/WeekDayEnum';
+import { ITimeStamps } from '../../shared/interfaces/ITimeStamps';
 
-export interface IBodyBuildingByUser {
+export interface IBodyBuildingByUser extends ITimeStamps  {
   id: string;
   exerciseId: string; // point to exercise collection
   plan: [
@@ -12,6 +13,4 @@ export interface IBodyBuildingByUser {
       weekDays?: WeekDaysEnum[];
     },
   ];
-  createdAt: Date;
-  updatedAt?: Date;
 }

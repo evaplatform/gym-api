@@ -1,21 +1,15 @@
 import { IGoogleUserInfo } from '../../shared/interfaces/IGoogleUserInfo';
-import { IBodyBuildingByUser } from '../bodyBuildingByUser/IBodyBuildingByUser';
-import { ICardioByUser } from '../cardioByUser/ICardioByUser';
-import { IPaymentInfo } from '../paymentInfo/IPaymentInfo';
+import { ITimeStamps } from '../../shared/interfaces/ITimeStamps';
 
-export interface IUser {
+export interface IUser extends ITimeStamps {
   id: string;
-  firstName: string;
-  lastName: string;
-  email: string; // unique
-  password?: string;
-  profilePhoto?: string;
-
+  cpf?: string; // unique
+  phoneNumber?: string; // unique
+  googleUserInfo?: IGoogleUserInfo;
+  isAdmin:boolean
   groupId?: string; // point to group collection
-  bodyBuildingByUser?: IBodyBuildingByUser[];
-  cardioByUser?: ICardioByUser[];
+  // bodyBuildingByUser?: IBodyBuildingByUser[];
+  // cardioByUser?: ICardioByUser[];
   academyId?: string;
-  paymentInfo?: IPaymentInfo;
-  createdAt: Date;
-  updatedAt?: Date;
+  // paymentInfo?: IPaymentInfo;
 }

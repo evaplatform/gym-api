@@ -1,4 +1,7 @@
-export interface IPaymentInfo {
+import { ITimeStamps } from "../../shared/interfaces/ITimeStamps";
+
+
+export interface IPaymentInfo extends ITimeStamps  {
   academyId?: string; // point to academy collection
   userId?: string;
   id: string;

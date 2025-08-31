@@ -1,22 +1,19 @@
 // src/models/User.ts
 import mongoose from 'mongoose';
 import { IUser } from './IUser';
-import { paymentInfoSchema } from '../paymentInfo/mongo-schema';
-import { CardioByUserSchema } from '../cardioByUser/mongo-schema';
-import { BodyBuildingByUserSchema } from '../bodyBuildingByUser/mongo-schema';
+import { googleUserInfoSchema } from './google-user-info-mongo-schema';
 
 const UserSchema = new mongoose.Schema<IUser>(
   {
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, default: null },
-    profilePhoto: { type: String, default: null },
+    cpf: { type: String, required: true, unique: true, maxlength: 11, minlength: 11 },
+    phoneNumber: { type: String, required: true, unique: true, maxlength: 15, minlength: 10 },
+    googleUserInfo: googleUserInfoSchema,
+    isAdmin: { type: Boolean, required: true, default: false },
     groupId: { type: mongoose.Schema.Types.ObjectId, ref: 'Group', default: null },
-    bodyBuildingByUser: [BodyBuildingByUserSchema],
-    cardioByUser: [CardioByUserSchema],
     academyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Academy', default: null },
-    paymentInfo: paymentInfoSchema,
+    // bodyBuildingByUser: [BodyBuildingByUserSchema],
+    // cardioByUser: [CardioByUserSchema],
+    // paymentInfo: paymentInfoSchema,
   },
   {
     timestamps: true, // Automatically add createdAt and updatedAt fields

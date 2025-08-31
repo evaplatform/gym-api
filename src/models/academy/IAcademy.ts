@@ -1,4 +1,6 @@
-export interface IAcademy {
+import { ITimeStamps } from "../../shared/interfaces/ITimeStamps";
+
+export interface IAcademy extends ITimeStamps  {
   id: string;
   name: string; // unique
   location: string;
@@ -9,6 +11,4 @@ export interface IAcademy {
   // groupIds?: string[]; // point to group collection
   userLimit: number;
   // paymentInfo?: IPaymentInfo;
-  createdAt: Date;
-  updatedAt?: Date;
 }
