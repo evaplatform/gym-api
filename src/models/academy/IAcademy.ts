@@ -1,5 +1,3 @@
-import { IPaymentInfo } from '../paymentInfo/IPaymentInfo';
-
 export interface IAcademy {
   id: string;
   name: string; // unique
