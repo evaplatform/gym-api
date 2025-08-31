@@ -35,8 +35,8 @@ export class AcademyServiceImpl implements IAcademyService {
 
     await this.academyRepository.delete(id);
     // try {
-    //   if (academy.logoImage) {
-    //     await deleteAWSFile(academy.logoImage)
+    //   if (academy.imagePath) {
+    //     await deleteAWSFile(academy.imagePath)
     //   }
     // } catch (error) {
     //   throw new AppError('Image delete on database. Failed to delete image on AWS', HttpStatusCodeEnum.INTERNAL_SERVER_ERROR);
