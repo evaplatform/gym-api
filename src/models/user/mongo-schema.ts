@@ -28,9 +28,9 @@ const UserSchema = new mongoose.Schema<IUser>(
       type: String, 
       required: true, 
       unique: true, 
-      maxlength: 11, 
-      minlength: 11, 
-      description: 'The CPF (Brazilian individual taxpayer registry identification) of the user, must be 11 characters long and unique.' 
+      maxlength: 14, 
+      minlength: 14, 
+      description: 'The CPF (Brazilian individual taxpayer registry identification) of the user, must be 14 characters long and unique (with dots and dashes).' 
     },
     phoneNumber: { 
       type: String, 
