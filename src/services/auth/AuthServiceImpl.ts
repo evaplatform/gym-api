@@ -14,12 +14,15 @@ import { UserWithToken } from '../../shared/types/AuthResponse';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
+
+type SigningRequestType = UserWithToken & { authCode: string; }
+
 export class AuthServiceImpl implements IAuthService {
   constructor(private readonly userRepository: IUserRepository) { }
 
   // Aqui o parâmetro pode ser o token do Google recebido do front
   async signinOurCreate(
-    user: UserWithToken & { authCode: string; }
+    user: SigningRequestType
   ): Promise<UserWithToken & { googleTokens?: IGoogleTokens }> {
 
 
@@ -86,6 +89,8 @@ export class AuthServiceImpl implements IAuthService {
       if (user.academyId) {
         newUserData.academyId = user.academyId;
       }
+
+      
 
       foundUser = await this.userRepository.create(newUserData);
     }
