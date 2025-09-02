@@ -1,8 +1,7 @@
-import { ITimeStamps } from '../../shared/interfaces/ITimeStamps';
+import { IDefaultEntityProperties } from '../../shared/interfaces/IDefaulEntityProperties';
 import { IdType } from '../../shared/types/IdType';
 
-export interface IExercise extends ITimeStamps  {
-  id: string;
+export interface IExercise  extends IDefaultEntityProperties   {
   name: string; // unique
   academyId: IdType; // point to academy collection
   exerciseBlockId: IdType;

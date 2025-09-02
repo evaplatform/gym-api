@@ -1,15 +1,14 @@
-import { IGoogleUserInfo } from '../../shared/interfaces/IGoogleUserInfo';
-import { ITimeStamps } from '../../shared/interfaces/ITimeStamps';
+import { IDefaultEntityProperties } from '../../shared/interfaces/IDefaulEntityProperties';
 
-export interface IUser extends ITimeStamps {
-  id: string;
+export interface IUser extends IDefaultEntityProperties {
+  name: string;
+  email: string; // unique
+  profilePhoto?: string;
   cpf?: string; // unique
   phoneNumber?: string; // unique
-  googleUserInfo?: IGoogleUserInfo;
-  isAdmin:boolean
+  isAdmin: boolean
   groupId?: string; // point to group collection
-  // bodyBuildingByUser?: IBodyBuildingByUser[];
-  // cardioByUser?: ICardioByUser[];
   academyId?: string;
-  // paymentInfo?: IPaymentInfo;
 }
+
+

@@ -1,9 +1,9 @@
 import { WeekDaysEnum } from '../../shared/enums/WeekDayEnum';
-import { ITimeStamps } from '../../shared/interfaces/ITimeStamps';
+import { IDefaultEntityProperties } from '../../shared/interfaces/IDefaulEntityProperties';
+import { IdType } from '../../shared/types/IdType';
 
-export interface IBodyBuildingByUser extends ITimeStamps  {
-  id: string;
-  exerciseId: string; // point to exercise collection
+export interface IBodyBuildingByUser extends IDefaultEntityProperties {
+  exerciseId: IdType; // point to exercise collection
   plan: [
     {
       exerciseId: string; // point to exercise collection

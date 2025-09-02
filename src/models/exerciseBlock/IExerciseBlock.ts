@@ -1,13 +1,11 @@
-import { Types } from 'mongoose';
+
 import { BlockTypeEnum } from '../../shared/enums/BlockTypeEnum';
 import { IdType } from '../../shared/types/IdType';
+import { IDefaultEntityProperties } from '../../shared/interfaces/IDefaulEntityProperties';
 
-export interface IExerciseBlock {
-  id: string;
-  name: string; 
+export interface IExerciseBlock extends IDefaultEntityProperties {
+  name: string;
   imagePath?: string;
   academyId: IdType;
   exerciseType: BlockTypeEnum;
-  createdAt: Date;
-  updatedAt?: Date;
 }

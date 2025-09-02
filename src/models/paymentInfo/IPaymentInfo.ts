@@ -1,7 +1,6 @@
-import { ITimeStamps } from "../../shared/interfaces/ITimeStamps";
+import { IDefaultEntityProperties } from "../../shared/interfaces/IDefaulEntityProperties";
 
-
-export interface IPaymentInfo extends ITimeStamps  {
+export interface IPaymentInfo extends IDefaultEntityProperties {
   academyId?: string; // point to academy collection
   userId?: string;
   id: string;

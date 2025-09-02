@@ -1,7 +1,6 @@
-import { ITimeStamps } from "../../shared/interfaces/ITimeStamps";
+import { IDefaultEntityProperties } from "../../shared/interfaces/IDefaulEntityProperties";
 
-export interface IGroup extends ITimeStamps  {
-  id: string;
+export interface IGroup  extends IDefaultEntityProperties  {
   name: string; // unique
   permissions: {
     drawerMenu: {

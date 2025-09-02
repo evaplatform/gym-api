@@ -3,13 +3,14 @@ import jwt from 'jsonwebtoken';
 import { AppError } from '../../errors/AppError';
 import { IUser } from '../../models/user/IUser';
 import { IUserRepository } from '../../repositories/user/IUserRepository';
-import { UserWithToken } from '../../shared/types/AuthResponse';
 import { IAuthService } from './IAuthService';
 import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
 import { OAuth2Client } from 'google-auth-library';
 import { getTokensFromAuthCode } from '../../shared/utils/getTokensFromAuthCode';
 import { IGoogleTokens } from '../../shared/interfaces/IGoogleTokens';
 import { log } from '../../shared/utils/log';
+import { IGoogleUserInfo } from '../../shared/interfaces/IGoogleUserInfo';
+import { UserWithToken } from '../../shared/types/AuthResponse';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -57,13 +58,26 @@ export class AuthServiceImpl implements IAuthService {
 
     // Se o usuário ainda não existe, você pode criar um novo registro ou retornar erro.
     if (!foundUser) {
-      const newUserData: IUser = {
-        // id: googleUserData.sub,
-        firstName: googleUserData.name,
-        lastName: googleUserData.name.split(' ')[1] || '',
-        email: googleUserData.email,
-        profilePhoto: googleUserData.picture,
-      } as IUser;
+      // const googleUserInfo: IGoogleUserInfo = {
+      //   email: googleUserData.email,
+      //   name: googleUserData.name,
+      //   givenName: googleUserData.given_name,
+      //   familyName: googleUserData.family_name,
+      // }
+
+
+      // const newUserData: IUser = {
+      //   id: googleUserData.sub,
+      //   name: googleUserData.name,
+      //   cpf: '',
+      //   isAdmin: false,
+      //   phoneNumber: '',
+      //   googleUserInfo,
+      //   email: googleUserData.email,
+      //   profilePhoto: googleUserData.picture,
+      // };
+
+      const newUserData: IUser = { ...user }
 
       if (user.groupId) {
         newUserData.groupId = user.groupId;
@@ -86,12 +100,10 @@ export class AuthServiceImpl implements IAuthService {
 
     // Removendo a propriedade sensível "password" se existir
     try {
-      const { password: _, ...userWithoutPassword } = foundUser;
-
       const googleTokens = {} as any; //await getTokensFromAuthCode(user.authCode);
 
       const userWithToken: UserWithToken & { googleTokens?: IGoogleTokens } = {
-        ...userWithoutPassword,
+        ...foundUser,
         token: user.token,
         googleTokens,
       };

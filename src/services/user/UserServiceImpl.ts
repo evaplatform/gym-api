@@ -9,7 +9,7 @@ import { UserWithToken } from '../../shared/types/AuthResponse';
 
 export class UserServiceImpl implements IUserService {
   // Constructor
-  constructor(private readonly userRepository: IUserRepository) {}
+  constructor(private readonly userRepository: IUserRepository) { }
   // Methods
 
   async getUserById(id: string): Promise<IUser | null> {
@@ -20,21 +20,21 @@ export class UserServiceImpl implements IUserService {
     return this.userRepository.getAll();
   }
 
-  // async createUser(user: UserWithToken): Promise<IUser> {
-  //   const encryptedPassword = await encrypt(user.password);
-  //   user.password = encryptedPassword;
+  async createUser(user: UserWithToken): Promise<IUser> {
+    // const encryptedPassword = await encrypt(user.password);
+    // user.password = encryptedPassword;
 
-  //   return this.userRepository.create(user);
-  // }
+    return this.userRepository.create(user);
+  }
 
   async updateUser(id: string, body: Partial<IUser>): Promise<IUser | null> {
     if (body.email) {
       throw new AppError('Email cannot be updated', HttpStatusCodeEnum.BAD_REQUEST);
     }
 
-    if (body.password) {
-      body.password = await encrypt(body.password);
-    }
+    // if (body.password) {
+    //   body.password = await encrypt(body.password);
+    // }
 
     return this.userRepository.update(id, body);
   }
