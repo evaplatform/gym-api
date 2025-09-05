@@ -4,7 +4,10 @@ import { ExerciseController } from '../controllers/ExerciseController';
 
 const router = express.Router();
 
-router.get('/', ExerciseController.getAll);
+
+router.get('/', (req, res, next) => {
+    ExerciseController.getAll(req, res).catch(next);
+});
 router.get('/:id', ExerciseController.getById);
 router.post('/', ExerciseController.create);
 router.patch('/', ExerciseController.update);

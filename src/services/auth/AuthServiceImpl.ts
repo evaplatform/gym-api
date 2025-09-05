@@ -21,7 +21,7 @@ export class AuthServiceImpl implements IAuthService {
   constructor(private readonly userRepository: IUserRepository) { }
 
   // Aqui o parâmetro pode ser o token do Google recebido do front
-  async signinOurCreate(
+  async signinOrCreate(
     user: SigningRequestType
   ): Promise<UserWithToken & { googleTokens?: IGoogleTokens }> {
 
@@ -112,9 +112,24 @@ export class AuthServiceImpl implements IAuthService {
         await this.userRepository.update(foundUser.id, { profilePhoto: user.profilePhoto });
       }
 
+
+      // Gerar JWT com informações do usuário
+      const jwtPayload = {
+        userId: foundUser.id,
+        academyId: foundUser.academyId,
+        isAdmin: foundUser.isAdmin
+      };
+
+      const jwtToken = jwt.sign(
+        jwtPayload,
+        process.env.JWT_SECRET as string,
+        { expiresIn: '24h' } // Você pode ajustar o tempo de expiração
+      );
+
+
       const userWithToken: UserWithToken & { googleTokens?: IGoogleTokens } = {
         ...foundUser,
-        token: user.token,
+        token: jwtToken,
         googleTokens,
       };
 
@@ -135,11 +150,62 @@ export class AuthServiceImpl implements IAuthService {
       }
 
     }
+
+
+
   }
 
   async signout(userInput: IUser): Promise<void> {
     // Neste cenário com OAuth, para o logout você pode simplesmente apagar o token no front,
     // ou, se necessário, revogar o token no Google (embora isso geralmente não seja obrigatório).
     // Essa função pode ser mantida para compatibilidade ou para realizar ações adicionais.
+  }
+
+  async generateTestToken(req: IUser & { userId: string }) {
+    // Verifique se está em ambiente de desenvolvimento
+    if (process.env.NODE_ENV !== 'development') {
+      throw new AppError('This endpoint is only available in development mode', HttpStatusCodeEnum.FORBIDDEN);
+    }
+
+    // Você pode permitir especificar o usuário pelo ID ou email
+    const { userId, email, isAdmin = false } = req;
+
+    let user: IUser | null = null;
+
+    if (userId) {
+      user = await this.userRepository.getById(userId);
+    } else if (email) {
+      user = await this.userRepository.getByEmail(email);
+    } else {
+      throw new AppError('Either userId or email is required', HttpStatusCodeEnum.BAD_REQUEST);
+    }
+
+    if (!user) {
+      throw new AppError('User not found', HttpStatusCodeEnum.NOT_FOUND);
+    }
+
+    // Gerar JWT com as informações do usuário
+    const jwtPayload = {
+      userId: user.id,
+      academyId: user.academyId,
+      isAdmin: isAdmin ? true : user.isAdmin
+    };
+
+    const token = jwt.sign(
+      jwtPayload,
+      process.env.JWT_SECRET as string,
+      { expiresIn: '24h' }
+    );
+
+    return {
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        academyId: user.academyId,
+        isAdmin: isAdmin ? true : user.isAdmin
+      }
+    };
   }
 }

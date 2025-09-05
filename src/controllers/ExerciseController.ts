@@ -4,15 +4,30 @@ import { Authenticate } from '../shared/decorators/authenticate';
 import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
 import { ExerciseRepositoryImpl } from '../repositories/exercise/ExerciseRepositoryImpl';
 import { ExerciseServiceImpl } from '../services/exercise/ExerciseServiceImpl';
+import { AcademyRepositoryImpl } from '../repositories/academy/AcademyRepositoryImpl';
+import { AppError } from '../errors/AppError';
 
-const exerciseService = new ExerciseServiceImpl(new ExerciseRepositoryImpl());
+const exerciseService = new ExerciseServiceImpl(new ExerciseRepositoryImpl(), new AcademyRepositoryImpl());
 
 export class ExerciseController {
     @CatchErrors
     @Authenticate
-    static async getAll(req: Request, res: Response) {
-        const exercises = await exerciseService.getAll();
-        res.json(exercises);
+    static async getAll(req: any, res: Response) {
+        // const academyId = req.params?.academyId;
+        // const exercises = await exerciseService.getAll(academyId);
+        // res.json(exercises);
+
+        if (req.user?.isAdmin) {
+            const exercises = await exerciseService.getAll();
+            return res.json(exercises);
+        }
+
+        if (!req.user?.academyId) {
+            throw new AppError('User not associated with any academy', HttpStatusCodeEnum.FORBIDDEN);
+        }
+
+        const exercises = await exerciseService.getAll(req.user.academyId);
+        return res.json(exercises);
     }
 
     @CatchErrors

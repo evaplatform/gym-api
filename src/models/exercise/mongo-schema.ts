@@ -13,7 +13,7 @@ const ExerciseSchema = new mongoose.Schema<IExercise>(
     academyId: { 
       type: mongoose.Schema.Types.ObjectId, 
       ref: 'Academy', 
-      required: false, 
+      required: true, 
       description: 'The ID of the academy associated with the exercise.' 
     },
     exerciseBlockId: { 

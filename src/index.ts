@@ -25,9 +25,9 @@ const main = async () => {
 
   await MongooseClient.connect();
 
+  app.use('/auth', authRoutes);
   app.use('/user', userRoutes);
   app.use('/academy', academyRoutes);
-  app.use('/auth', authRoutes);
   app.use('/group', groupRoutes);
   app.use('/exercise', exerciseRoutes);
   app.use('/exercise-block', exerciseBlockRoutes);
