@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema<IUser>(
     },
     cpf: { 
       type: String, 
-      required: true, 
+      required: false, 
       unique: true, 
       maxlength: 14, 
       minlength: 14, 
