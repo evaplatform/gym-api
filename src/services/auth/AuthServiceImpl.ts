@@ -108,8 +108,8 @@ export class AuthServiceImpl implements IAuthService {
       const googleTokens = {} as any; //await getTokensFromAuthCode(user.authCode);
 
       if (!foundUser.profilePhoto) {
-        foundUser.profilePhoto = googleUserData.picture;
-        await this.userRepository.update(foundUser.id, { profilePhoto: googleUserData.picture });
+        foundUser.profilePhoto = user.profilePhoto;
+        await this.userRepository.update(foundUser.id, { profilePhoto: user.profilePhoto });
       }
 
       const userWithToken: UserWithToken & { googleTokens?: IGoogleTokens } = {
