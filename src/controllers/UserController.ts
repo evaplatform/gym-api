@@ -36,7 +36,7 @@ export class UserController {
   @CatchErrors
   @Authenticate
   static async update(req: Request, res: Response) {
-    const user = await userService.updateUser(req.params.id, req.body);
+    const user = await userService.updateUser(req.body);
     if (user) {
       res.status(HttpStatusCodeEnum.OK).json(user);
     } else {

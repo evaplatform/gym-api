@@ -27,16 +27,16 @@ export class UserServiceImpl implements IUserService {
     return this.userRepository.create(user);
   }
 
-  async updateUser(id: string, body: Partial<IUser>): Promise<IUser | null> {
+  async updateUser(body: Partial<IUser>): Promise<IUser | null> {
     if (body.email) {
       throw new AppError('Email cannot be updated', HttpStatusCodeEnum.BAD_REQUEST);
     }
 
-    // if (body.password) {
-    //   body.password = await encrypt(body.password);
-    // }
+    if (!body.id) {
+      throw new AppError('User ID is required for update', HttpStatusCodeEnum.BAD_REQUEST);
+    }
 
-    return this.userRepository.update(id, body);
+    return this.userRepository.update(body.id, body);
   }
 
   async delete(id: string): Promise<void | null> {
