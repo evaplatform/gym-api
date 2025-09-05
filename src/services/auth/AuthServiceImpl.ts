@@ -90,7 +90,7 @@ export class AuthServiceImpl implements IAuthService {
         newUserData.academyId = user.academyId;
       }
 
-      
+
 
       foundUser = await this.userRepository.create(newUserData);
     }
@@ -106,6 +106,11 @@ export class AuthServiceImpl implements IAuthService {
     // Removendo a propriedade sensível "password" se existir
     try {
       const googleTokens = {} as any; //await getTokensFromAuthCode(user.authCode);
+
+      if (!foundUser.profilePhoto) {
+        foundUser.profilePhoto = googleUserData.picture;
+        await this.userRepository.update(foundUser.id, { profilePhoto: googleUserData.picture });
+      }
 
       const userWithToken: UserWithToken & { googleTokens?: IGoogleTokens } = {
         ...foundUser,
