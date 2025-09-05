@@ -28,9 +28,7 @@ export class UserServiceImpl implements IUserService {
   }
 
   async updateUser(body: Partial<IUser>): Promise<IUser | null> {
-    if (body.email) {
-      throw new AppError('Email cannot be updated', HttpStatusCodeEnum.BAD_REQUEST);
-    }
+    delete body.email;
 
     if (!body.id) {
       throw new AppError('User ID is required for update', HttpStatusCodeEnum.BAD_REQUEST);
