@@ -29,24 +29,59 @@ export function Authenticate(
       }
 
       const token = authHeader.split(' ')[1];
+      
+      // Decodificar o token sem verificar
+      try {
+        const parts = token.split('.');
+        if (parts.length === 3) {
+          const headerB64 = parts[0];
+          const headerStr = Buffer.from(headerB64, 'base64').toString();
+          const header = JSON.parse(headerStr);
+          log('Token header:', header);
+          
+          // Se o algoritmo não for HS256, temos um problema
+          if (header.alg !== 'HS256') {
+            log('WARNING: Token algorithm is not HS256, but:', header.alg);
+          }
+          
+          const payloadB64 = parts[1];
+          const payloadStr = Buffer.from(payloadB64, 'base64').toString();
+          const payload = JSON.parse(payloadStr);
+          log('Token payload (partial):', {
+            // Mostrar apenas campos não sensíveis
+            iat: payload.iat,
+            exp: payload.exp,
+            userId: payload.userId,
+            // Não mostrar valores completos
+            hasUserId: !!payload.userId,
+            hasAcademyId: !!payload.academyId,
+            isAdmin: payload.isAdmin
+          });
+        }
+      } catch (e) {
+        log('Error decoding token:', e);
+      }
 
+      // Verificar o JWT_SECRET
+      if (!JWT_SECRET) {
+        log('JWT_SECRET is not defined');
+        throw new AppError('Server authentication configuration error', HttpStatusCodeEnum.INTERNAL_SERVER_ERROR);
+      }
+      
+      log('JWT_SECRET first 5 chars:', JWT_SECRET.substring(0, 5) + '...');
+      log('JWT_SECRET length:', JWT_SECRET.length);
 
       try {
-        log('Attempting to verify token with secret length:', JWT_SECRET?.length);
-
-        if (!JWT_SECRET) {
-          console.error('JWT_SECRET is not defined in environment variables');
-          throw new AppError('Server authentication configuration error', HttpStatusCodeEnum.INTERNAL_SERVER_ERROR);
-        }
-
+        // Verificar o token
+        log('Attempting to verify token...');
         const decoded = jwt.verify(
           token,
           JWT_SECRET,
           { algorithms: ['HS256'] }
         ) as JwtPayload;
 
-        log('Token successfully verified');
-
+        log('Token successfully verified!');
+        
         // Adicionar informações do usuário à requisição
         req.user = {
           id: decoded.userId,
@@ -54,19 +89,20 @@ export function Authenticate(
           isAdmin: decoded.isAdmin
         };
 
-        log('Authenticated user:', req.user);
-
-        // Chamar o método original com o mesmo contexto e argumentos
+        // Chamar o método original
         return originalMethod.apply(this, arguments);
       } catch (error: any) {
+        log('JWT verification error details:', {
+          name: error.name,
+          message: error.message,
+          stack: error.stack?.split('\n')[0]
+        });
         throw new AppError(error.message, HttpStatusCodeEnum.UNAUTHORIZED);
       }
     } catch (error: any) {
-      log('JWT verification error:', error.message, error.name);
       if (next) {
         next(error);
       } else {
-        // Se não tiver next, tratar o erro aqui
         console.error('Authentication error:', error);
         res.status(401).json({
           error: 'Authentication failed',
@@ -78,5 +114,3 @@ export function Authenticate(
 
   return descriptor;
 }
-
-
