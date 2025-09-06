@@ -1,5 +1,7 @@
 // src/index.ts
 import { config } from 'dotenv';
+config();
+
 import express from 'express';
 import type { ErrorRequestHandler } from 'express';
 import mongoose from 'mongoose';
@@ -15,8 +17,6 @@ import paymentInfoRoutes from './routes/paymentInfoRoutes';
 import { errorHandler } from './middlewares/error.middleware';
 
 const main = async () => {
-  config();
-
   const app = express();
 
   app.use(express.json());

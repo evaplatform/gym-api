@@ -28,15 +28,15 @@ export class ExerciseServiceImpl implements IExerciseService {
   async create(req: AuthenticatedRequest<IExercise>): Promise<IExercise> {
     const exercise = req.body;
 
-    if (!req.user?.academyId) {
-      throw new AppError('User not associated with Request academy', HttpStatusCodeEnum.FORBIDDEN);
-    }
-
     if (req.user?.isAdmin) {
       return this.exerciseRepository.create(exercise);
     }
 
-    if (req.user?.academyId !==  exercise?.academyId.toString()) {
+    if (!req.user?.academyId) {
+      throw new AppError('User not associated with Request academy', HttpStatusCodeEnum.FORBIDDEN);
+    }
+
+    if (req.user?.academyId !== exercise?.academyId.toString()) {
       throw new AppError('Cannot create exercise for a different academy', HttpStatusCodeEnum.FORBIDDEN);
     }
 
@@ -46,15 +46,15 @@ export class ExerciseServiceImpl implements IExerciseService {
   async update(req: AuthenticatedRequest<IExercise>): Promise<IExercise | null> {
     const exercise = req.body;
 
-    if (!req.user?.academyId) {
-      throw new AppError('User not associated with Request academy', HttpStatusCodeEnum.FORBIDDEN);
-    }
-
     if (req.user?.isAdmin) {
       return this.exerciseRepository.update(exercise.id, exercise);
     }
 
-    if (req.user?.academyId !==  exercise?.academyId.toString()) {
+    if (!req.user?.academyId) {
+      throw new AppError('User not associated with Request academy', HttpStatusCodeEnum.FORBIDDEN);
+    }
+
+    if (req.user?.academyId !== exercise?.academyId.toString()) {
       throw new AppError('Cannot update exercise for a different academy', HttpStatusCodeEnum.FORBIDDEN);
     }
 
@@ -62,7 +62,6 @@ export class ExerciseServiceImpl implements IExerciseService {
   }
 
   async getById(req: AuthenticatedRequest): Promise<IExerciseExtendedProps | null> {
-
     const id = req.params.id;
     let exercise: IExercise | null = null;
 
@@ -76,6 +75,10 @@ export class ExerciseServiceImpl implements IExerciseService {
       }
 
       exercise = await this.exerciseRepository.getById(id, req.user.academyId);
+    }
+
+    if (!exercise?.academyId?.toString()) {
+      return exercise
     }
 
     const academyId = (exercise?.academyId?.toString() || '');
