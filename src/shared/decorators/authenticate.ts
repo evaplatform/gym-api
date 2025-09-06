@@ -6,7 +6,6 @@ import { AuthenticatedRequest } from "../interfaces/AuthenticatedRequest";
 import { log } from "../utils/log";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
-const JWT_SECRET_KEY = new TextEncoder().encode(JWT_SECRET);
 
 interface JwtPayload {
   userId: string;
@@ -32,7 +31,7 @@ export function Authenticate(
       const token = authHeader.split(' ')[1];
 
       try {
-
+        log('Attempting to verify token with secret length:', JWT_SECRET?.length);
 
         if (!JWT_SECRET) {
           console.error('JWT_SECRET is not defined in environment variables');
@@ -44,6 +43,8 @@ export function Authenticate(
           JWT_SECRET,
           { algorithms: ['HS256'] }
         ) as JwtPayload;
+
+        log('Token successfully verified');
 
         // Adicionar informações do usuário à requisição
         req.user = {
@@ -59,7 +60,8 @@ export function Authenticate(
       } catch (error: any) {
         throw new AppError(error.message, HttpStatusCodeEnum.UNAUTHORIZED);
       }
-    } catch (error) {
+    } catch (error: any) {
+      log('JWT verification error:', error.message, error.name);
       if (next) {
         next(error);
       } else {
