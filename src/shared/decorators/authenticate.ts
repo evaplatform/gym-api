@@ -42,7 +42,7 @@ export function Authenticate(
         const decoded = jwt.verify(
           token,
           JWT_SECRET,
-          { algorithms: ['HS256', 'RS256'] }
+          { algorithms: ['HS256'] }
         ) as JwtPayload;
 
         log('Token successfully verified');
