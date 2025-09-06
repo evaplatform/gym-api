@@ -4,7 +4,6 @@ import { IExercise } from '../../models/exercise/IExercise';
 import { IAcademyRepository } from '../../repositories/academy/IAcademyRepository';
 import { IExerciseRepository } from '../../repositories/exercise/IExerciseRepository';
 import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
-import { IExerciseExtendedProps } from '../../shared/interfaces/IExerciseExtendedProps';
 import { IExerciseService } from './IExerciseService';
 
 
@@ -61,7 +60,7 @@ export class ExerciseServiceImpl implements IExerciseService {
     return this.exerciseRepository.update(exercise.id, exercise);
   }
 
-  async getById(req: AuthenticatedRequest): Promise<IExerciseExtendedProps | null> {
+  async getById(req: AuthenticatedRequest): Promise<IExercise | null> {
     const id = req.params.id;
     let exercise: IExercise | null = null;
 
@@ -89,10 +88,9 @@ export class ExerciseServiceImpl implements IExerciseService {
       throw new AppError('Invalid exercise data', HttpStatusCodeEnum.BAD_REQUEST);
     }
 
-    const exerciseWithAcademy: IExerciseExtendedProps = {
+    const exerciseWithAcademy: IExercise = {
       ...exercise,
-      name: exercise.name,
-      academyName: academy?.name || '',
+      name: exercise.name
     };
 
     return exerciseWithAcademy;
