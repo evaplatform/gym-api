@@ -89,7 +89,7 @@ export class AuthServiceImpl implements IAuthService {
       const jwtToken = jwt.sign(
         jwtPayload,
         process.env.JWT_SECRET as string,
-        { expiresIn: '24h', algorithm: 'HS256' } // Você pode ajustar o tempo de expiração
+        { expiresIn: '24h', algorithm: 'RS256' } // Você pode ajustar o tempo de expiração
       );
 
 
