@@ -44,14 +44,6 @@ export class AuthServiceImpl implements IAuthService {
       });
 
       googleUserData = (ticket as any).payload;
-      // A resposta geralmente contém:
-      // {
-      //    sub: "ID único do Google",
-      //    name: "Nome do usuário",
-      //    email: "user@gmail.com",
-      //    picture: "URL da foto",
-      //    ...
-      // }
     } catch (error) {
       log("Error verifying Google token: " + (error as any)?.message || "unknown error");
       throw new AppError('Invalid Google token', HttpStatusCodeEnum.UNAUTHORIZED);
@@ -62,25 +54,6 @@ export class AuthServiceImpl implements IAuthService {
 
     // Se o usuário ainda não existe, você pode criar um novo registro ou retornar erro.
     if (!foundUser) {
-      // const googleUserInfo: IGoogleUserInfo = {
-      //   email: googleUserData.email,
-      //   name: googleUserData.name,
-      //   givenName: googleUserData.given_name,
-      //   familyName: googleUserData.family_name,
-      // }
-
-
-      // const newUserData: IUser = {
-      //   id: googleUserData.sub,
-      //   name: googleUserData.name,
-      //   cpf: '',
-      //   isAdmin: false,
-      //   phoneNumber: '',
-      //   googleUserInfo,
-      //   email: googleUserData.email,
-      //   profilePhoto: googleUserData.picture,
-      // };
-
       const newUserData: IUser = { ...user }
 
       if (user.groupId) {
@@ -95,14 +68,6 @@ export class AuthServiceImpl implements IAuthService {
 
       foundUser = await this.userRepository.create(newUserData);
     }
-
-    // // Opcional: se você quiser gerar um JWT próprio para manter o estado da sessão,
-    // // você pode assinar um token com os dados do usuário.
-    // const token = jwt.sign(
-    //     { id: foundUser.id, role: foundUser.groupId },
-    //     process.env.JWT_SECRET as string,
-    //     { expiresIn: '1h' }
-    // );
 
     // Removendo a propriedade sensível "password" se existir
     try {
@@ -124,7 +89,7 @@ export class AuthServiceImpl implements IAuthService {
       const jwtToken = jwt.sign(
         jwtPayload,
         process.env.JWT_SECRET as string,
-        { expiresIn: '24h' } // Você pode ajustar o tempo de expiração
+        { expiresIn: '24h', algorithm: 'HS256' } // Você pode ajustar o tempo de expiração
       );
 
 
@@ -151,9 +116,6 @@ export class AuthServiceImpl implements IAuthService {
       }
 
     }
-
-
-
   }
 
   async signout(userInput: IUser): Promise<void> {
