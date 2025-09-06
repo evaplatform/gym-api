@@ -30,6 +30,20 @@ export function Authenticate(
 
       const token = authHeader.split(' ')[1];
 
+      // Decodificar o token sem verificá-lo para inspecionar o cabeçalho
+      try {
+        const parts = token.split('.');
+        if (parts.length === 3) {
+          const headerB64 = parts[0];
+          const headerStr = Buffer.from(headerB64, 'base64').toString();
+          const header = JSON.parse(headerStr);
+          log('Token header:', header); // Isso mostrará o algoritmo usado no token
+        }
+      } catch (e) {
+        log('Error decoding token header:', e);
+      }
+
+
       try {
         log('Attempting to verify token with secret length:', JWT_SECRET?.length);
 
