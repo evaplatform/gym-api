@@ -9,8 +9,9 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
         return ExerciseModel.findByIdAndUpdate(id, { $set: user }, { new: true });
     }
 
-    async getById(id: string): Promise<IExercise | null> {
-        return ExerciseModel.findById(id).lean();
+    async getById(id: string, academyId?: string): Promise<IExercise | null> {
+        const filter = academyId ? { academyId } : {};
+        return ExerciseModel.findOne({ _id: id, ...filter }).lean();
     }
 
     async getAll(academyId?: IdType): Promise<IExercise[]> {
@@ -18,16 +19,6 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
         return ExerciseModel.find(filter);
     }
 
-    // como o chat GPT sugeriu:
-    // async getAll(academyId?: string, isAdmin = false): Promise<YourEntityType[]> {
-    //     // Se for admin e não especificar academyId, retorna todos
-    //     if (isAdmin && !academyId) {
-    //       return this.model.find().exec();
-    //     }
-        
-    //     // Se não for admin ou especificar academyId, filtra por academyId
-    //     return this.model.find({ academyId }).exec();
-    //   }
     async create(exercise: IExercise): Promise<IExercise> {
         return (await ExerciseModel.create(exercise)).toObject();
     }

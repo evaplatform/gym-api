@@ -27,8 +27,7 @@ export class AuthController {
 
   @CatchErrors
   static async generateTestToken(req: Request, res: Response) {
-    // Verifique se está em ambiente de desenvolvimento
-    const response = await authService.generateTestToken(req.body);
+    const response = await authService.generateTestToken(req);
 
     res.json(response);
   }

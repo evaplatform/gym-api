@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { AppError } from "../../errors/AppError";
 import { HttpStatusCodeEnum } from "../enums/HttpStatusCodeEnum";
+import { AuthenticatedRequest } from "../interfaces/AuthenticatedRequest";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 const JWT_SECRET_KEY = new TextEncoder().encode(JWT_SECRET);
@@ -19,7 +20,7 @@ export function Authenticate(
 ): PropertyDescriptor {
   const originalMethod = descriptor.value;
 
-  descriptor.value = function (req: any, res: Response, next: NextFunction) {
+  descriptor.value = function (req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const authHeader = req.headers.authorization;
 

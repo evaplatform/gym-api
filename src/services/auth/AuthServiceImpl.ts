@@ -18,6 +18,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 type SigningRequestType = UserWithToken & { authCode: string; }
 
 export class AuthServiceImpl implements IAuthService {
+
   constructor(private readonly userRepository: IUserRepository) { }
 
   // Aqui o parâmetro pode ser o token do Google recebido do front
@@ -161,14 +162,14 @@ export class AuthServiceImpl implements IAuthService {
     // Essa função pode ser mantida para compatibilidade ou para realizar ações adicionais.
   }
 
-  async generateTestToken(req: IUser & { userId: string }) {
+  async generateTestToken(req: any) {
     // Verifique se está em ambiente de desenvolvimento
     if (process.env.NODE_ENV !== 'development') {
       throw new AppError('This endpoint is only available in development mode', HttpStatusCodeEnum.FORBIDDEN);
     }
 
     // Você pode permitir especificar o usuário pelo ID ou email
-    const { userId, email, isAdmin = false } = req;
+    const { userId, email, isAdmin = false } = req.body;
 
     let user: IUser | null = null;
 
@@ -208,4 +209,5 @@ export class AuthServiceImpl implements IAuthService {
       }
     };
   }
+
 }

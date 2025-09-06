@@ -21,7 +21,7 @@ export class UserRepositoryImpl implements IUserRepository {
     return UserModel.find();
   }
 
-  async create(user: IUser): Promise<IUser> {
+  async create(user: Omit<IUser, 'id' | 'createdAt'>): Promise<IUser> {
     return (await UserModel.create(user)).toObject();
   }
 

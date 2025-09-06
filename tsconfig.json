@@ -10,11 +10,25 @@
     "emitDecoratorMetadata": true,
     "typeRoots": [
       "./node_modules/@types",
-      "./types"
-    ]
+      "src/types"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "src/types/*",
+        "src/shared/*",
+        "src/models/*"
+      ],
+      "src/shared/*": ["src/shared/*"],
+      "src/models/*": ["src/models/*"]
+    }
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "src/types/**/*.d.ts",
+    "src/shared/**/*.ts",
+    "src/models/**/*.ts" 
   ],
   "exclude": [
     "node_modules",

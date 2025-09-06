@@ -1,6 +1,7 @@
-// src/index.ts (ou server.ts)
+// src/index.ts
 import { config } from 'dotenv';
-import express, { ErrorRequestHandler } from 'express';
+import express from 'express';
+import type { ErrorRequestHandler } from 'express';
 import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes';
 import academyRoutes from './routes/academyRoutes';
