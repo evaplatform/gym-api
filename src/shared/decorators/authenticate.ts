@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { AppError } from "../../errors/AppError";
 import { HttpStatusCodeEnum } from "../enums/HttpStatusCodeEnum";
 import { AuthenticatedRequest } from "../interfaces/AuthenticatedRequest";
+import { log } from "utils/log";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 const JWT_SECRET_KEY = new TextEncoder().encode(JWT_SECRET);
@@ -43,10 +44,12 @@ export function Authenticate(
           isAdmin: decoded.isAdmin
         };
 
+        log('Authenticated user:', req.user);
+
         // Chamar o método original com o mesmo contexto e argumentos
         return originalMethod.apply(this, arguments);
-      } catch (error) {
-        throw new AppError('Invalid token', HttpStatusCodeEnum.UNAUTHORIZED);
+      } catch (error: any) {
+        throw new AppError(error.message, HttpStatusCodeEnum.UNAUTHORIZED);
       }
     } catch (error) {
       if (next) {

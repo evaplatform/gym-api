@@ -1,5 +1,5 @@
-export function log(message: string) {
+export function log(...messages: any[]) {
     if (process.env.DEBUG === 'true') {
-        console.log(`[DEBUG] ${message}`);
+        console.log('[DEBUG]', ...messages);
     }
 }
