@@ -1,4 +1,4 @@
-export interface AuthenticatedRequest<T = unknown> extends Request {
+export interface AuthenticatedRequest<T = unknown> extends Omit<Request, 'body'> {
   user?: {
     id: string;
     academyId: string | null;
@@ -8,6 +8,6 @@ export interface AuthenticatedRequest<T = unknown> extends Request {
     authorization?: string;
     "x-refresh-token"?: string;
   };
-  requestBody: T; // Renamed to avoid conflict with the Request interface
+  body: T; // Redefined to avoid conflict with the Request interface
   params: { [key: string]: string };
 }

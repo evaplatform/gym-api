@@ -1,4 +1,3 @@
-
 import { AuthenticatedRequest } from 'interfaces/AuthenticatedRequest';
 import { AppError } from '../../errors/AppError';
 import { IExercise } from '../../models/exercise/IExercise';
@@ -12,25 +11,25 @@ import { IExerciseService } from './IExerciseService';
 export class ExerciseServiceImpl implements IExerciseService {
   constructor(private readonly exerciseRepository: IExerciseRepository, private readonly academyRepository: IAcademyRepository) { }
 
-  async getAll(req: any): Promise<IExercise[]> {
+  async getAll(req: AuthenticatedRequest): Promise<IExercise[]> {
     if (req.user?.isAdmin) {
       const exercises = await this.exerciseRepository.getAll();
       return exercises;
     }
 
     if (!req.user?.academyId) {
-      throw new AppError('User not associated with any academy', HttpStatusCodeEnum.FORBIDDEN);
+      throw new AppError('User not associated with Request academy', HttpStatusCodeEnum.FORBIDDEN);
     }
 
     const academyId = req.user.academyId;
     return this.exerciseRepository.getAll(academyId);
   }
 
-  async create(req: any): Promise<IExercise> {
+  async create(req: AuthenticatedRequest<IExercise>): Promise<IExercise> {
     const exercise = req.body;
 
     if (!req.user?.academyId) {
-      throw new AppError('User not associated with any academy', HttpStatusCodeEnum.FORBIDDEN);
+      throw new AppError('User not associated with Request academy', HttpStatusCodeEnum.FORBIDDEN);
     }
 
     if (req.user?.isAdmin) {
@@ -44,11 +43,11 @@ export class ExerciseServiceImpl implements IExerciseService {
     return this.exerciseRepository.create(exercise);
   }
 
-  async update(req: any): Promise<IExercise | null> {
+  async update(req: AuthenticatedRequest<IExercise>): Promise<IExercise | null> {
     const exercise = req.body;
 
     if (!req.user?.academyId) {
-      throw new AppError('User not associated with any academy', HttpStatusCodeEnum.FORBIDDEN);
+      throw new AppError('User not associated with Request academy', HttpStatusCodeEnum.FORBIDDEN);
     }
 
     if (req.user?.isAdmin) {
@@ -62,7 +61,7 @@ export class ExerciseServiceImpl implements IExerciseService {
     return this.exerciseRepository.update(exercise.id, exercise);
   }
 
-  async getById(req: any): Promise<IExerciseExtendedProps | null> {
+  async getById(req: AuthenticatedRequest): Promise<IExerciseExtendedProps | null> {
 
     const id = req.params.id;
     let exercise: IExercise | null = null;
@@ -73,7 +72,7 @@ export class ExerciseServiceImpl implements IExerciseService {
     }
     else {
       if (!req.user?.academyId) {
-        throw new AppError('User not associated with any academy', HttpStatusCodeEnum.FORBIDDEN);
+        throw new AppError('User not associated with Request academy', HttpStatusCodeEnum.FORBIDDEN);
       }
 
       exercise = await this.exerciseRepository.getById(id, req.user.academyId);
@@ -96,7 +95,7 @@ export class ExerciseServiceImpl implements IExerciseService {
     return exerciseWithAcademy;
   }
 
-  async delete(req: any): Promise<void | null> {
+  async delete(req: AuthenticatedRequest): Promise<void | null> {
     const id = req.params.id;
     const exercise = await this.exerciseRepository.getById(id);
 
