@@ -4,26 +4,35 @@ import { IGoogleTokens } from '../interfaces/IGoogleTokens';
 import { log } from './log';
 
 export async function getTokensFromAuthCode(authCode: string): Promise<IGoogleTokens | undefined> {
+  try {
+    const data = {
+      code: authCode,
+      client_id: process.env.GOOGLE_CLIENT_ID,
+      client_secret: process.env.GOOGLE_CLIENT_SECRET,
+      redirect_uri: process.env.GOOGLE_REDIRECT_URI, // Isso é obrigatório
+      grant_type: 'authorization_code' // Isso também é obrigatório
+    };
 
-  const data = JSON.stringify({
-    code: authCode, // O código de autorização
-    client_id: process.env.GOOGLE_CLIENT_ID,
-    client_secret: process.env.GOOGLE_CLIENT_SECRET,
-    // redirect_uri: process.env.GOOGLE_REDIRECT_URI, // O mesmo redirect_uri usado na solicitação inicial
-    // grant_type: 'authorization_code'
-  })
+    log('Token exchange request data:', data);
 
-  log(data)
+    const response = await axios.post(
+      'https://oauth2.googleapis.com/token',
+      qs.stringify(data), // Apenas qs.stringify, não JSON.stringify
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    );
 
-  const response = await axios.post(
-    'https://oauth2.googleapis.com/token',
-    qs.stringify(data),
-    {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
+    log('Token exchange response:', response.data);
+
+    return response.data as IGoogleTokens;
+  } catch (error) {
+    log('Error exchanging auth code for tokens:', error);
+    if (axios.isAxiosError(error) && error.response) {
+      log('Error response data:', error.response.data);
     }
-  );
-
-  return response.data; // Isso irá conter o refresh_token
+    throw error;
+  }
 }

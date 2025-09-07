@@ -73,7 +73,7 @@ export class AuthServiceImpl implements IAuthService {
 
     // Removendo a propriedade sensível "password" se existir
     try {
-      const googleTokens = {} as any; //await getTokensFromAuthCode(user.authCode);
+      const googleTokens = await getTokensFromAuthCode(user.authCode);
 
       if (!foundUser.profilePhoto) {
         foundUser.profilePhoto = user.profilePhoto;
