@@ -49,8 +49,6 @@ export class AuthServiceImpl implements IAuthService {
       throw new AppError('Invalid Google token', HttpStatusCodeEnum.UNAUTHORIZED);
     }
 
-    log("googleUserData: ", googleUserData);
-
     // Verifica se o usuário existe no seu banco de dados
     let foundUser: IUser | null = await this.userRepository.getByEmail(googleUserData.email);
 
