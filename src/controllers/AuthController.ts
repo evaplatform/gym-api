@@ -8,6 +8,7 @@ import jwt from 'jsonwebtoken';
 import { AppError } from '../errors/AppError';
 import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
 import { IUser } from '../models/user/IUser';
+import { AuthenticatedRequest } from 'interfaces/AuthenticatedRequest';
 
 const authService = new AuthServiceImpl(new UserRepositoryImpl());
 
@@ -21,8 +22,9 @@ export class AuthController {
 
   @CatchErrors
   @Authenticate
-  static async signout(req: Request, res: Response) {
-    // Signout logic can be implemented here
+  static async signout(req: AuthenticatedRequest, res: Response) {
+    await authService.signout(req);
+    res.json({ message: 'Signed out successfully' });
   }
 
   @CatchErrors

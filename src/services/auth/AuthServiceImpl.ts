@@ -11,6 +11,7 @@ import { IGoogleTokens } from '../../shared/interfaces/IGoogleTokens';
 import { log } from '../../shared/utils/log';
 import { IGoogleUserInfo } from '../../shared/interfaces/IGoogleUserInfo';
 import { UserWithToken } from '../../shared/types/AuthResponse';
+import { AuthenticatedRequest } from 'interfaces/AuthenticatedRequest';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -118,7 +119,7 @@ export class AuthServiceImpl implements IAuthService {
     }
   }
 
-  async signout(userInput: IUser): Promise<void> {
+  async signout(req: AuthenticatedRequest): Promise<void> {
     // Neste cenário com OAuth, para o logout você pode simplesmente apagar o token no front,
     // ou, se necessário, revogar o token no Google (embora isso geralmente não seja obrigatório).
     // Essa função pode ser mantida para compatibilidade ou para realizar ações adicionais.
