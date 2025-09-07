@@ -49,6 +49,8 @@ export class AuthServiceImpl implements IAuthService {
       throw new AppError('Invalid Google token', HttpStatusCodeEnum.UNAUTHORIZED);
     }
 
+    log("googleUserData: ", googleUserData);
+
     // Verifica se o usuário existe no seu banco de dados
     let foundUser: IUser | null = await this.userRepository.getByEmail(googleUserData.email);
 
@@ -89,7 +91,7 @@ export class AuthServiceImpl implements IAuthService {
       const jwtToken = jwt.sign(
         jwtPayload,
         process.env.JWT_SECRET as string,
-        { expiresIn: '24h', algorithm: 'HS256' } // Você pode ajustar o tempo de expiração
+        { expiresIn: '24h', algorithm: 'RS256' } // Você pode ajustar o tempo de expiração
       );
 
 
