@@ -15,8 +15,11 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
     }
 
     async getAll(academyId?: IdType): Promise<IExercise[]> {
-        const filter = academyId ? { academyId } : {};
-        return ExerciseModel.find(filter);
+        const filter = academyId ? { academyId } : null;
+        if(filter){
+            return ExerciseModel.find(filter).lean();
+        }
+        return ExerciseModel.find().lean();
     }
 
     async create(exercise: IExercise): Promise<IExercise> {

@@ -4,14 +4,14 @@ import { IExercise } from '../../models/exercise/IExercise';
 import { IExerciseRepository } from '../../repositories/exercise/IExerciseRepository';
 import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
 import { IExerciseService } from './IExerciseService';
-import { validateAcademy } from '../../shared/decorators/ValidateAcademy';
+import { ValidateAcademy } from '../../shared/decorators/ValidateAcademy';
 import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 
 
 export class ExerciseServiceImpl implements IExerciseService {
   constructor(private readonly exerciseRepository: IExerciseRepository) { }
 
-  @validateAcademy
+  @ValidateAcademy
   async getAll(req: AuthenticatedRequest): Promise<IExercise[]> {
     if (req.user?.isAdmin) {
       return this.exerciseRepository.getAll();
@@ -20,7 +20,7 @@ export class ExerciseServiceImpl implements IExerciseService {
     return this.exerciseRepository.getAll(req.validatedAcademyId);
   }
 
-  @validateAcademy
+  @ValidateAcademy
   async getById(req: AuthenticatedRequest): Promise<IExercise | null> {
     const id = req.params.id;
     let exercise: IExercise | null = null;
@@ -38,21 +38,21 @@ export class ExerciseServiceImpl implements IExerciseService {
     return exercise;
   }
 
-  @validateAcademy
+  @ValidateAcademy
   async create(req: AuthenticatedRequest<IExercise>): Promise<IExercise> {
     const exercise = req.body;
 
     return this.exerciseRepository.create(exercise);
   }
 
-  @validateAcademy
+  @ValidateAcademy
   async update(req: AuthenticatedRequest<IExercise>): Promise<IExercise | null> {
     const exercise = req.body;
 
     return this.exerciseRepository.update(exercise.id, exercise);
   }
   
-  @validateAcademy
+  @ValidateAcademy
   async delete(req: AuthenticatedRequest): Promise<void | null> {
     const id = req.params.id;
    
