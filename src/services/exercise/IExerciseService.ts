@@ -1,4 +1,4 @@
-import { AuthenticatedRequest } from 'interfaces/AuthenticatedRequest';
+import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 import { IExercise } from '../../models/exercise/IExercise';
 
 export interface IExerciseService {

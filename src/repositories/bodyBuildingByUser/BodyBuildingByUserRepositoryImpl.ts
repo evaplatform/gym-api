@@ -1,8 +1,10 @@
 // src/repositories/UserRepository.ts
-import { IBodyBuildingByUser } from 'bodyBuildingByUser/IBodyBuildingByUser';
+
+import { IBodyBuildingByUser } from '@/models/bodyBuildingByUser/IBodyBuildingByUser';
 import { IdType } from '../../shared/types/IdType';
 import { IBodyBuildingByUserRepository } from './IBodyBuildingByUserRepository';
-import { BodyBuildingByUserModel } from 'bodyBuildingByUser/mongo-schema';
+import { BodyBuildingByUserModel } from '@/models/bodyBuildingByUser/mongo-schema';
+
 
 
 export class BodyBuildingByUserRepositoryImpl implements IBodyBuildingByUserRepository {

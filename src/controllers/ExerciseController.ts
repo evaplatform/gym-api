@@ -1,12 +1,13 @@
-import { Response } from 'express-serve-static-core';
+import { Response } from 'express';
 import { CatchErrors } from '../shared/decorators/CatchErrors';
 import { Authenticate } from '../shared/decorators/Authenticate';
 import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
 import { ExerciseRepositoryImpl } from '../repositories/exercise/ExerciseRepositoryImpl';
 import { ExerciseServiceImpl } from '../services/exercise/ExerciseServiceImpl';
 import { AcademyRepositoryImpl } from '../repositories/academy/AcademyRepositoryImpl';
-import { AuthenticatedRequest } from 'interfaces/AuthenticatedRequest';
-import { IExercise } from 'exercise/IExercise';
+import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
+import { IExercise } from '@/models/exercise/IExercise';
+
 
 const exerciseService = new ExerciseServiceImpl(new ExerciseRepositoryImpl());
 

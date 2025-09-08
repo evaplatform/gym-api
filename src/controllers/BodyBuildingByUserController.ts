@@ -1,11 +1,12 @@
-import {  Response } from 'express-serve-static-core';
+import {  Response } from 'express';
 import { CatchErrors } from '../shared/decorators/CatchErrors';
 import { Authenticate } from '../shared/decorators/Authenticate';
 import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
-import { AuthenticatedRequest } from 'interfaces/AuthenticatedRequest';
-import { IBodyBuildingByUser } from 'bodyBuildingByUser/IBodyBuildingByUser';
-import { BodyBuildingByUserRepositoryImpl } from 'bodyBuildingByUser/BodyBuildingByUserRepositoryImpl';
-import { BodyBuildingByUserServiceImpl } from 'bodyBuildingByUser/BodyBuildingByUserServiceImpl';
+import { IBodyBuildingByUser } from '@/models/bodyBuildingByUser/IBodyBuildingByUser';
+
+import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
+import { BodyBuildingByUserServiceImpl } from '@/services/bodyBuildingByUser/BodyBuildingByUserServiceImpl';
+import { BodyBuildingByUserRepositoryImpl } from '@/repositories/bodyBuildingByUser/BodyBuildingByUserRepositoryImpl';
 
 
 const bodyBuildingByUserService = new BodyBuildingByUserServiceImpl(new BodyBuildingByUserRepositoryImpl());

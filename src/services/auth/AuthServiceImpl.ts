@@ -11,7 +11,7 @@ import { IGoogleTokens } from '../../shared/interfaces/IGoogleTokens';
 import { log } from '../../shared/utils/log';
 import { IGoogleUserInfo } from '../../shared/interfaces/IGoogleUserInfo';
 import { UserWithToken } from '../../shared/types/AuthResponse';
-import { AuthenticatedRequest } from 'interfaces/AuthenticatedRequest';
+import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 

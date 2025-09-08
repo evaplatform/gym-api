@@ -1,4 +1,5 @@
-import { AuthenticatedRequest } from 'interfaces/AuthenticatedRequest';
+
+import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 import { AppError } from '../../errors/AppError';
 import { IBodyBuildingByUser } from '../../models/bodyBuildingByUser/IBodyBuildingByUser';
 import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
@@ -54,18 +55,18 @@ export class BodyBuildingByUserServiceImpl implements IBodyBuildingByUserService
 
     const academyId = (bodyBuildingByUser?.academyId?.toString() || '');
 
-    const academy = await this.academyRepository.getById(academyId);
+    // const academy = await this.academyRepository.getById(academyId);
 
-    if (!bodyBuildingByUser) {
-      throw new AppError('Invalid exercise data', HttpStatusCodeEnum.BAD_REQUEST);
-    }
+    // if (!bodyBuildingByUser) {
+    //   throw new AppError('Invalid exercise data', HttpStatusCodeEnum.BAD_REQUEST);
+    // }
 
-    const exerciseWithAcademy: IBodyBuildingByUser = {
-      ...bodyBuildingByUser,
-      name: bodyBuildingByUser.name
-    };
+    // const exerciseWithAcademy: IBodyBuildingByUser = {
+    //   ...bodyBuildingByUser,
+    //   name: bodyBuildingByUser.name
+    // };
 
-    return exerciseWithAcademy;
+    return bodyBuildingByUser;
   }
 
   async delete(req: AuthenticatedRequest): Promise<void | null> {

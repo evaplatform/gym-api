@@ -1,4 +1,4 @@
-import { AuthenticatedRequest } from 'interfaces/AuthenticatedRequest';
+import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 import { IUser } from '../../models/user/IUser';
 import { UserWithToken } from '../../shared/types/AuthResponse';
 

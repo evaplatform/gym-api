@@ -1,7 +1,7 @@
 import express from 'express';
 import { BodyBuildingByUserController } from '../controllers/BodyBuildingByUserController';
-import { AuthenticatedRequest } from 'interfaces/AuthenticatedRequest';
-import { IBodyBuildingByUser } from 'bodyBuildingByUser/IBodyBuildingByUser';
+import { IBodyBuildingByUser } from '@/models/bodyBuildingByUser/IBodyBuildingByUser';
+import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 
 
 const router = express.Router();

@@ -1,4 +1,4 @@
-import { AuthenticatedRequest } from 'interfaces/AuthenticatedRequest';
+import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 import { IBodyBuildingByUser } from '../../models/bodyBuildingByUser/IBodyBuildingByUser';
 
 export interface IBodyBuildingByUserService {

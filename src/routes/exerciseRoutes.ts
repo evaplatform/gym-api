@@ -1,7 +1,7 @@
 import express from 'express';
 import { ExerciseController } from '../controllers/ExerciseController';
-import { AuthenticatedRequest } from 'interfaces/AuthenticatedRequest';
-import { IExercise } from 'exercise/IExercise';
+import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
+import { IExercise } from '@/models/exercise/IExercise';
 
 
 const router = express.Router();

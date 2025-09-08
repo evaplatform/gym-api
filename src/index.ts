@@ -10,12 +10,13 @@ import academyRoutes from './routes/academyRoutes';
 import { MongooseClient } from './database/mongooseClient';
 import authRoutes from './routes/authRoutes';
 import groupRoutes from './routes/groupRoutes';
-import { HttpStatusCodeEnum } from './shared/enums/HttpStatusCodeEnum';
 import exerciseRoutes from './routes/exerciseRoutes';
 import exerciseBlockRoutes from './routes/exerciseBlockRoutes';
 import paymentInfoRoutes from './routes/paymentInfoRoutes';
 import bodyBuildingByUserRoutes from './routes/bodyBuildingByUserRoutes';
 import { errorHandler } from './middlewares/error.middleware';
+import { HttpStatusCodeEnum } from './shared/enums/HttpStatusCodeEnum';
+
 
 const main = async () => {
   const app = express();

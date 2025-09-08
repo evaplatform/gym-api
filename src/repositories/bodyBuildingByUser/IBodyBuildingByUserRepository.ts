@@ -1,4 +1,4 @@
-import { IBodyBuildingByUser } from 'bodyBuildingByUser/IBodyBuildingByUser';
+import { IBodyBuildingByUser } from '@/models/bodyBuildingByUser/IBodyBuildingByUser';
 import { IdType } from '../../shared/types/IdType';
 
 export interface IBodyBuildingByUserRepository {

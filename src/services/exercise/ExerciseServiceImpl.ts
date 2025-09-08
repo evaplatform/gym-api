@@ -1,11 +1,12 @@
-import { AuthenticatedRequest } from 'interfaces/AuthenticatedRequest';
+
 import { AppError } from '../../errors/AppError';
 import { IExercise } from '../../models/exercise/IExercise';
 import { IAcademyRepository } from '../../repositories/academy/IAcademyRepository';
 import { IExerciseRepository } from '../../repositories/exercise/IExerciseRepository';
 import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
 import { IExerciseService } from './IExerciseService';
-import { validateAcademy } from 'decorators/ValidateAcademy';
+import { validateAcademy } from '../../shared/decorators/ValidateAcademy';
+import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 
 
 export class ExerciseServiceImpl implements IExerciseService {

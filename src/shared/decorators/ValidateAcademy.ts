@@ -1,6 +1,7 @@
-import { HttpStatusCodeEnum } from "enums/HttpStatusCodeEnum";
-import { AppError } from "errors/AppError";
-import { AuthenticatedRequest } from "interfaces/AuthenticatedRequest";
+import { HttpStatusCodeEnum } from "../enums/HttpStatusCodeEnum";
+import { AppError } from "../../errors/AppError";
+import { AuthenticatedRequest } from "../interfaces/AuthenticatedRequest";
+
 
 export function validateAcademy(target: any, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor {
     const originalMethod = descriptor.value;

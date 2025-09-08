@@ -12,34 +12,11 @@
       "./node_modules/@types",
       "src/types"
     ],
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "*": [
-        "node_modules/*",
-        "src/types/*",
-        "src/shared/*",
-        "src/models/*",
-        "src/repositories/*",
-        "src/services/*",
-        "src/*"
-      ],
-      "src/*": ["src/*"],
-      "src/shared/*": ["src/shared/*"],
-      "src/models/*": ["src/models/*"],
-      "src/repositories/*": ["src/repositories/*"],
-      "src/services/*": ["src/services/*"]
+      "@/*": ["src/*"]
     }
   },
-  "include": [
-    "src/**/*.ts",
-    "src/types/**/*.d.ts",
-    "src/shared/**/*.ts",
-    "src/models/**/*.ts" ,
-    "src/repositories/**/*.ts",
-    "src/services/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }

@@ -4,7 +4,8 @@ import { Authenticate } from '../shared/decorators/Authenticate';
 import { AuthServiceImpl } from '../services/auth/AuthServiceImpl';
 import { UserRepositoryImpl } from '../repositories/user/UserRepositoryImpl';
 import { log } from '../shared/utils/log';
-import { AuthenticatedRequest } from 'interfaces/AuthenticatedRequest';
+import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
+
 
 const authService = new AuthServiceImpl(new UserRepositoryImpl());
 
