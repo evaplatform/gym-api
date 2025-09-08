@@ -36,7 +36,7 @@ const main = async () => {
   app.use('/exercise', exerciseRoutes);
   app.use('/exercise-block', exerciseBlockRoutes);
   app.use('/payment-info', paymentInfoRoutes);
-  app.use('/body-building-by-user', bodyBuildingByUserRoutes);
+  app.use('/bodybuilding-by-user', bodyBuildingByUserRoutes);
 
   app.get('/ping', async (_, res) => {
     const dbState = mongoose.connection.readyState;

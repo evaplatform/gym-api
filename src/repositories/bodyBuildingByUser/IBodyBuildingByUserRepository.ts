@@ -2,9 +2,9 @@ import { IBodyBuildingByUser } from '@/models/bodyBuildingByUser/IBodyBuildingBy
 import { IdType } from '../../shared/types/IdType';
 
 export interface IBodyBuildingByUserRepository {
-  getById(id: string, academyId?: string): Promise<IBodyBuildingByUser | null>;
-  getAllFromUser(userId: IdType): Promise<IBodyBuildingByUser[]>;
-  create(user: IBodyBuildingByUser): Promise<IBodyBuildingByUser>;
-  update(id: string, user: Partial<IBodyBuildingByUser>): Promise<IBodyBuildingByUser | null>;
-  delete(id: string): Promise<void | null>;
+  getById(id: IdType, academyId?: IdType): Promise<IBodyBuildingByUser | null>;
+  getAll(academyId?: IdType): Promise<IBodyBuildingByUser[]>;
+  create(bodyBuildingByUser: IBodyBuildingByUser): Promise<IBodyBuildingByUser>;
+  update(id: IdType, bodyBuildingByUser: Partial<IBodyBuildingByUser>): Promise<IBodyBuildingByUser | null>;
+  delete(id: IdType): Promise<void | null>;
 }

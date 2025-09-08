@@ -8,25 +8,36 @@ import { BodyBuildingByUserModel } from '@/models/bodyBuildingByUser/mongo-schem
 
 
 export class BodyBuildingByUserRepositoryImpl implements IBodyBuildingByUserRepository {
-    async update(id: string, user: Partial<IBodyBuildingByUser>): Promise<IBodyBuildingByUser | null> {
-        return BodyBuildingByUserModel.findByIdAndUpdate(id, { $set: user }, { new: true });
+    async update(id: IdType, bodyBuildingExercise: Partial<IBodyBuildingByUser>): Promise<IBodyBuildingByUser | null> {
+        const updated = await BodyBuildingByUserModel.findByIdAndUpdate(
+            id,
+            { $set: bodyBuildingExercise },
+            { new: true }
+        ).exec();
+
+        return updated ? updated.toJSON() : null;
     }
 
-    async getById(id: string, academyId?: string): Promise<IBodyBuildingByUser | null> {
+
+    async getById(id: IdType, academyId?: IdType): Promise<IBodyBuildingByUser | null> {
+        const filter = academyId ? { _id: id, academyId } : { _id: id };
+        const exercise = await BodyBuildingByUserModel.findOne(filter).exec();
+
+        return exercise ? exercise.toJSON() : null;
+    }
+
+    async getAll(academyId?: IdType): Promise<IBodyBuildingByUser[]> {
         const filter = academyId ? { academyId } : {};
-        return BodyBuildingByUserModel.findOne({ _id: id, ...filter }).lean();
-    }
+        const exercises = await BodyBuildingByUserModel.find(filter).exec();
 
-    async getAllFromUser(userId?: IdType): Promise<IBodyBuildingByUser[]> {
-        const filter = userId ? { userId } : {};
-        return BodyBuildingByUserModel.find(filter).lean();
+        return exercises.map(exercise => exercise.toJSON());
     }
 
     async create(exercise: IBodyBuildingByUser): Promise<IBodyBuildingByUser> {
         return (await BodyBuildingByUserModel.create(exercise)).toObject();
     }
 
-    async delete(id: string): Promise<void | null> {
+    async delete(id: IdType): Promise<void | null> {
         return BodyBuildingByUserModel.findByIdAndDelete(id);
     }
 }

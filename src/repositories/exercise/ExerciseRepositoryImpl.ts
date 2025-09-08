@@ -4,7 +4,7 @@ import { IdType } from '../../shared/types/IdType';
 import { IExerciseRepository } from './IExerciseRepository';
 
 export class ExerciseRepositoryImpl implements IExerciseRepository {
-    async update(id: string, exercise: Partial<IExercise>): Promise<IExercise | null> {
+    async update(id: IdType, exercise: Partial<IExercise>): Promise<IExercise | null> {
         const updated = await ExerciseModel.findByIdAndUpdate(
             id, 
             { $set: exercise }, 
@@ -14,7 +14,7 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
         return updated ? updated.toJSON() : null;
     }
 
-    async getById(id: string, academyId?: string): Promise<IExercise | null> {
+    async getById(id: IdType, academyId?: IdType): Promise<IExercise | null> {
         const filter = academyId ? { _id: id, academyId } : { _id: id };
         const exercise = await ExerciseModel.findOne(filter).exec();
         
@@ -33,7 +33,7 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
         return created.toJSON();
     }
 
-    async delete(id: string): Promise<void | null> {
+    async delete(id: IdType): Promise<void | null> {
         await ExerciseModel.findByIdAndDelete(id);
     }
 }

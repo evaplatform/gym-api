@@ -14,8 +14,8 @@ const bodyBuildingByUserService = new BodyBuildingByUserServiceImpl(new BodyBuil
 export class BodyBuildingByUserController {
     @CatchErrors
     @Authenticate
-    static async getAll(req: AuthenticatedRequest<IBodyBuildingByUser[]>, res: Response) {
-        const bodyBuildingByUser = await bodyBuildingByUserService.getAllFromUser(req);
+    static async getAll(req: AuthenticatedRequest, res: Response) {
+        const bodyBuildingByUser = await bodyBuildingByUserService.getAll(req);
         return res.json(bodyBuildingByUser);
     }
 

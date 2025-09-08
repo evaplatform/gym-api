@@ -4,7 +4,7 @@ import { ExerciseBlockModel } from '../../models/exerciseBlock/mongo-schema';
 import { IExerciseBlockRepository } from './IExerciseBlockRepository';
 
 export class ExerciseBlockRepositoryImpl implements IExerciseBlockRepository {
-    async update(id: string, exercise: Partial<IExerciseBlock>): Promise<IExerciseBlock | null> {
+    async update(id: IdType, exercise: Partial<IExerciseBlock>): Promise<IExerciseBlock | null> {
         const updated = await ExerciseBlockModel.findByIdAndUpdate(
             id,
             { $set: exercise },
@@ -14,7 +14,7 @@ export class ExerciseBlockRepositoryImpl implements IExerciseBlockRepository {
         return updated ? updated.toJSON() : null;
     }
 
-    async getById(id: string, academyId?: string): Promise<IExerciseBlock | null> {
+    async getById(id: IdType, academyId?: IdType): Promise<IExerciseBlock | null> {
         const filter = academyId ? { _id: id, academyId } : { _id: id };
         const exercise = await ExerciseBlockModel.findOne(filter).exec();
 
@@ -33,7 +33,7 @@ export class ExerciseBlockRepositoryImpl implements IExerciseBlockRepository {
         return created.toJSON();
     }
 
-    async delete(id: string): Promise<void | null> {
+    async delete(id: IdType): Promise<void | null> {
         await ExerciseBlockModel.findByIdAndDelete(id);
     }
 }

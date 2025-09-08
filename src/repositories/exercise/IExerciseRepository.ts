@@ -4,7 +4,7 @@ import { IdType } from '../../shared/types/IdType';
 export interface IExerciseRepository {
   getById(id: IdType, academyId?: IdType): Promise<IExercise | null>;
   getAll(academyId?: IdType): Promise<IExercise[]>;
-  create(user: IExercise): Promise<IExercise>;
-  update(id: string, user: Partial<IExercise>): Promise<IExercise | null>;
-  delete(id: string): Promise<void | null>;
+  create(exercise: IExercise): Promise<IExercise>;
+  update(id: IdType, exercise: Partial<IExercise>): Promise<IExercise | null>;
+  delete(id: IdType): Promise<void | null>;
 }

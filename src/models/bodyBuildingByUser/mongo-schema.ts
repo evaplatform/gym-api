@@ -4,17 +4,11 @@ import { MONGO_DEFAULT_PROPERTIES } from '../../shared/constants/mongoDefaultPro
 
 export const BodyBuildingByUserSchema = new mongoose.Schema<IBodyBuildingByUser>(
   {
-    exerciseId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Exercise',
-      required: true,
-      description: 'Unique identifier for the exercise',
-      maxlength: 50
-    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
+      unique: true,
       description: 'Unique identifier for the exercise',
       maxlength: 50
     },
@@ -26,6 +20,13 @@ export const BodyBuildingByUserSchema = new mongoose.Schema<IBodyBuildingByUser>
     },
     plan: [
       {
+        exerciseId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Exercise',
+          required: true,
+          description: 'Unique identifier for the exercise',
+          maxlength: 50
+        },
         clientWeight: {
           type: Number,
           required: true,

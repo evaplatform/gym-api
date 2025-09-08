@@ -40,7 +40,7 @@ export class UserRepositoryImpl implements IUserRepository {
     return created.toJSON();
   }
 
-  async delete(id: string): Promise<void | null> {
+  async delete(id: IdType): Promise<void | null> {
     return UserModel.findByIdAndDelete(id);
   }
 }
