@@ -6,8 +6,8 @@ import { asyncRoute } from '@/shared/utils/asyncRoute';
 const router = express.Router();
 
 // Rotas simplificadas com o wrapper
-router.get('/', asyncRoute<IExercise[]>(ExerciseController.getAll));
-router.get('/:id', asyncRoute<IExercise>(ExerciseController.getById));
+router.get('/', asyncRoute<void>(ExerciseController.getAll));
+router.get('/:id', asyncRoute<void>(ExerciseController.getById));
 router.post('/', asyncRoute<IExercise>(ExerciseController.create));
 router.patch('/', asyncRoute<IExercise>(ExerciseController.update));
 router.delete('/:id', asyncRoute<IExercise>(ExerciseController.delete));

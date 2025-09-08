@@ -2,7 +2,7 @@ import { IExercise } from '../../models/exercise/IExercise';
 import { IdType } from '../../shared/types/IdType';
 
 export interface IExerciseRepository {
-  getById(id: string, academyId?: string): Promise<IExercise | null>;
+  getById(id: IdType, academyId?: IdType): Promise<IExercise | null>;
   getAll(academyId?: IdType): Promise<IExercise[]>;
   create(user: IExercise): Promise<IExercise>;
   update(id: string, user: Partial<IExercise>): Promise<IExercise | null>;

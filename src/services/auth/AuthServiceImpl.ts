@@ -1,4 +1,3 @@
-import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { AppError } from '../../errors/AppError';
 import { IUser } from '../../models/user/IUser';
@@ -9,12 +8,10 @@ import { OAuth2Client } from 'google-auth-library';
 import { getTokensFromAuthCode } from '../../shared/utils/getTokensFromAuthCode';
 import { IGoogleTokens } from '../../shared/interfaces/IGoogleTokens';
 import { log } from '../../shared/utils/log';
-import { IGoogleUserInfo } from '../../shared/interfaces/IGoogleUserInfo';
 import { UserWithToken } from '../../shared/types/AuthResponse';
 import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
 
 type SigningRequestType = UserWithToken & { authCode: string; }
 
@@ -22,11 +19,10 @@ export class AuthServiceImpl implements IAuthService {
 
   constructor(private readonly userRepository: IUserRepository) { }
 
-  // Aqui o parâmetro pode ser o token do Google recebido do front
+  // The parameter here can be the Google token received from the frontend
   async signinOrCreate(
     user: SigningRequestType
   ): Promise<UserWithToken & { googleTokens?: IGoogleTokens }> {
-
 
     log("Starting Google Signin/Signup process");
 
@@ -38,10 +34,10 @@ export class AuthServiceImpl implements IAuthService {
     } = {} as any;
 
     try {
-      // Chamada para a API do Google para validar o token e obter os dados do usuário.
+      // Call the Google API to validate the token and retrieve user data
       const ticket = await client.verifyIdToken({
-        idToken: user.token, // aqui é o id_token que você recebeu do front
-        audience: process.env.GOOGLE_CLIENT_ID, // verificação de segurança
+        idToken: user.token, // this is the id_token received from the frontend
+        audience: process.env.GOOGLE_CLIENT_ID, // security check
       });
 
       googleUserData = (ticket as any).payload;
@@ -50,10 +46,10 @@ export class AuthServiceImpl implements IAuthService {
       throw new AppError('Invalid Google token', HttpStatusCodeEnum.UNAUTHORIZED);
     }
 
-    // Verifica se o usuário existe no seu banco de dados
+    // Check if the user exists in your database
     let foundUser: IUser | null = await this.userRepository.getByEmail(googleUserData.email);
 
-    // Se o usuário ainda não existe, você pode criar um novo registro ou retornar erro.
+    // If the user does not exist, you can create a new record or return an error
     if (!foundUser) {
       const newUserData: IUser = { ...user }
 
@@ -65,12 +61,10 @@ export class AuthServiceImpl implements IAuthService {
         newUserData.academyId = user.academyId;
       }
 
-
-
       foundUser = await this.userRepository.create(newUserData);
     }
 
-    // Removendo a propriedade sensível "password" se existir
+    // Remove the sensitive "password" property if it exists
     try {
       const googleTokens = await getTokensFromAuthCode(user.authCode);
 
@@ -79,8 +73,7 @@ export class AuthServiceImpl implements IAuthService {
         await this.userRepository.update(foundUser.id, { profilePhoto: user.profilePhoto });
       }
 
-
-      // Gerar JWT com informações do usuário
+      // Generate JWT with user information
       const jwtPayload = {
         userId: foundUser.id,
         academyId: foundUser.academyId,
@@ -90,9 +83,8 @@ export class AuthServiceImpl implements IAuthService {
       const jwtToken = jwt.sign(
         jwtPayload,
         process.env.JWT_SECRET as string,
-        { expiresIn: '24h', algorithm: 'HS256' } // Você pode ajustar o tempo de expiração
+        { expiresIn: '24h', algorithm: 'HS256' } // You can adjust the expiration time
       );
-
 
       const userWithToken: UserWithToken & { googleTokens?: IGoogleTokens } = {
         ...foundUser,
@@ -120,18 +112,18 @@ export class AuthServiceImpl implements IAuthService {
   }
 
   async signout(req: AuthenticatedRequest): Promise<void> {
-    // Neste cenário com OAuth, para o logout você pode simplesmente apagar o token no front,
-    // ou, se necessário, revogar o token no Google (embora isso geralmente não seja obrigatório).
-    // Essa função pode ser mantida para compatibilidade ou para realizar ações adicionais.
+    // In this OAuth scenario, for logout, you can simply delete the token on the frontend,
+    // or, if necessary, revoke the token on Google (though this is generally not required).
+    // This function can be kept for compatibility or to perform additional actions.
   }
 
-  async generateTestToken(req: any) {
-    // Verifique se está em ambiente de desenvolvimento
+  async generateTestToken(req: AuthenticatedRequest<{ userId: string; email: string; isAdmin: boolean }>) {
+    // Check if in development environment
     if (process.env.NODE_ENV !== 'development') {
       throw new AppError('This endpoint is only available in development mode', HttpStatusCodeEnum.FORBIDDEN);
     }
 
-    // Você pode permitir especificar o usuário pelo ID ou email
+    // You can allow specifying the user by ID or email
     const { userId, email, isAdmin = false } = req.body;
 
     let user: IUser | null = null;
@@ -148,7 +140,7 @@ export class AuthServiceImpl implements IAuthService {
       throw new AppError('User not found', HttpStatusCodeEnum.NOT_FOUND);
     }
 
-    // Gerar JWT com as informações do usuário
+    // Generate JWT with user information
     const jwtPayload = {
       userId: user.id,
       academyId: user.academyId,

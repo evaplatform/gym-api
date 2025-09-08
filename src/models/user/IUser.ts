@@ -1,3 +1,4 @@
+import { IdType } from '@/shared/types/IdType';
 import { IDefaultEntityProperties } from '../../shared/interfaces/IDefaulEntityProperties';
 
 export interface IUser extends IDefaultEntityProperties {
@@ -8,7 +9,7 @@ export interface IUser extends IDefaultEntityProperties {
   phoneNumber?: string; // unique
   groupId?: string; // point to group collection
   cpf?: string; // unique
-  academyId?: string;
+  academyId: IdType;
 }
 
 

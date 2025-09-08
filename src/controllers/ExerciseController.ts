@@ -13,7 +13,7 @@ const exerciseService = new ExerciseServiceImpl(new ExerciseRepositoryImpl());
 export class ExerciseController {
     @CatchErrors
     @Authenticate
-    static async getAll(req: AuthenticatedRequest<IExercise[]>, res: Response) {
+    static async getAll(req: AuthenticatedRequest, res: Response) {
         const exercises = await exerciseService.getAll(req);
         return res.json(exercises);
     }

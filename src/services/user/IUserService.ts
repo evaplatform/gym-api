@@ -1,10 +1,10 @@
+import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 import { IUser } from '../../models/user/IUser';
-import { UserWithToken } from '../../shared/types/AuthResponse';
 
 export interface IUserService {
-  getUsers(): Promise<IUser[]>;
-  createUser(user: UserWithToken): Promise<IUser>;
-  updateUser(body: Partial<IUser>): Promise<IUser | null>;
-  delete(id: string): Promise<void | null>;
-  getUserById(id: string): Promise<IUser | null>;
+  getAll(req: AuthenticatedRequest): Promise<IUser[]>;
+  create(user: AuthenticatedRequest): Promise<IUser>;
+  update(req: AuthenticatedRequest): Promise<IUser | null>;
+  delete(req: AuthenticatedRequest): Promise<void | null>;
+  getById(req: AuthenticatedRequest): Promise<IUser | null>;
 }

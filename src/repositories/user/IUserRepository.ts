@@ -1,8 +1,9 @@
+import { IdType } from '@/shared/types/IdType';
 import { IUser } from '../../models/user/IUser';
 
 export interface IUserRepository {
-  getById(id: string): Promise<IUser | null>;
-  getAll(): Promise<IUser[]>;
+  getById(id: IdType, academyId?: IdType): Promise<IUser | null>;
+  getAll(academyId?: IdType): Promise<IUser[]>;
   create(user: Omit<IUser, 'id' | 'createdAt'>): Promise<IUser>;
   update(id: string, user: Partial<IUser>): Promise<IUser | null>;
   getByEmail(email: string): Promise<IUser | null>;
