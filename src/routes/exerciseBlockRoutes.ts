@@ -1,13 +1,15 @@
 import express from 'express';
-import { ExerciseBlockController } from '../controllers/ExerciseBlockController';
-
+import { asyncRoute } from '@/shared/utils/asyncRoute';
+import { IExerciseBlock } from '@/models/exerciseBlock/IExerciseBlock';
+import { ExerciseBlockController } from '@/controllers/ExerciseBlockController';
 
 const router = express.Router();
 
-router.get('/', ExerciseBlockController.getAll);
-router.get('/:id', ExerciseBlockController.getById);
-router.post('/', ExerciseBlockController.create);
-router.patch('/', ExerciseBlockController.update);
-router.delete('/:id', ExerciseBlockController.delete);
+// Rotas simplificadas com o wrapper
+router.get('/', asyncRoute<IExerciseBlock[]>(ExerciseBlockController.getAll));
+router.get('/:id', asyncRoute<IExerciseBlock>(ExerciseBlockController.getById));
+router.post('/', asyncRoute<IExerciseBlock>(ExerciseBlockController.create));
+router.patch('/', asyncRoute<IExerciseBlock>(ExerciseBlockController.update));
+router.delete('/:id', asyncRoute<IExerciseBlock>(ExerciseBlockController.delete));
 
 export default router;

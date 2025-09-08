@@ -1,18 +1,15 @@
 import express from 'express';
 import { ExerciseController } from '../controllers/ExerciseController';
-import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 import { IExercise } from '@/models/exercise/IExercise';
-
+import { asyncRoute } from '@/shared/utils/asyncRoute';
 
 const router = express.Router();
 
-
-router.get('/', (req, res, next) => {
-    ExerciseController.getAll(req as unknown as AuthenticatedRequest<IExercise[]>, res).catch(next);
-});
-router.get('/:id', (req, res, next) => ExerciseController.getById(req as unknown as AuthenticatedRequest<IExercise>, res).catch(next));
-router.post('/', (req, res, next) => ExerciseController.create(req as unknown as AuthenticatedRequest<IExercise>, res).catch(next));
-router.patch('/', (req, res, next) => ExerciseController.update(req as unknown as AuthenticatedRequest<IExercise>, res).catch(next));
-router.delete('/:id', (req, res, next) => ExerciseController.delete(req as unknown as AuthenticatedRequest<IExercise>, res).catch(next));
+// Rotas simplificadas com o wrapper
+router.get('/', asyncRoute<IExercise[]>(ExerciseController.getAll));
+router.get('/:id', asyncRoute<IExercise>(ExerciseController.getById));
+router.post('/', asyncRoute<IExercise>(ExerciseController.create));
+router.patch('/', asyncRoute<IExercise>(ExerciseController.update));
+router.delete('/:id', asyncRoute<IExercise>(ExerciseController.delete));
 
 export default router;
