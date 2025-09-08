@@ -4,19 +4,25 @@ import { MONGO_DEFAULT_PROPERTIES } from '../../shared/constants/mongoDefaultPro
 
 const GroupSchema = new mongoose.Schema<IGroup>(
   {
-    name: { 
-      type: String, 
-      required: true, 
-      unique: false, 
-      maxlength: 100, 
-      description: 'The name of the group, must be unique and up to 100 characters long.' 
+    name: {
+      type: String,
+      required: true,
+      unique: false,
+      maxlength: 100,
+      description: 'The name of the group, must be unique and up to 100 characters long.'
+    },
+    academyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Academy',
+      required: true,
+      description: 'The ID of the academy this group belongs to'
     },
     permissions: {
       drawerMenu: {
-        drawer: { 
-          type: Boolean, 
-          default: false, 
-          description: 'Indicates whether the drawer menu is accessible.' 
+        drawer: {
+          type: Boolean,
+          default: false,
+          description: 'Indicates whether the drawer menu is accessible.'
         },
       },
     },

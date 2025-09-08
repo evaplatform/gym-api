@@ -18,17 +18,25 @@
         "node_modules/*",
         "src/types/*",
         "src/shared/*",
-        "src/models/*"
+        "src/models/*",
+        "src/repositories/*",
+        "src/services/*",
+        "src/*"
       ],
+      "src/*": ["src/*"],
       "src/shared/*": ["src/shared/*"],
-      "src/models/*": ["src/models/*"]
+      "src/models/*": ["src/models/*"],
+      "src/repositories/*": ["src/repositories/*"],
+      "src/services/*": ["src/services/*"]
     }
   },
   "include": [
     "src/**/*.ts",
     "src/types/**/*.d.ts",
     "src/shared/**/*.ts",
-    "src/models/**/*.ts" 
+    "src/models/**/*.ts" ,
+    "src/repositories/**/*.ts",
+    "src/services/**/*.ts"
   ],
   "exclude": [
     "node_modules",

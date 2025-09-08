@@ -4,43 +4,50 @@ import { MONGO_DEFAULT_PROPERTIES } from '../../shared/constants/mongoDefaultPro
 
 export const BodyBuildingByUserSchema = new mongoose.Schema<IBodyBuildingByUser>(
   {
-    exerciseId: { 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: 'Exercise',  
-      required: true, 
-      description: 'Unique identifier for the exercise', 
-      maxlength: 50 
+    exerciseId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Exercise',
+      required: true,
+      description: 'Unique identifier for the exercise',
+      maxlength: 50
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+      description: 'Unique identifier for the exercise',
+      maxlength: 50
+    },
+    academyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Academy',
+      required: true,
+      description: 'The ID of the academy this group belongs to'
     },
     plan: [
       {
-        exerciseId: { 
-          type: String, 
-          required: true, 
-          description: 'Unique identifier for the exercise in the plan', 
-          maxlength: 50 
+        clientWeight: {
+          type: Number,
+          required: true,
+          description: 'Weight of the client for the exercise',
+          maxlength: 10
         },
-        clientWeight: { 
-          type: Number, 
-          required: true, 
-          description: 'Weight of the client for the exercise', 
-          maxlength: 10 
+        repetitions: {
+          type: Number,
+          required: true,
+          description: 'Number of repetitions for the exercise',
+          maxlength: 10
         },
-        repetitions: { 
-          type: Number, 
-          required: true, 
-          description: 'Number of repetitions for the exercise', 
-          maxlength: 10 
+        goal: {
+          type: String,
+          required: true,
+          description: 'Goal for the exercise',
+          maxlength: 100
         },
-        goal: { 
-          type: String, 
-          required: true, 
-          description: 'Goal for the exercise', 
-          maxlength: 100 
-        },
-        weekDays: [{ 
-          type: String, 
-          description: 'Days of the week for the exercise', 
-          maxlength: 20 
+        weekDays: [{
+          type: String,
+          description: 'Days of the week for the exercise',
+          maxlength: 20
         }],
       },
     ],
@@ -48,4 +55,4 @@ export const BodyBuildingByUserSchema = new mongoose.Schema<IBodyBuildingByUser>
   { ...MONGO_DEFAULT_PROPERTIES }
 );
 
-// it does not have a mongoose model because it is not a collection
+export const BodyBuildingByUserModel = mongoose.model<IBodyBuildingByUser>('BodyBuildingByUser', BodyBuildingByUserSchema);

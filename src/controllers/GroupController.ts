@@ -1,7 +1,7 @@
 // src/controllers/GroupController.ts
 import { Request, Response } from 'express';
-import { CatchErrors } from '../shared/decorators/catch-errors';
-import { Authenticate } from '../shared/decorators/authenticate';
+import { CatchErrors } from '../shared/decorators/CatchErrors';
+import { Authenticate } from '../shared/decorators/Authenticate';
 import { GroupServiceImpl } from '../services/group/GroupServiceImpl';
 import { GroupRepositoryImpl } from '../repositories/group/GroupRepositoryImpl';
 

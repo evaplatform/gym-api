@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { AcademyServiceImpl } from '../services/academy/AcademyServiceImpl';
 import { AcademyRepositoryImpl } from '../repositories/academy/AcademyRepositoryImpl';
-import { CatchErrors } from '../shared/decorators/catch-errors';
-import { Authenticate } from '../shared/decorators/authenticate';
+import { CatchErrors } from '../shared/decorators/CatchErrors';
+import { Authenticate } from '../shared/decorators/Authenticate';
 import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
 
 const academyService = new AcademyServiceImpl(new AcademyRepositoryImpl());

@@ -1,6 +1,6 @@
-import {  Response } from 'express-serve-static-core';
-import { CatchErrors } from '../shared/decorators/catch-errors';
-import { Authenticate } from '../shared/decorators/authenticate';
+import { Response } from 'express-serve-static-core';
+import { CatchErrors } from '../shared/decorators/CatchErrors';
+import { Authenticate } from '../shared/decorators/Authenticate';
 import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
 import { ExerciseRepositoryImpl } from '../repositories/exercise/ExerciseRepositoryImpl';
 import { ExerciseServiceImpl } from '../services/exercise/ExerciseServiceImpl';
@@ -8,7 +8,7 @@ import { AcademyRepositoryImpl } from '../repositories/academy/AcademyRepository
 import { AuthenticatedRequest } from 'interfaces/AuthenticatedRequest';
 import { IExercise } from 'exercise/IExercise';
 
-const exerciseService = new ExerciseServiceImpl(new ExerciseRepositoryImpl(), new AcademyRepositoryImpl());
+const exerciseService = new ExerciseServiceImpl(new ExerciseRepositoryImpl());
 
 export class ExerciseController {
     @CatchErrors

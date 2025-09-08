@@ -20,7 +20,7 @@ const ExerciseBlockSchema = new mongoose.Schema<IExerciseBlock>(
     academyId: { 
       type: mongoose.Schema.Types.ObjectId, 
       ref: 'Academy', 
-      required: false, 
+      required: true, 
       description: 'The ID of the associated academy.' 
     },
     exerciseType: { 

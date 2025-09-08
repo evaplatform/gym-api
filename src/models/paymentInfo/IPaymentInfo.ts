@@ -1,7 +1,8 @@
+import { IdType } from "types/IdType";
 import { IDefaultEntityProperties } from "../../shared/interfaces/IDefaulEntityProperties";
 
 export interface IPaymentInfo extends IDefaultEntityProperties {
-  academyId?: string; // point to academy collection
+  academyId: IdType; // point to academy collection
   userId?: string;
   id: string;
   monthlyFee: number;

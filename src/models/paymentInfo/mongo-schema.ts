@@ -6,7 +6,7 @@ export const paymentInfoSchema = new mongoose.Schema<IPaymentInfo>({
   academyId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Academy', 
-    required: false, 
+    required: true, 
     description: 'Reference to the academy associated with the payment info' 
   },
   userId: { 

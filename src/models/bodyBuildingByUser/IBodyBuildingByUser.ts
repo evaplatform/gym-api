@@ -4,9 +4,10 @@ import { IdType } from '../../shared/types/IdType';
 
 export interface IBodyBuildingByUser extends IDefaultEntityProperties {
   exerciseId: IdType; // point to exercise collection
+  userId: IdType; // point to user collection
+  academyId: IdType; // point to academy collection
   plan: [
     {
-      exerciseId: string; // point to exercise collection
       clientWeight: number;
       repetitions: number;
       goal: string;

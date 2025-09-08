@@ -1,4 +1,5 @@
 export interface AuthenticatedRequest<T = unknown> extends Omit<Request, 'body'> {
+  validatedAcademyId?: string;
   user?: {
     id: string;
     academyId: string | null;

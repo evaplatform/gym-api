@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { CatchErrors } from '../shared/decorators/catch-errors';
-import { Authenticate } from '../shared/decorators/authenticate';
+import { CatchErrors } from '../shared/decorators/CatchErrors';
+import { Authenticate } from '../shared/decorators/Authenticate';
 import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
 import { ExerciseBlockRepositoryImpl } from '../repositories/exerciseBlock/ExerciseBlockRepositoryImpl';
 import { ExerciseBlockServiceImpl } from '../services/exerciseBlock/ExerciseBlockServiceImpl';

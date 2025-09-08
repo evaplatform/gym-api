@@ -55,6 +55,7 @@ const UserSchema = new mongoose.Schema<IUser>(
     academyId: { 
       type: mongoose.Schema.Types.ObjectId, 
       ref: 'Academy', 
+      required: true,
       default: null, 
       description: 'The ID of the academy the user is associated with, if any.' 
     },

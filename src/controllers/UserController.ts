@@ -2,8 +2,8 @@
 import { Request, Response } from 'express';
 import { UserServiceImpl } from '../services/user/UserServiceImpl';
 import { UserRepositoryImpl } from '../repositories/user/UserRepositoryImpl';
-import { CatchErrors } from '../shared/decorators/catch-errors';
-import { Authenticate } from '../shared/decorators/authenticate';
+import { CatchErrors } from '../shared/decorators/CatchErrors';
+import { Authenticate } from '../shared/decorators/Authenticate';
 import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
 
 const userService = new UserServiceImpl(new UserRepositoryImpl());

@@ -1,13 +1,9 @@
 import { Request, Response } from 'express';
-import { CatchErrors } from '../shared/decorators/catch-errors';
-import { Authenticate } from '../shared/decorators/authenticate';
+import { CatchErrors } from '../shared/decorators/CatchErrors';
+import { Authenticate } from '../shared/decorators/Authenticate';
 import { AuthServiceImpl } from '../services/auth/AuthServiceImpl';
 import { UserRepositoryImpl } from '../repositories/user/UserRepositoryImpl';
 import { log } from '../shared/utils/log';
-import jwt from 'jsonwebtoken';
-import { AppError } from '../errors/AppError';
-import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
-import { IUser } from '../models/user/IUser';
 import { AuthenticatedRequest } from 'interfaces/AuthenticatedRequest';
 
 const authService = new AuthServiceImpl(new UserRepositoryImpl());

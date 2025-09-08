@@ -14,6 +14,7 @@ import { HttpStatusCodeEnum } from './shared/enums/HttpStatusCodeEnum';
 import exerciseRoutes from './routes/exerciseRoutes';
 import exerciseBlockRoutes from './routes/exerciseBlockRoutes';
 import paymentInfoRoutes from './routes/paymentInfoRoutes';
+import bodyBuildingByUserRoutes from './routes/bodyBuildingByUserRoutes';
 import { errorHandler } from './middlewares/error.middleware';
 
 const main = async () => {
@@ -33,6 +34,7 @@ const main = async () => {
   app.use('/exercise', exerciseRoutes);
   app.use('/exercise-block', exerciseBlockRoutes);
   app.use('/payment-info', paymentInfoRoutes);
+  app.use('/body-building-by-user', bodyBuildingByUserRoutes);
 
   app.get('/ping', async (_, res) => {
     const dbState = mongoose.connection.readyState;
