@@ -17,8 +17,9 @@ import bodyBuildingByUserRoutes from './routes/bodyBuildingByUserRoutes';
 import { errorHandler } from './middlewares/error.middleware';
 import { HttpStatusCodeEnum } from './shared/enums/HttpStatusCodeEnum';
 
-
 const main = async () => {
+
+
   const app = express();
 
   app.use(express.json());

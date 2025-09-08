@@ -2,11 +2,22 @@ import mongoose from "mongoose";
 
 export const MONGO_DEFAULT_PROPERTIES = {
     toJSON: {
-        virtuals: true, // include the virtuals (eg: id)
-        versionKey: false, // remove __v
-        transform: function (doc: mongoose.Document, ret: { [key: string]: any }) {
-            delete ret._id; // optional: remove _id if you only want id
-        },
+      virtuals: true,
+      versionKey: false,
+      transform: function (doc: mongoose.Document, ret: { [key: string]: any }) {
+        ret.id = ret._id.toString();  // Adicionar id explicitamente
+        delete ret._id;
+        delete ret.__v;
+      }
     },
-    timestamps: true, // Automatically add createdAt and updatedAt fields
-}
+    toObject: {  // Adicionar toObject também
+      virtuals: true,
+      versionKey: false,
+      transform: function (doc: mongoose.Document, ret: { [key: string]: any }) {
+        ret.id = ret._id.toString();
+        delete ret._id;
+        delete ret.__v;
+      }
+    },
+    timestamps: true
+  };
