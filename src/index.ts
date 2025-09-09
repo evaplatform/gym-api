@@ -2,57 +2,8 @@
 import { config } from 'dotenv';
 config();
 
-import express from 'express';
-import type { ErrorRequestHandler } from 'express';
-import mongoose from 'mongoose';
-import userRoutes from './routes/userRoutes';
-import academyRoutes from './routes/academyRoutes';
-import { MongooseClient } from './database/mongooseClient';
-import authRoutes from './routes/authRoutes';
-import groupRoutes from './routes/groupRoutes';
-import exerciseRoutes from './routes/exerciseRoutes';
-import exerciseBlockRoutes from './routes/exerciseBlockRoutes';
-import paymentInfoRoutes from './routes/paymentInfoRoutes';
-import bodyBuildingByUserRoutes from './routes/bodyBuildingByUserRoutes';
-import { errorHandler } from './middlewares/error.middleware';
-import { HttpStatusCodeEnum } from './shared/enums/HttpStatusCodeEnum';
+import app from './app';
 
-const main = async () => {
-  const app = express();
+const port = process.env.PROJECT_PORT || 3000;
 
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
-
-  const port = process.env.PROJECT_PORT || 3000;
-
-  await MongooseClient.connect();
-
-  app.use('/auth', authRoutes);
-  app.use('/user', userRoutes);
-  app.use('/academy', academyRoutes);
-  app.use('/group', groupRoutes);
-  app.use('/exercise', exerciseRoutes);
-  app.use('/exercise-block', exerciseBlockRoutes);
-  app.use('/payment-info', paymentInfoRoutes);
-  app.use('/bodybuilding-by-user', bodyBuildingByUserRoutes);
-
-  app.get('/ping', async (_, res) => {
-    const dbState = mongoose.connection.readyState;
-    if (dbState === 1) {
-      res.status(HttpStatusCodeEnum.OK).json({ message: 'pong 🏓', database: 'connected' });
-    } else {
-      res.status(HttpStatusCodeEnum.INTERNAL_SERVER_ERROR).json({
-        message: 'pong 🏓',
-        database: 'not connected',
-        state: dbState,
-      });
-    }
-  });
-
-  // middleware global de erros (último)
-  app.use(errorHandler as unknown as ErrorRequestHandler);
-
-  app.listen(port, () => console.log(`🚀 Server is running on port ${port}`));
-};
-
-main();
+app.listen(port, () => console.log(`🚀 Server is running on port ${port}`));
