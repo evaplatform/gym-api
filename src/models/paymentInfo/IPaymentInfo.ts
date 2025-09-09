@@ -1,4 +1,4 @@
-import { IdType } from "types/IdType";
+import { IdType } from "@/shared/types/IdType";
 import { IDefaultEntityProperties } from "../../shared/interfaces/IDefaulEntityProperties";
 
 export interface IPaymentInfo extends IDefaultEntityProperties {
