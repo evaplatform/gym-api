@@ -3,11 +3,7 @@
   "builds": [
     {
       "src": "src/index.ts",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["src/**/*"],
-        "buildCommand": "tsc && tsc-alias"
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
