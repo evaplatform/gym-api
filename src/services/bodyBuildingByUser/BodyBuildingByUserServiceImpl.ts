@@ -11,7 +11,6 @@ import { ValidateAcademy } from '@/shared/decorators/ValidateAcademy';
 export class BodyBuildingByUserServiceImpl implements IBodyBuildingByUserService {
   constructor(private readonly bodyBuildingByUserRepository: IBodyBuildingByUserRepository) { }
 
-
   @ValidateAcademy
   async getAll(req: AuthenticatedRequest): Promise<IBodyBuildingByUser[]> {
     if (req.user?.isAdmin) {

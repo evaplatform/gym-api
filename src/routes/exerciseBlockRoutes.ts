@@ -5,7 +5,6 @@ import { ExerciseBlockController } from '@/controllers/ExerciseBlockController';
 
 const router = express.Router();
 
-// Rotas simplificadas com o wrapper
 router.get('/', asyncRoute<void>(ExerciseBlockController.getAll));
 router.get('/:id', asyncRoute<void>(ExerciseBlockController.getById));
 router.post('/', asyncRoute<IExerciseBlock>(ExerciseBlockController.create));
