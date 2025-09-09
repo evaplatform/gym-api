@@ -7,7 +7,11 @@
     "start": "node dist/index.js",
     "build": "tsc --project tsconfig.json && tsc-alias",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "vercel-build": "tsc && tsc-alias"
+  },
+  "_moduleAliases": {
+    "@": "dist"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.782.0",

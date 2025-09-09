@@ -1,6 +1,14 @@
+// api/index.ts
+import 'module-alias/register';
 import { config } from 'dotenv';
 config();
 
-import expressApp from '../src/app'; // já exportado sem listen()
+// Configurar module-alias para resolver @/ imports
+import { addAliases } from 'module-alias';
+addAliases({
+  '@': __dirname + '/../src'
+});
 
-export default expressApp;
+import app from '../src/app';
+
+export default app;
