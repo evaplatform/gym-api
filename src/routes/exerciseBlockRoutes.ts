@@ -1,5 +1,5 @@
 import express from 'express';
-import { asyncRoute } from '@/shared/utils/asyncRoute';
+import { asyncRoute } from '../shared/utils/asyncRoute';
 import { IExerciseBlock } from '@/models/exerciseBlock/IExerciseBlock';
 import { ExerciseBlockController } from '@/controllers/ExerciseBlockController';
 
