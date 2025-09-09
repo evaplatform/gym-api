@@ -9,9 +9,6 @@
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
-  "_moduleAliases": {
-    "@": "dist"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -2,8 +2,6 @@
 import { config } from 'dotenv';
 config();
 
-import './config/aliases';
-
 import express from 'express';
 import type { ErrorRequestHandler } from 'express';
 import mongoose from 'mongoose';

@@ -1,5 +1,4 @@
 import 'module-alias/register';
-import './config/aliases';
 import { config } from 'dotenv';
 import express from 'express';
 import { MongooseClient } from './src/database/mongooseClient';
