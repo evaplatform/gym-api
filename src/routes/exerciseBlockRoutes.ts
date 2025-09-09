@@ -5,7 +5,7 @@ import { ExerciseBlockController } from '@/controllers/ExerciseBlockController';
 
 const router = express.Router();
 
-router.get('/', asyncRoute<void>(ExerciseBlockController.getAll));
+router.get('/', asyncRoute<void>(ExerciseBlockController.getAll));//
 router.get('/:id', asyncRoute<void>(ExerciseBlockController.getById));
 router.post('/', asyncRoute<IExerciseBlock>(ExerciseBlockController.create));
 router.patch('/', asyncRoute<IExerciseBlock>(ExerciseBlockController.update));
