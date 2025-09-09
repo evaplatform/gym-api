@@ -2,6 +2,8 @@
 import { config } from 'dotenv';
 config();
 
+import './config/aliases';
+
 import express from 'express';
 import type { ErrorRequestHandler } from 'express';
 import mongoose from 'mongoose';
@@ -18,8 +20,6 @@ import { errorHandler } from './middlewares/error.middleware';
 import { HttpStatusCodeEnum } from './shared/enums/HttpStatusCodeEnum';
 
 const main = async () => {
-
-
   const app = express();
 
   app.use(express.json());
