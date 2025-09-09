@@ -4,7 +4,7 @@ import { config } from 'dotenv';
 import express from 'express';
 import { MongooseClient } from './src/database/mongooseClient';
 const main = async () => {
-  config();
+  config();//
 
   const app = express();
 
