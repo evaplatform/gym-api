@@ -6,9 +6,9 @@ config();
 // Configurar module-alias para resolver @/ imports
 import { addAliases } from 'module-alias';
 addAliases({
-  '@': __dirname + '/../src'
+  '@': __dirname + '/../dist'
 });
 
-import app from '../src/app';
+import app from '../dist/app';
 
 export default app;

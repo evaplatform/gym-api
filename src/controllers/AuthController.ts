@@ -25,7 +25,7 @@ export class AuthController {
   }
 
   @CatchErrors
-  static async generateTestToken(req: Request, res: Response) {
+  static async generateTestToken(req: AuthenticatedRequest<{ userId: string; email: string; isAdmin: boolean }>, res: Response) {
     const response = await authService.generateTestToken(req);
 
     res.json(response);
