@@ -1,18 +1,14 @@
 {
   "name": "gym-api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
-    "start": "node build/index.js",
+    "start": "node dist/index.js",
     "build": "tsc --project tsconfig.json && tsc-alias",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.782.0",
     "axios": "^1.8.4",
