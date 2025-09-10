@@ -1,3 +1,4 @@
+import { BodyBuildingByUserModel } from '@/models/bodyBuildingByUser/mongo-schema';
 import { IExercise } from '../../models/exercise/IExercise';
 import { ExerciseModel } from '../../models/exercise/mongo-schema';
 import { IdType } from '../../shared/types/IdType';
@@ -35,5 +36,18 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
 
     async delete(id: IdType): Promise<void | null> {
         await ExerciseModel.findByIdAndDelete(id);
+    }
+
+    async getAllByUserId(userId: IdType, academyId?: IdType): Promise<IExercise[]> {
+        const filter = academyId ? { userId, academyId } : { userId };
+        const exercises = await ExerciseModel.find(filter).exec();
+
+        const bodyBuildingExercises = await BodyBuildingByUserModel.find(filter).exec();
+
+        const bodyBuildingExerciseIds = bodyBuildingExercises.flatMap(bbu => bbu.plan.map(p => p.exerciseId.toString()));
+
+        const filteredExercises = exercises.filter(exercise => !bodyBuildingExerciseIds.includes(exercise._id.toString()));
+
+        return filteredExercises.map(exercise => exercise.toJSON());
     }
 }

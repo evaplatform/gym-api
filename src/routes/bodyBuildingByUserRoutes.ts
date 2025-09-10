@@ -3,7 +3,6 @@ import { BodyBuildingByUserController } from '../controllers/BodyBuildingByUserC
 import { IBodyBuildingByUser } from '@/models/bodyBuildingByUser/IBodyBuildingByUser';
 import { asyncRoute } from '../shared/utils/asyncRoute';
 
-
 const router = express.Router();
 
 router.get('/', asyncRoute<void>(BodyBuildingByUserController.getAll));

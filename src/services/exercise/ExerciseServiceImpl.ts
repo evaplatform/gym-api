@@ -51,13 +51,19 @@ export class ExerciseServiceImpl implements IExerciseService {
 
     return this.exerciseRepository.update(exercise.id, exercise);
   }
-  
+
   @ValidateAcademy
   async delete(req: AuthenticatedRequest): Promise<void | null> {
     const id = req.params.id;
-   
+
     await this.getById(req);
 
     await this.exerciseRepository.delete(id);
+  }
+
+  @ValidateAcademy
+  async getAllByUserId(req: AuthenticatedRequest): Promise<IExercise[]> {
+    const userId = req.params.userId;
+    return this.exerciseRepository.getAllByUserId(userId, req.validatedAcademyId);
   }
 }
