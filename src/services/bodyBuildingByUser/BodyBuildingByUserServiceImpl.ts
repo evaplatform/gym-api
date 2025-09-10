@@ -6,6 +6,7 @@ import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
 import { IBodyBuildingByUserService } from './IBodyBuildingByUserService';
 import { IBodyBuildingByUserRepository } from 'src/repositories/bodyBuildingByUser/IBodyBuildingByUserRepository';
 import { ValidateAcademy } from '@/shared/decorators/ValidateAcademy';
+import { IBodyBuildingPlanByUser } from '@/shared/interfaces/IBodyBuildingPlanByUser';
 
 
 export class BodyBuildingByUserServiceImpl implements IBodyBuildingByUserService {
@@ -51,11 +52,38 @@ export class BodyBuildingByUserServiceImpl implements IBodyBuildingByUserService
     return bodyBuildingByUser;
   }
 
+  @ValidateAcademy
+  async getByUserId(req: AuthenticatedRequest): Promise<IBodyBuildingByUser | null> {
+    const userId = req.params.userId;
+
+    return this.bodyBuildingByUserRepository.getByUserId(userId, req.validatedAcademyId);
+  }
+
+  @ValidateAcademy
+  async getByUserAndExerciseId(req: AuthenticatedRequest): Promise<IBodyBuildingPlanByUser | null> {
+    const userId = req.params.userId;
+    const exerciseId = req.params.exerciseId;
+
+    let bodyBuildingPlanByUser: IBodyBuildingPlanByUser | null = null;
+
+    if (req.user?.isAdmin) {
+      bodyBuildingPlanByUser = await this.bodyBuildingByUserRepository.getByUserAndExerciseId(userId, exerciseId);
+    } else {
+      bodyBuildingPlanByUser = await this.bodyBuildingByUserRepository.getByUserAndExerciseId(userId, exerciseId, req.validatedAcademyId);
+    }
+
+    if (!bodyBuildingPlanByUser) {
+      throw new AppError('plan by user not found', HttpStatusCodeEnum.NOT_FOUND);
+    }
+
+    return bodyBuildingPlanByUser;
+  }
+
 
   @ValidateAcademy
   async delete(req: AuthenticatedRequest): Promise<void | null> {
     const id = req.params.id;
-   
+
     await this.getById(req);
 
     await this.bodyBuildingByUserRepository.delete(id);

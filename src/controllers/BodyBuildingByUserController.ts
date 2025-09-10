@@ -1,4 +1,4 @@
-import {  Response } from 'express';
+import { Response } from 'express';
 import { CatchErrors } from '../shared/decorators/CatchErrors';
 import { Authenticate } from '../shared/decorators/Authenticate';
 import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
@@ -44,6 +44,20 @@ export class BodyBuildingByUserController {
     @Authenticate
     static async getById(req: AuthenticatedRequest, res: Response) {
         const bodyBuildingByUser = await bodyBuildingByUserService.getById(req);
+        res.status(HttpStatusCodeEnum.OK).json(bodyBuildingByUser);
+    }
+
+    @CatchErrors
+    @Authenticate
+    static async getByUserAndExerciseId(req: AuthenticatedRequest, res: Response) {
+        const bodyBuildingPlanByUser = await bodyBuildingByUserService.getByUserAndExerciseId(req);
+        res.status(HttpStatusCodeEnum.OK).json(bodyBuildingPlanByUser);
+    }
+
+    @CatchErrors
+    @Authenticate
+    static async getByUserId(req: AuthenticatedRequest, res: Response) {
+        const bodyBuildingByUser = await bodyBuildingByUserService.getByUserId(req);
         res.status(HttpStatusCodeEnum.OK).json(bodyBuildingByUser);
     }
 }

@@ -4,6 +4,7 @@ import { IBodyBuildingByUser } from '@/models/bodyBuildingByUser/IBodyBuildingBy
 import { IdType } from '../../shared/types/IdType';
 import { IBodyBuildingByUserRepository } from './IBodyBuildingByUserRepository';
 import { BodyBuildingByUserModel } from '@/models/bodyBuildingByUser/mongo-schema';
+import { IBodyBuildingPlanByUser } from '@/shared/interfaces/IBodyBuildingPlanByUser';
 
 
 
@@ -26,6 +27,13 @@ export class BodyBuildingByUserRepositoryImpl implements IBodyBuildingByUserRepo
         return exercise ? exercise.toJSON() : null;
     }
 
+    async getByUserId(userId: IdType, academyId?: IdType): Promise<IBodyBuildingByUser | null> {
+        const filter = academyId ? { userId, academyId } : { userId };
+        const bodyBuildingByUser = await BodyBuildingByUserModel.findOne(filter).exec();
+
+        return bodyBuildingByUser ? bodyBuildingByUser.toJSON() : null;
+    }
+
     async getAll(academyId?: IdType): Promise<IBodyBuildingByUser[]> {
         const filter = academyId ? { academyId } : {};
         const exercises = await BodyBuildingByUserModel.find(filter).exec();
@@ -39,5 +47,18 @@ export class BodyBuildingByUserRepositoryImpl implements IBodyBuildingByUserRepo
 
     async delete(id: IdType): Promise<void | null> {
         return BodyBuildingByUserModel.findByIdAndDelete(id);
+    }
+
+    async getByUserAndExerciseId(userId: IdType, exerciseId: IdType, academyId?: IdType): Promise<IBodyBuildingPlanByUser | null> {
+        const filter = academyId ? { userId, exerciseId, academyId } : { userId, exerciseId };
+        const bodyBuildingByUser = await BodyBuildingByUserModel.findOne(filter).exec();
+
+        if (!bodyBuildingByUser) {
+            return null;
+        }
+
+        const plan = bodyBuildingByUser.plan.find(planItem => planItem.exerciseId.toString() === exerciseId.toString());
+
+        return plan ? plan : null;
     }
 }
