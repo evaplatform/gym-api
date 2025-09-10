@@ -7,4 +7,6 @@ export interface IBodyBuildingByUserService {
   update(req: AuthenticatedRequest): Promise<IBodyBuildingByUser | null>;
   delete(req: AuthenticatedRequest): Promise<void | null>;
   getById(req: AuthenticatedRequest): Promise<IBodyBuildingByUser | null>;
+  addPlan(req: AuthenticatedRequest): Promise<IBodyBuildingByUser>;
+  removePlan(req: AuthenticatedRequest): Promise<IBodyBuildingByUser>;
 }

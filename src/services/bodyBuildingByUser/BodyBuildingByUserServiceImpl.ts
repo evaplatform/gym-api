@@ -7,6 +7,7 @@ import { IBodyBuildingByUserService } from './IBodyBuildingByUserService';
 import { IBodyBuildingByUserRepository } from 'src/repositories/bodyBuildingByUser/IBodyBuildingByUserRepository';
 import { ValidateAcademy } from '@/shared/decorators/ValidateAcademy';
 import { IBodyBuildingPlanByUser } from '@/shared/interfaces/IBodyBuildingPlanByUser';
+import { isObjectEmpty } from '@/shared/utils/isObjectEmpty';
 
 
 export class BodyBuildingByUserServiceImpl implements IBodyBuildingByUserService {
@@ -87,5 +88,50 @@ export class BodyBuildingByUserServiceImpl implements IBodyBuildingByUserService
     await this.getById(req);
 
     await this.bodyBuildingByUserRepository.delete(id);
+  }
+
+  @ValidateAcademy
+  async addPlan(req: AuthenticatedRequest): Promise<IBodyBuildingByUser> {
+    const plan = req.body as IBodyBuildingPlanByUser;
+    const userId = req.params.userId;
+
+    if (!userId || isObjectEmpty(plan) || !plan.exerciseId) {
+      throw new AppError('Invalid input data', HttpStatusCodeEnum.BAD_REQUEST);
+    }
+
+    return this.bodyBuildingByUserRepository.addPlan(userId, plan, req.validatedAcademyId);
+  }
+
+  @ValidateAcademy
+  async removePlan(req: AuthenticatedRequest): Promise<IBodyBuildingByUser> {
+    const exerciseId = req.params.exerciseId;
+    const userId = req.params.userId;
+
+    if (!exerciseId) {
+      throw new AppError('Invalid input data, missing exercise ID', HttpStatusCodeEnum.BAD_REQUEST);
+    }
+
+    if (!userId) {
+      throw new AppError('Invalid input data, missing user ID', HttpStatusCodeEnum.BAD_REQUEST);
+    }
+
+    const existingRecord = await this.bodyBuildingByUserRepository.getByUserId(userId, req.validatedAcademyId);
+
+    if (!existingRecord) {
+      throw new AppError('BodyBuilding plan for this user does not exist', HttpStatusCodeEnum.NOT_FOUND);
+    }
+
+    const updatedPlan = existingRecord.plan.filter(p => p.exerciseId.toString() !== exerciseId.toString());
+    if (updatedPlan.length === existingRecord.plan.length) {
+      throw new AppError('The specified plan was not found for this user', HttpStatusCodeEnum.NOT_FOUND);
+    }
+
+    if (updatedPlan.length === existingRecord.plan.length) {
+      throw new AppError('The specified plan was not found for this user', HttpStatusCodeEnum.NOT_FOUND);
+    }
+
+    existingRecord.plan = updatedPlan;
+
+    return this.bodyBuildingByUserRepository.update(existingRecord.id, existingRecord) as Promise<IBodyBuildingByUser>;
   }
 }

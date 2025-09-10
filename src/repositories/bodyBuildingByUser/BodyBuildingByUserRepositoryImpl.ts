@@ -61,4 +61,21 @@ export class BodyBuildingByUserRepositoryImpl implements IBodyBuildingByUserRepo
 
         return plan ? plan : null;
     }
+
+    async addPlan(userId: IdType, plan: IBodyBuildingPlanByUser, academyId?: IdType): Promise<IBodyBuildingByUser> {
+        const filter = academyId ? { userId, academyId } : { userId };
+        const bodyBuildingByUser = await BodyBuildingByUserModel.findOne(filter).exec();
+
+        if (!bodyBuildingByUser) {
+            const newBodyBuildingByUser = new BodyBuildingByUserModel({
+                userId,
+                academyId,
+                plan: [plan],
+            });
+            return (await newBodyBuildingByUser.save()).toObject();
+        }
+
+        bodyBuildingByUser.plan.push(plan);
+        return (await bodyBuildingByUser.save()).toObject();
+    }
 }

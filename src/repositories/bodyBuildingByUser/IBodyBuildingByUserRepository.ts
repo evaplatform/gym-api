@@ -10,4 +10,5 @@ export interface IBodyBuildingByUserRepository {
   delete(id: IdType): Promise<void | null>;
   getByUserAndExerciseId(userId: IdType, exerciseId: IdType, academyId?: IdType): Promise<IBodyBuildingPlanByUser | null>;
   getByUserId(userId: IdType, academyId?: IdType): Promise<IBodyBuildingByUser | null>;
+  addPlan(userId: IdType, plan: IBodyBuildingPlanByUser, academyId?: IdType): Promise<IBodyBuildingByUser>;
 }

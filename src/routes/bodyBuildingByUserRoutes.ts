@@ -12,5 +12,7 @@ router.patch('/', asyncRoute<IBodyBuildingByUser>(BodyBuildingByUserController.u
 router.delete('/:id', asyncRoute<IBodyBuildingByUser>(BodyBuildingByUserController.delete));
 router.get('/plan/user/:userId/exercise/:exerciseId', asyncRoute<void>(BodyBuildingByUserController.getByUserAndExerciseId));
 router.get('/user/:userId', asyncRoute<void>(BodyBuildingByUserController.getByUserId));
+router.post('/add-plan/:userId', asyncRoute<IBodyBuildingByUser>(BodyBuildingByUserController.addPlan));
+router.delete('/remove-plan/:userId/:exerciseId', asyncRoute<IBodyBuildingByUser>(BodyBuildingByUserController.removePlan));
 
 export default router;
