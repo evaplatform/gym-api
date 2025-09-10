@@ -103,6 +103,31 @@ export class BodyBuildingByUserServiceImpl implements IBodyBuildingByUserService
   }
 
   @ValidateAcademy
+  async updatePlan(req: AuthenticatedRequest): Promise<IBodyBuildingByUser> {
+    const plan = req.body as IBodyBuildingPlanByUser;
+    const userId = req.params.userId;
+
+    if (!userId || isObjectEmpty(plan) || !plan.exerciseId) {
+      throw new AppError('Invalid input data', HttpStatusCodeEnum.BAD_REQUEST);
+    }
+
+    const existingRecord = await this.bodyBuildingByUserRepository.getByUserId(userId, req.validatedAcademyId);
+
+    if (!existingRecord) {
+      throw new AppError('BodyBuilding plan for this user does not exist', HttpStatusCodeEnum.NOT_FOUND);
+    }
+
+    const planIndex = existingRecord.plan.findIndex(p => p.exerciseId.toString() === plan.exerciseId.toString());
+    if (planIndex === -1) {
+      throw new AppError('The specified plan was not found for this user', HttpStatusCodeEnum.NOT_FOUND);
+    }
+
+    existingRecord.plan[planIndex] = plan;
+
+    return this.bodyBuildingByUserRepository.update(existingRecord.id, existingRecord) as Promise<IBodyBuildingByUser>;
+  }
+
+  @ValidateAcademy
   async removePlan(req: AuthenticatedRequest): Promise<IBodyBuildingByUser> {
     const exerciseId = req.params.exerciseId;
     const userId = req.params.userId;
@@ -134,4 +159,6 @@ export class BodyBuildingByUserServiceImpl implements IBodyBuildingByUserService
 
     return this.bodyBuildingByUserRepository.update(existingRecord.id, existingRecord) as Promise<IBodyBuildingByUser>;
   }
+
+
 }

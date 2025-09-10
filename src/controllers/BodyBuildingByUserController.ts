@@ -70,6 +70,13 @@ export class BodyBuildingByUserController {
 
     @CatchErrors
     @Authenticate
+    static async updatePlan(req: AuthenticatedRequest<IBodyBuildingByUser>, res: Response) {
+        const bodyBuildingByUser = await bodyBuildingByUserService.updatePlan(req);
+        res.status(HttpStatusCodeEnum.OK).json(bodyBuildingByUser);
+    }
+
+    @CatchErrors
+    @Authenticate
     static async removePlan(req: AuthenticatedRequest<IBodyBuildingByUser>, res: Response) {
         const bodyBuildingByUser = await bodyBuildingByUserService.removePlan(req);
         res.status(HttpStatusCodeEnum.OK).json(bodyBuildingByUser);

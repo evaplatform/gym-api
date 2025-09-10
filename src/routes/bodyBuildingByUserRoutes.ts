@@ -14,5 +14,6 @@ router.get('/plan/user/:userId/exercise/:exerciseId', asyncRoute<void>(BodyBuild
 router.get('/user/:userId', asyncRoute<void>(BodyBuildingByUserController.getByUserId));
 router.post('/add-plan/:userId', asyncRoute<IBodyBuildingByUser>(BodyBuildingByUserController.addPlan));
 router.delete('/remove-plan/:userId/:exerciseId', asyncRoute<IBodyBuildingByUser>(BodyBuildingByUserController.removePlan));
+router.patch('/update-plan/:userId', asyncRoute<IBodyBuildingByUser>(BodyBuildingByUserController.updatePlan));
 
 export default router;
