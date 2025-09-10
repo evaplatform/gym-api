@@ -3,6 +3,7 @@ import { IExercise } from '../../models/exercise/IExercise';
 import { ExerciseModel } from '../../models/exercise/mongo-schema';
 import { IdType } from '../../shared/types/IdType';
 import { IExerciseRepository } from './IExerciseRepository';
+import { AppError } from '@/errors/AppError';
 
 export class ExerciseRepositoryImpl implements IExerciseRepository {
     async update(id: IdType, exercise: Partial<IExercise>): Promise<IExercise | null> {
@@ -40,14 +41,24 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
 
     async getAllByUserId(userId: IdType, academyId?: IdType): Promise<IExercise[]> {
         const exercises = await ExerciseModel.find({ academyId }).exec();
-        
+
         const filter = academyId ? { userId, academyId } : { userId };
         const bodyBuildingExercises = await BodyBuildingByUserModel.find(filter).exec();
 
-        const bodyBuildingExerciseIds = bodyBuildingExercises.flatMap(bbu => bbu.plan.map(p => p.exerciseId.toString()));
+        if (bodyBuildingExercises.length === 0) {
+            throw new AppError('No BodyBuilding plan found for this user', 404);
+        }
 
-        const filteredExercises = exercises.filter(exercise => !bodyBuildingExerciseIds.includes(exercise._id.toString()));
 
-        return filteredExercises.map(exercise => exercise.toJSON());
+        const filteredExercises = bodyBuildingExercises[0].plan.reduce<IExercise[]>((acc, plan) => {
+            const exercise = exercises.find(exercise => exercise._id.toString() === plan.exerciseId.toString());
+            if (exercise) {
+                acc.push(exercise.toJSON());
+            }
+            return acc;
+        }, []);
+
+        return filteredExercises;
+
     }
 }
