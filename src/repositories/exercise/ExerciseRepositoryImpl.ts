@@ -7,25 +7,25 @@ import { IExerciseRepository } from './IExerciseRepository';
 export class ExerciseRepositoryImpl implements IExerciseRepository {
     async update(id: IdType, exercise: Partial<IExercise>): Promise<IExercise | null> {
         const updated = await ExerciseModel.findByIdAndUpdate(
-            id, 
-            { $set: exercise }, 
+            id,
+            { $set: exercise },
             { new: true }
         ).exec();
-        
+
         return updated ? updated.toJSON() : null;
     }
 
     async getById(id: IdType, academyId?: IdType): Promise<IExercise | null> {
         const filter = academyId ? { _id: id, academyId } : { _id: id };
         const exercise = await ExerciseModel.findOne(filter).exec();
-        
+
         return exercise ? exercise.toJSON() : null;
     }
 
     async getAll(academyId?: IdType): Promise<IExercise[]> {
         const filter = academyId ? { academyId } : {};
         const exercises = await ExerciseModel.find(filter).exec();
-        
+
         return exercises.map(exercise => exercise.toJSON());
     }
 
@@ -39,9 +39,9 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
     }
 
     async getAllByUserId(userId: IdType, academyId?: IdType): Promise<IExercise[]> {
+        const exercises = await ExerciseModel.find({ academyId }).exec();
+        
         const filter = academyId ? { userId, academyId } : { userId };
-        const exercises = await ExerciseModel.find(filter).exec();
-
         const bodyBuildingExercises = await BodyBuildingByUserModel.find(filter).exec();
 
         const bodyBuildingExerciseIds = bodyBuildingExercises.flatMap(bbu => bbu.plan.map(p => p.exerciseId.toString()));
