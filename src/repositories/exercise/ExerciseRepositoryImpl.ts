@@ -43,22 +43,18 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
         const exercises = await ExerciseModel.find({ academyId }).exec();
 
         const filter = academyId ? { userId, academyId } : { userId };
-        const bodyBuildingExercises = await ExerciseByUserModel.find(filter).exec();
+        const exercisesByUser = await ExerciseByUserModel.find(filter).exec();
 
-        if (bodyBuildingExercises.length === 0) {
+        if (exercisesByUser.length === 0) {
             throw new AppError('No BodyBuilding plan found for this user', 404);
         }
 
+        const filteredExercises = exercisesByUser.map(exByUser => {
+            const exerciseDetails = exercises.find(ex => ex._id.toString() === exByUser.exerciseId.toString());
+            return exerciseDetails ? exerciseDetails.toJSON() : null;
+        });
 
-        const filteredExercises = bodyBuildingExercises[0].plan.reduce<IExercise[]>((acc, plan) => {
-            const exercise = exercises.find(exercise => exercise._id.toString() === plan.exerciseId.toString());
-            if (exercise) {
-                acc.push(exercise.toJSON());
-            }
-            return acc;
-        }, []);
-
-        return filteredExercises;
+        return filteredExercises.filter(exercise => exercise !== null);
 
     }
 }
