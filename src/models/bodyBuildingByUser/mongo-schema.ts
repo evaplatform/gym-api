@@ -10,7 +10,6 @@ export const ExerciseByUserSchema = new mongoose.Schema<IExerciseByUser>(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      unique: true,
       description: 'Unique identifier for the exercise',
       maxlength: 50
     },
