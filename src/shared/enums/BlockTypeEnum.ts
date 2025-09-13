@@ -1,4 +1,7 @@
 export enum BlockTypeEnum {
   CARDIO = 'CARDIO',
   BODYBUILDING = 'BODYBUILDING',
+  MOBILITY = 'MOBILITY',
+  STRETCHING = 'STRETCHING',
+  OTHER = 'OTHER',
 }

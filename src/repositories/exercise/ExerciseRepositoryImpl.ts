@@ -1,4 +1,4 @@
-import { BodyBuildingByUserModel } from '@/models/bodyBuildingByUser/mongo-schema';
+import { ExerciseByUserModel } from '@/models/bodyBuildingByUser/mongo-schema';
 import { IExercise } from '../../models/exercise/IExercise';
 import { ExerciseModel } from '../../models/exercise/mongo-schema';
 import { IdType } from '../../shared/types/IdType';
@@ -43,7 +43,7 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
         const exercises = await ExerciseModel.find({ academyId }).exec();
 
         const filter = academyId ? { userId, academyId } : { userId };
-        const bodyBuildingExercises = await BodyBuildingByUserModel.find(filter).exec();
+        const bodyBuildingExercises = await ExerciseByUserModel.find(filter).exec();
 
         if (bodyBuildingExercises.length === 0) {
             throw new AppError('No BodyBuilding plan found for this user', 404);
