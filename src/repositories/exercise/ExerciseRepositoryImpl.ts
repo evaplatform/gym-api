@@ -55,6 +55,5 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
         });
 
         return filteredExercises.filter(exercise => exercise !== null);
-
     }
 }
