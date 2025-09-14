@@ -64,6 +64,7 @@ export class ExerciseServiceImpl implements IExerciseService {
   @ValidateAcademy
   async getAllByUserId(req: AuthenticatedRequest): Promise<IExercise[]> {
     const userId = req.params.userId;
+    const isAdmin = req.user?.isAdmin || false;
     return this.exerciseRepository.getAllByUserId(userId, req.validatedAcademyId);
   }
 }

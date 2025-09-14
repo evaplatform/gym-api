@@ -5,6 +5,8 @@ import { IdType } from '../../shared/types/IdType';
 import { IExerciseRepository } from './IExerciseRepository';
 import { AppError } from '@/errors/AppError';
 import { log } from '@/shared/utils/log';
+import { UserModel } from '@/models/user/mongo-schema';
+import { HttpStatusCodeEnum } from '@/shared/enums/HttpStatusCodeEnum';
 
 export class ExerciseRepositoryImpl implements IExerciseRepository {
     async update(id: IdType, exercise: Partial<IExercise>): Promise<IExercise | null> {
@@ -41,13 +43,20 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
     }
 
     async getAllByUserId(userId: IdType, academyId?: IdType): Promise<IExercise[]> {
-        log("Fetching exercises for userId:", userId, "and academyId:", academyId);
+
+        if (!academyId) {
+            const user = await UserModel.findOne({ _id: userId }).exec();
+            if (!user) {
+                throw new AppError('User not found', HttpStatusCodeEnum.NOT_FOUND);
+            }
+            academyId = user.academyId;
+        }
+
         const exercises = await ExerciseModel.find({ academyId }).exec();
-        log(`Found ${exercises.length} exercises in academy ${exercises}`);
+
 
         const filter = academyId ? { userId, academyId } : { userId };
         const exercisesByUser = await ExerciseByUserModel.find(filter).exec();
-        log(`Found ${exercisesByUser.length} exercise entries for user ${exercisesByUser}`);
 
         if (exercisesByUser.length === 0) {
             throw new AppError('Nenhum exercício encontrado para esse usuário', 404);

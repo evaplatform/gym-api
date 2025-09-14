@@ -6,3 +6,6 @@ export interface IAuthService {
   signout(req: AuthenticatedRequest): Promise<void>;
   generateTestToken(req: AuthenticatedRequest): Promise<any>;
 }
+
+
+
