@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { CatchErrors } from '../shared/decorators/CatchErrors';
 import { Authenticate } from '../shared/decorators/Authenticate';
 import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
-import { IExerciseByUser } from '@/models/bodyBuildingByUser/IExerciseByUser';
+import { IExerciseByUser } from '@/models/exerciseByUser/IExerciseByUser';
 
 import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 import { ExerciseByUserServiceImpl } from '@/services/exerciseByUser/ExerciseByUserServiceImpl';

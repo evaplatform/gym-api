@@ -1,4 +1,4 @@
-import { ExerciseByUserModel } from '@/models/bodyBuildingByUser/mongo-schema';
+import { ExerciseByUserModel } from '@/models/exerciseByUser/mongo-schema';
 import { IExercise } from '../../models/exercise/IExercise';
 import { ExerciseModel } from '../../models/exercise/mongo-schema';
 import { IdType } from '../../shared/types/IdType';

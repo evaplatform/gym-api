@@ -1,5 +1,5 @@
 import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
-import { IExerciseByUser } from '../../models/bodyBuildingByUser/IExerciseByUser';
+import { IExerciseByUser } from '../../models/exerciseByUser/IExerciseByUser';
 
 export interface IExerciseByUserService {
   getAll(req: AuthenticatedRequest): Promise<IExerciseByUser[]>;

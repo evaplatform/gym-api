@@ -1,4 +1,4 @@
-import { IExerciseByUser } from '@/models/bodyBuildingByUser/IExerciseByUser';
+import { IExerciseByUser } from '@/models/exerciseByUser/IExerciseByUser';
 import { IdType } from '../../shared/types/IdType';
 
 export interface IExerciseByUserRepository {

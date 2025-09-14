@@ -1,7 +1,7 @@
 
 import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 import { AppError } from '../../errors/AppError';
-import { IExerciseByUser } from '../../models/bodyBuildingByUser/IExerciseByUser';
+import { IExerciseByUser } from '../../models/exerciseByUser/IExerciseByUser';
 import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
 import { IExerciseByUserService } from './IExerciseByUserService';
 import { IExerciseByUserRepository } from '@/repositories/exerciseByUser/IExerciseByUserRepository';

@@ -1,6 +1,6 @@
 import express from 'express';
 import { ExerciseByUserController } from '../controllers/ExerciseByUserController';
-import { IExerciseByUser } from '@/models/bodyBuildingByUser/IExerciseByUser';
+import { IExerciseByUser } from '@/models/exerciseByUser/IExerciseByUser';
 import { asyncRoute } from '../shared/utils/asyncRoute';
 
 const router = express.Router();

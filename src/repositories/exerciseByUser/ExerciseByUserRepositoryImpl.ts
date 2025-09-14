@@ -1,9 +1,9 @@
 // src/repositories/UserRepository.ts
 
-import { IExerciseByUser } from '@/models/bodyBuildingByUser/IExerciseByUser';
+import { IExerciseByUser } from '@/models/exerciseByUser/IExerciseByUser';
 import { IdType } from '../../shared/types/IdType';
 import { IExerciseByUserRepository } from './IExerciseByUserRepository';
-import { ExerciseByUserModel } from '@/models/bodyBuildingByUser/mongo-schema';
+import { ExerciseByUserModel } from '@/models/exerciseByUser/mongo-schema';
 
 export class ExerciseByUserRepositoryImpl implements IExerciseByUserRepository {
     async update(id: IdType, exerciseByUser: Partial<IExerciseByUser>): Promise<IExerciseByUser | null> {
