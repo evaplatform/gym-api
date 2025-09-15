@@ -43,17 +43,7 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
     }
 
     async getAllByUserId(userId: IdType, academyId?: IdType): Promise<IExercise[]> {
-
-        if (!academyId) {
-            const user = await UserModel.findOne({ _id: userId }).exec();
-            if (!user) {
-                throw new AppError('User not found', HttpStatusCodeEnum.NOT_FOUND);
-            }
-            academyId = user.academyId;
-        }
-
         const exercises = await ExerciseModel.find({ academyId }).exec();
-
 
         const filter = academyId ? { userId, academyId } : { userId };
         const exercisesByUser = await ExerciseByUserModel.find(filter).exec();
