@@ -37,11 +37,11 @@ export class ExerciseByUserRepositoryImpl implements IExerciseByUserRepository {
         return ExerciseByUserModel.findByIdAndDelete(id);
     }
 
-    async getByUserId(userId: IdType, academyId?: IdType): Promise<IExerciseByUser | null> {
+    async getByUserId(userId: IdType, academyId?: IdType): Promise<IExerciseByUser[] | null> {
         const filter = academyId ? { userId, academyId } : { userId };
-        const bodyBuildingByUser = await ExerciseByUserModel.findOne(filter).exec();
+        const exercisesByUser = await ExerciseByUserModel.find(filter).exec();
 
-        return bodyBuildingByUser ? bodyBuildingByUser.toJSON() : null;
+        return exercisesByUser.length > 0 ? exercisesByUser.map(exercise => exercise.toJSON()) : null;
     }
 
     async getByUserAndExerciseId(userId: IdType, exerciseId: IdType, academyId?: IdType): Promise<IExerciseByUser | null> {

@@ -8,5 +8,5 @@ export interface IExerciseByUserRepository {
   update(id: IdType, bodyBuildingByUser: Partial<IExerciseByUser>): Promise<IExerciseByUser | null>;
   delete(id: IdType): Promise<void | null>;
   getByUserAndExerciseId(userId: IdType, exerciseId: IdType, academyId?: IdType): Promise<IExerciseByUser | null>;
-  getByUserId(userId: IdType, academyId?: IdType): Promise<IExerciseByUser | null>;
+  getByUserId(userId: IdType, academyId?: IdType): Promise<IExerciseByUser[] | null>;
 }

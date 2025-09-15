@@ -60,7 +60,7 @@ export class ExerciseByUserServiceImpl implements IExerciseByUserService {
   }
 
   @ValidateAcademy
-  async getByUserId(req: AuthenticatedRequest): Promise<IExerciseByUser | null> {
+  async getByUserId(req: AuthenticatedRequest): Promise<IExerciseByUser[] | null> {
     const userId = req.params.userId;
 
     return this.exerciseByUserRepository.getByUserId(userId, req.validatedAcademyId);

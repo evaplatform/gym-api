@@ -8,6 +8,6 @@ export interface IExerciseByUserService {
   delete(req: AuthenticatedRequest): Promise<void | null>;
   getById(req: AuthenticatedRequest): Promise<IExerciseByUser | null>;
   getByUserAndExerciseId(req: AuthenticatedRequest): Promise<IExerciseByUser | null>;
-  getByUserId(req: AuthenticatedRequest): Promise<IExerciseByUser | null>;
+  getByUserId(req: AuthenticatedRequest): Promise<IExerciseByUser[] | null>;
 }
 
