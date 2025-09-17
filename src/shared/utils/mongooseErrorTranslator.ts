@@ -1,5 +1,6 @@
 import { ErrorCode } from "@/errors/ErrorMessages";
 import { i18n } from "@/i18n";
+import { SupportedLanguagesEnum } from "../enums/LanguagesEnum";
 
 
 // Mapear padrões de mensagens do Mongoose para códigos de erro
@@ -90,13 +91,13 @@ export function translateMongooseError(errorMessage: string, fieldDisplayName?: 
 export function getFieldDisplayName(field: string): string {
   // Mapeamento de nomes de campos para versões amigáveis
   const fieldDisplayNames: Record<string, string> = {
-    'name': i18n.getLanguage() === 'pt' ? 'Nome' : 'Name',
+    'name': i18n.getLanguage() === SupportedLanguagesEnum.PT_BR ? 'Nome' : 'Name',
     'email': 'E-mail',
-    'password': i18n.getLanguage() === 'pt' ? 'Senha' : 'Password',
-    'username': i18n.getLanguage() === 'pt' ? 'Nome de usuário' : 'Username',
-    'phone': i18n.getLanguage() === 'pt' ? 'Telefone' : 'Phone',
-    'address': i18n.getLanguage() === 'pt' ? 'Endereço' : 'Address',
-    'birthDate': i18n.getLanguage() === 'pt' ? 'Data de nascimento' : 'Birth Date',
+    'password': i18n.getLanguage() === SupportedLanguagesEnum.PT_BR ? 'Senha' : 'Password',
+    'username': i18n.getLanguage() === SupportedLanguagesEnum.PT_BR ? 'Nome de usuário' : 'Username',
+    'phone': i18n.getLanguage() === SupportedLanguagesEnum.PT_BR ? 'Telefone' : 'Phone',
+    'address': i18n.getLanguage() === SupportedLanguagesEnum.PT_BR ? 'Endereço' : 'Address',
+    'birthDate': i18n.getLanguage() === SupportedLanguagesEnum.PT_BR ? 'Data de nascimento' : 'Birth Date',
     // Adicione outros campos conforme necessário
   };
   
