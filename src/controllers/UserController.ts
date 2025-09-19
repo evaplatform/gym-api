@@ -7,6 +7,8 @@ import { Authenticate } from '../shared/decorators/Authenticate';
 import { HttpStatusCodeEnum } from '../shared/enums/HttpStatusCodeEnum';
 import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 import { IUser } from '@/models/user/IUser';
+import { i18n } from '@/i18n';
+import { GeneralMessages } from '@/errors/GeneralMessages';
 
 const userService = new UserServiceImpl(new UserRepositoryImpl());
 export class UserController {
@@ -24,7 +26,7 @@ export class UserController {
     if (user) {
       res.json(user);
     } else {
-      res.status(HttpStatusCodeEnum.NOT_FOUND).send('User not found');
+      res.status(HttpStatusCodeEnum.NOT_FOUND).send(i18n.translate(GeneralMessages.USER_NOT_FOUND));
     }
   }
 
@@ -46,6 +48,17 @@ export class UserController {
   @Authenticate
   static async delete(req: AuthenticatedRequest, res: Response) {
     await userService.delete(req);
-    res.status(HttpStatusCodeEnum.OK).json({ message: 'User deleted successfully' });
+    res.status(HttpStatusCodeEnum.OK).json({ message: i18n.translate(GeneralMessages.USER_DELETED_SUCCESSFULLY) });
+  }
+
+  @CatchErrors
+  @Authenticate
+  static async getLoggedUser(req: AuthenticatedRequest, res: Response) {
+    const user = await userService.getLoggedUser(req);
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(HttpStatusCodeEnum.NOT_FOUND).send(i18n.translate(GeneralMessages.USER_NOT_FOUND));
+    }
   }
 }

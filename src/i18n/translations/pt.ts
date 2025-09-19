@@ -1,7 +1,9 @@
 // src/i18n/translations/pt.ts
+import { MessageType } from '@/shared/types/MessageType';
 import { ErrorCode } from '../../errors/ErrorMessages';
+import { GeneralMessages } from '@/errors/GeneralMessages';
 
-export const errorMessages: Record<ErrorCode, string> = {
+export const ptErrorMessages: MessageType = {
     [ErrorCode.GENERIC_ERROR]: 'Ocorreu um erro inesperado',
     [ErrorCode.UNAUTHORIZED]: 'Autenticação necessária',
     [ErrorCode.FORBIDDEN]: 'Você não tem permissão para realizar esta ação',
@@ -29,4 +31,18 @@ export const errorMessages: Record<ErrorCode, string> = {
     [ErrorCode.VALIDATION_UNIQUE]: '{field} já existe',
     [ErrorCode.VALIDATION_TYPE]: '{field} deve ser um {type} válido',
     [ErrorCode.VALIDATION_CUSTOM]: '{field} é inválido',
+
+    // Mensagens de usuário
+    [GeneralMessages.USER_NOT_FOUND]: 'Usuário não encontrado',
+    [GeneralMessages.USER_DELETED_SUCCESSFULLY]: 'Usuário deletado com sucesso',
+    [GeneralMessages.USER_UPDATED_SUCCESSFULLY]: 'Usuário atualizado com sucesso',
+    [GeneralMessages.USER_CREATED_SUCCESSFULLY]: 'Usuário criado com sucesso',
+    [GeneralMessages.USER_ID_REQUIRED_FOR_UPDATE]: 'ID do usuário é obrigatório para atualização',
+
+    // Mensagens da academia
+    [GeneralMessages.ACADEMY_COURSE_NOT_FOUND]: 'Curso da academia não encontrado',
+    [GeneralMessages.ACADEMY_ENROLLMENT_SUCCESSFUL]: 'Inscrição realizada com sucesso',
+    [GeneralMessages.ACADEMY_COURSE_COMPLETED]: 'Curso concluído',
+    [GeneralMessages.ACADEMY_ACCESS_DENIED]: 'Acesso negado',
+    [GeneralMessages.ACADEMY_NOT_ASSOCIATED]: 'Usuário não associado a nenhuma academia',
 };

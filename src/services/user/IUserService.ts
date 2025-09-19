@@ -7,4 +7,5 @@ export interface IUserService {
   update(req: AuthenticatedRequest): Promise<IUser | null>;
   delete(req: AuthenticatedRequest): Promise<void | null>;
   getById(req: AuthenticatedRequest): Promise<IUser | null>;
+  getLoggedUser(req: AuthenticatedRequest): Promise<IUser | null>;
 }

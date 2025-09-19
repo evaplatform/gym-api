@@ -10,5 +10,6 @@ router.get('/:id', asyncRoute<void>(UserController.getById));
 router.post('/', asyncRoute<IUser>(UserController.create));
 router.patch('/', asyncRoute<IUser>(UserController.update));
 router.delete('/:id', asyncRoute<IUser>(UserController.delete));
+router.get('/', asyncRoute<void>(UserController.getLoggedUser))
 
 export default router;

@@ -34,3 +34,5 @@ reset: # reset packages
 	@rm -rf node_modules/ package-lock.json 
 	@npm i
 	
+build: # build project
+	@npm run build

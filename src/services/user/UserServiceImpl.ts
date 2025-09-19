@@ -6,6 +6,8 @@ import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
 import { UserWithToken } from '../../shared/types/AuthResponse';
 import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 import { ValidateAcademy } from '@/shared/decorators/ValidateAcademy';
+import { i18n } from '@/i18n';
+import { GeneralMessages } from '@/errors/GeneralMessages';
 
 export class UserServiceImpl implements IUserService {
   // Constructor
@@ -33,7 +35,7 @@ export class UserServiceImpl implements IUserService {
     }
 
     if (!user) {
-      throw new AppError('User not found', HttpStatusCodeEnum.NOT_FOUND);
+      throw new AppError(i18n.translate(GeneralMessages.USER_NOT_FOUND), HttpStatusCodeEnum.NOT_FOUND);
     }
 
     return user;
@@ -54,7 +56,7 @@ export class UserServiceImpl implements IUserService {
     const user = req.body;
 
     if (!user?.id) {
-      throw new AppError('User ID is required for update', HttpStatusCodeEnum.BAD_REQUEST);
+      throw new AppError(i18n.translate(GeneralMessages.USER_ID_REQUIRED_FOR_UPDATE), HttpStatusCodeEnum.BAD_REQUEST);
     }
 
     return this.userRepository.update(user.id, user);
@@ -67,5 +69,22 @@ export class UserServiceImpl implements IUserService {
     await this.getById(req);
 
     await this.userRepository.delete(id);
+  }
+
+  @ValidateAcademy
+  async getLoggedUser(req: AuthenticatedRequest): Promise<IUser | null> {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      throw new AppError(i18n.translate(GeneralMessages.USER_NOT_FOUND), HttpStatusCodeEnum.NOT_FOUND);
+    }
+
+    const user = await this.userRepository.getById(userId);
+
+    if (!user) {
+      throw new AppError(i18n.translate(GeneralMessages.USER_NOT_FOUND), HttpStatusCodeEnum.NOT_FOUND);
+    }
+
+    return user;
   }
 }

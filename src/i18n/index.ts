@@ -1,12 +1,12 @@
 // src/i18n/index.ts
-import { errorMessages as enErrorMessages } from './translations/en';
-import { errorMessages as ptErrorMessages } from './translations/pt';
+import { enErrorMessages as enErrorMessages } from './translations/en';
+import { ptErrorMessages as ptErrorMessages } from './translations/pt';
 import { ErrorCode } from '../errors/ErrorMessages';
 import { SupportedLanguagesEnum } from '@/shared/enums/LanguagesEnum';
+import { GeneralMessages } from '@/errors/GeneralMessages';
+import { MessageType } from '@/shared/types/MessageType';
 
-
-
-const translations: Record<SupportedLanguagesEnum, Record<ErrorCode, string>> = {
+const translations: Record<SupportedLanguagesEnum, MessageType> = {
   en: enErrorMessages,
   'pt-BR': ptErrorMessages,
 };
@@ -22,7 +22,7 @@ export const i18n = {
     return currentLanguage;
   },
 
-  translate(code: ErrorCode): string {
+  translate(code: ErrorCode | GeneralMessages): string {
     return translations[currentLanguage][code] || translations['en'][code];
   }
 }
