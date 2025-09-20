@@ -92,6 +92,12 @@ export class AuthServiceImpl implements IAuthService {
         googleTokens,
       };
 
+      const updatedUser = { ...foundUser, id: (foundUser as any)?._id || foundUser.id };
+
+      if("_id" in updatedUser) {
+        delete updatedUser._id;
+      }
+
       return userWithToken;
     } catch (error) {
 
