@@ -1,7 +1,7 @@
 import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 import { UserWithToken } from '../../shared/types/AuthResponse';
 import { IRefreshToken } from '@/shared/interfaces/IRefreshToken';
-import { IResponseRefreshToken } from '@/shared/interfaces/IToken';
+import { IResponseRefreshToken } from '@/shared/interfaces/IResponseRefreshToken';
 
 export interface IAuthService {
   signinOrCreate(userInput: UserWithToken): Promise<UserWithToken>;

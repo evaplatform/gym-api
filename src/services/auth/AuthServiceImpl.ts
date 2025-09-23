@@ -12,11 +12,12 @@ import { UserWithToken } from '../../shared/types/AuthResponse';
 import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 import { refreshGoogleTokens } from '@/shared/utils/refreshGoogleTokens';
 import { IRefreshToken } from '@/shared/interfaces/IRefreshToken';
-import { IResponseRefreshToken } from '@/shared/interfaces/IToken';
+
 import { IUserService } from '../user/IUserService';
 import { EXPIRATION_TIME, JWT_ALGORITHM } from '@/shared/constants';
 import { i18n } from '@/i18n';
 import { GeneralMessages } from '@/errors/GeneralMessages';
+import { IResponseRefreshToken } from './interfaces';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
