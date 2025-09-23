@@ -129,7 +129,7 @@ export class AuthServiceImpl implements IAuthService {
       throw new AppError('This endpoint is only available in development mode', HttpStatusCodeEnum.FORBIDDEN);
     }
 
-    // You can allow specifying the user by ID or email
+    // You can allow specifying the user by ID or email//
     const { userId, email, isAdmin = false } = req.body;
 
     let user: IUser | null = null;
