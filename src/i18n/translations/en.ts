@@ -37,6 +37,7 @@ export const enErrorMessages: MessageType = {
     [GeneralMessages.USER_UPDATED_SUCCESSFULLY]: 'User updated successfully',
     [GeneralMessages.USER_CREATED_SUCCESSFULLY]: 'User created successfully',
     [GeneralMessages.USER_ID_REQUIRED_FOR_UPDATE]: 'User ID is required for update',
+    [GeneralMessages.ERROR_PROCESSING_USER_DATA]: 'Error processing user data',
 
     // Academy Messages
     [GeneralMessages.ACADEMY_COURSE_NOT_FOUND]: 'Academy course not found',
@@ -44,5 +45,9 @@ export const enErrorMessages: MessageType = {
     [GeneralMessages.ACADEMY_COURSE_COMPLETED]: 'Course completed',
     [GeneralMessages.ACADEMY_ACCESS_DENIED]: 'Access denied',
     [GeneralMessages.ACADEMY_NOT_ASSOCIATED]: 'User not associated with any academy',
+
+    // Auth Messages
+    [GeneralMessages.FAILED_REFRESH_TOKEN]: 'Failed to refresh token',
+    [GeneralMessages.INVALID_GOOGLE_TOKEN]: 'Invalid Google token',
 };
 ;

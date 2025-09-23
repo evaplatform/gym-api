@@ -38,6 +38,7 @@ export const ptErrorMessages: MessageType = {
     [GeneralMessages.USER_UPDATED_SUCCESSFULLY]: 'Usuário atualizado com sucesso',
     [GeneralMessages.USER_CREATED_SUCCESSFULLY]: 'Usuário criado com sucesso',
     [GeneralMessages.USER_ID_REQUIRED_FOR_UPDATE]: 'ID do usuário é obrigatório para atualização',
+    [GeneralMessages.ERROR_PROCESSING_USER_DATA]: 'Erro ao processar os dados do usuário',
 
     // Mensagens da academia
     [GeneralMessages.ACADEMY_COURSE_NOT_FOUND]: 'Curso da academia não encontrado',
@@ -45,4 +46,8 @@ export const ptErrorMessages: MessageType = {
     [GeneralMessages.ACADEMY_COURSE_COMPLETED]: 'Curso concluído',
     [GeneralMessages.ACADEMY_ACCESS_DENIED]: 'Acesso negado',
     [GeneralMessages.ACADEMY_NOT_ASSOCIATED]: 'Usuário não associado a nenhuma academia',
+
+    // Mensagens de autenticação
+    [GeneralMessages.FAILED_REFRESH_TOKEN]: 'Falha ao atualizar o token',
+    [GeneralMessages.INVALID_GOOGLE_TOKEN]: 'Token do Google inválido',
 };

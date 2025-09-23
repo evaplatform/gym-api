@@ -4,6 +4,7 @@ import { AppError } from "../../errors/AppError";
 import { HttpStatusCodeEnum } from "../enums/HttpStatusCodeEnum";
 import { AuthenticatedRequest } from "../interfaces/AuthenticatedRequest";
 import { log } from "../utils/log";
+import { JWT_ALGORITHM } from "../constants";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -40,7 +41,7 @@ export function Authenticate(
           log('Token header:', header);
           
           // Se o algoritmo não for HS256, temos um problema
-          if (header.alg !== 'HS256') {
+          if (header.alg !== JWT_ALGORITHM) {
             log('WARNING: Token algorithm is not HS256, but:', header.alg);
           }
           
@@ -77,7 +78,7 @@ export function Authenticate(
         const decoded = jwt.verify(
           token,
           JWT_SECRET,
-          { algorithms: ['HS256'] }
+          { algorithms: [JWT_ALGORITHM] }
         ) as JwtPayload;
 
         log('Token successfully verified!');

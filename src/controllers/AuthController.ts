@@ -5,9 +5,11 @@ import { AuthServiceImpl } from '../services/auth/AuthServiceImpl';
 import { UserRepositoryImpl } from '../repositories/user/UserRepositoryImpl';
 import { log } from '../shared/utils/log';
 import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
+import { IRefreshToken } from '@/shared/interfaces/IRefreshToken';
+import { UserServiceImpl } from '@/services/user/UserServiceImpl';
 
-
-const authService = new AuthServiceImpl(new UserRepositoryImpl());
+const userRepository = new UserRepositoryImpl();
+const authService = new AuthServiceImpl(userRepository, new UserServiceImpl(userRepository));
 
 export class AuthController {
   @CatchErrors
@@ -27,6 +29,13 @@ export class AuthController {
   @CatchErrors
   static async generateTestToken(req: AuthenticatedRequest<{ userId: string; email: string; isAdmin: boolean }>, res: Response) {
     const response = await authService.generateTestToken(req);
+
+    res.json(response);
+  }
+
+  @CatchErrors
+  static async refreshToken(req: AuthenticatedRequest<IRefreshToken>, res: Response) {
+    const response = await authService.refreshToken(req);
 
     res.json(response);
   }

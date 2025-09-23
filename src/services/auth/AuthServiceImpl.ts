@@ -10,6 +10,13 @@ import { IGoogleTokens } from '../../shared/interfaces/IGoogleTokens';
 import { log } from '../../shared/utils/log';
 import { UserWithToken } from '../../shared/types/AuthResponse';
 import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
+import { refreshGoogleTokens } from '@/shared/utils/refreshGoogleTokens';
+import { IRefreshToken } from '@/shared/interfaces/IRefreshToken';
+import { IResponseRefreshToken } from '@/shared/interfaces/IToken';
+import { IUserService } from '../user/IUserService';
+import { EXPIRATION_TIME, JWT_ALGORITHM } from '@/shared/constants';
+import { i18n } from '@/i18n';
+import { GeneralMessages } from '@/errors/GeneralMessages';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -17,7 +24,7 @@ type SigningRequestType = UserWithToken & { authCode: string; }
 
 export class AuthServiceImpl implements IAuthService {
 
-  constructor(private readonly userRepository: IUserRepository) { }
+  constructor(private readonly userRepository: IUserRepository, private readonly userService: IUserService) { }
 
   // The parameter here can be the Google token received from the frontend
   async signinOrCreate(
@@ -43,7 +50,7 @@ export class AuthServiceImpl implements IAuthService {
       googleUserData = (ticket as any).payload;
     } catch (error) {
       log("Error verifying Google token: " + (error as any)?.message || "unknown error");
-      throw new AppError('Invalid Google token', HttpStatusCodeEnum.UNAUTHORIZED);
+      throw new AppError(i18n.translate(GeneralMessages.INVALID_GOOGLE_TOKEN), HttpStatusCodeEnum.UNAUTHORIZED);
     }
 
     // Check if the user exists in your database
@@ -83,7 +90,7 @@ export class AuthServiceImpl implements IAuthService {
       const jwtToken = jwt.sign(
         jwtPayload,
         process.env.JWT_SECRET as string,
-        { expiresIn: '1m', algorithm: 'HS256' } // You can adjust the expiration time
+        { expiresIn: EXPIRATION_TIME, algorithm: JWT_ALGORITHM } // You can adjust the expiration time
       );
 
       const userWithToken: UserWithToken & { googleTokens?: IGoogleTokens } = {
@@ -94,7 +101,7 @@ export class AuthServiceImpl implements IAuthService {
 
       const updatedUser = { ...foundUser, id: (foundUser as any)?._id || foundUser.id };
 
-      if("_id" in updatedUser) {
+      if ("_id" in updatedUser) {
         delete updatedUser._id;
       }
 
@@ -106,14 +113,50 @@ export class AuthServiceImpl implements IAuthService {
         log("Error processing user data " + error.message)
         log(JSON.stringify((error as any)?.response?.data, null, 2) || error.message)
 
-        throw new AppError('Error processing user data', error.statusCode);
+        throw new AppError(i18n.translate(GeneralMessages.ERROR_PROCESSING_USER_DATA), error.statusCode);
       } else {
 
         log(JSON.stringify((error as any)?.response?.data, null, 2) || (error as any)?.message || 'Unknown error');
         log("Error processing user data: Unknown error");
-        throw new AppError('Error processing user data', HttpStatusCodeEnum.INTERNAL_SERVER_ERROR);
+        throw new AppError(i18n.translate(GeneralMessages.ERROR_PROCESSING_USER_DATA), HttpStatusCodeEnum.INTERNAL_SERVER_ERROR);
       }
 
+    }
+  }
+
+  async refreshToken(req: AuthenticatedRequest<IRefreshToken>): Promise<IResponseRefreshToken> {
+    try {
+      const refreshToken = req.body.refreshToken;
+      // Verifica e renova o token do Google usando o refresh_token
+      const googleTokens = await refreshGoogleTokens(refreshToken);
+
+      // Extrai as informações do usuário do token renovado
+      const user = await this.userService.getLoggedUser(req);
+
+      if (!user) {
+        throw new AppError(i18n.translate(GeneralMessages.USER_NOT_FOUND), HttpStatusCodeEnum.NOT_FOUND);
+      }
+
+      // Gera um novo JWT
+      const jwtPayload = {
+        userId: user.id,
+        academyId: user.academyId,
+        isAdmin: user.isAdmin
+      };
+
+      const jwtToken = jwt.sign(
+        jwtPayload,
+        process.env.JWT_SECRET as string,
+        { expiresIn: EXPIRATION_TIME, algorithm: JWT_ALGORITHM }
+      );
+
+      // Retorna o novo token JWT
+      return {
+        token: jwtToken,
+        googleTokens
+      };
+    } catch (error) {
+      throw new AppError(i18n.translate(GeneralMessages.FAILED_REFRESH_TOKEN), HttpStatusCodeEnum.UNAUTHORIZED);
     }
   }
 
@@ -156,7 +199,7 @@ export class AuthServiceImpl implements IAuthService {
     const token = jwt.sign(
       jwtPayload,
       process.env.JWT_SECRET as string,
-      { expiresIn: '24h' }
+      { expiresIn: EXPIRATION_TIME }
     );
 
     return {

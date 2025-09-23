@@ -5,12 +5,16 @@ export enum GeneralMessages {
     USER_UPDATED_SUCCESSFULLY = 'User updated successfully',
     USER_CREATED_SUCCESSFULLY = 'User created successfully',
     USER_ID_REQUIRED_FOR_UPDATE = 'USER_ID_REQUIRED_FOR_UPDATE',
-
+    ERROR_PROCESSING_USER_DATA = 'Error processing user data',
+    
     // academy messages
     ACADEMY_COURSE_NOT_FOUND = 'Academy course not found',
     ACADEMY_ENROLLMENT_SUCCESSFUL = 'Enrollment successful',
     ACADEMY_COURSE_COMPLETED = 'Course completed',
     ACADEMY_ACCESS_DENIED = 'Access denied',
     ACADEMY_NOT_ASSOCIATED = 'ACADEMY_NOT_ASSOCIATED',
-     
+    
+    // auth messages
+    FAILED_REFRESH_TOKEN = 'Failed to refresh token',
+    INVALID_GOOGLE_TOKEN = 'Invalid Google token',
 }
