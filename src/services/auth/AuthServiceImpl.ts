@@ -83,7 +83,7 @@ export class AuthServiceImpl implements IAuthService {
       const jwtToken = jwt.sign(
         jwtPayload,
         process.env.JWT_SECRET as string,
-        { expiresIn: '24h', algorithm: 'HS256' } // You can adjust the expiration time
+        { expiresIn: '1m', algorithm: 'HS256' } // You can adjust the expiration time
       );
 
       const userWithToken: UserWithToken & { googleTokens?: IGoogleTokens } = {
