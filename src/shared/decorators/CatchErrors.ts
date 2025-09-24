@@ -21,5 +21,3 @@ export function CatchErrors(
 
   return descriptor;
 }
-
-// Usage in a controller method
