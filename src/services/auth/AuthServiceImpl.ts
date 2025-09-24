@@ -107,6 +107,7 @@ export class AuthServiceImpl implements IAuthService {
       const userWithToken: UserWithToken & { googleTokens?: IGoogleTokens } = {
         ...foundUser,
         token: jwtToken,
+        refreshToken: foundUser.refreshToken,
         googleTokens,
       };
 
