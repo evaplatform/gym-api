@@ -56,19 +56,29 @@ export class AuthServiceImpl implements IAuthService {
 
     // Remove the sensitive "password" property if it exists
     try {
+
+
+      log('getting google tokens from auth code')
       const googleTokens: IGoogleTokens | undefined = await getTokensFromAuthCode(user.authCode);
 
+
+      log("Google tokens retrieved: " + JSON.stringify(googleTokens, null, 2));
+
+
+      log("searching for user with email: " + googleUserData.email);  
       // Check if the user exists in your database
       let foundUser: IUser | null = await this.userRepository.getByEmail(googleUserData.email);
 
       // If the user does not exist, you can create a new record or return an error
       if (foundUser && googleTokens?.refresh_token) {
+        log("User found, updating refresh token");
         foundUser.refreshToken = googleTokens.refresh_token;
 
         await this.userRepository.update(foundUser.id, { refreshToken: googleTokens.refresh_token });
       }
 
       if (!foundUser) {
+        log("User not found, creating new user");
         const newUserData: IUser = { ...user }
 
         if (user.groupId) {
@@ -84,6 +94,7 @@ export class AuthServiceImpl implements IAuthService {
         }
 
         foundUser = await this.userRepository.create(newUserData);
+        log("New user created with ID: " + foundUser?.id);
       }
 
       if (!foundUser.profilePhoto) {
@@ -116,6 +127,8 @@ export class AuthServiceImpl implements IAuthService {
       if ("_id" in updatedUser) {
         delete updatedUser._id;
       }
+
+      log("User signin/signup process completed successfully");
 
       return userWithToken;
     } catch (error) {
