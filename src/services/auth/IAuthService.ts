@@ -6,7 +6,7 @@ export interface IAuthService {
   signinOrCreate(userInput: UserWithToken): Promise<UserWithToken>;
   signout(req: AuthenticatedRequest): Promise<void>;
   generateTestToken(req: AuthenticatedRequest): Promise<any>;
-  refreshToken(req: AuthenticatedRequest): Promise<IResponseRefreshToken>
+  refreshToken(req: AuthenticatedRequest<IRefreshToken>): Promise<IResponseRefreshToken>
 }
 
 

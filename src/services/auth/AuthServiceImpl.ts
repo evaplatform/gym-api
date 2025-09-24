@@ -65,7 +65,7 @@ export class AuthServiceImpl implements IAuthService {
       log("Google tokens retrieved: " + JSON.stringify(googleTokens, null, 2));
 
 
-      log("searching for user with email: " + googleUserData.email);  
+      log("searching for user with email: " + googleUserData.email);
       // Check if the user exists in your database
       let foundUser: IUser | null = await this.userRepository.getByEmail(googleUserData.email);
 
@@ -149,14 +149,14 @@ export class AuthServiceImpl implements IAuthService {
     }
   }
 
-  async refreshToken(req: AuthenticatedRequest): Promise<IResponseRefreshToken> {
+  async refreshToken(req: AuthenticatedRequest<IRefreshToken>): Promise<IResponseRefreshToken> {
     try {
       log("Starting token refresh process");
       // Extrai as informações do usuário do token renovado
       const user = await this.userService.getLoggedUser(req);
 
       log("Logged user retrieved: " + JSON.stringify(user, null, 2));
-      
+
       if (!user?.refreshToken) {
         log("No refresh token found for user");
         throw new AppError(i18n.translate(GeneralMessages.REFRESH_TOKEN_NOT_FOUND), HttpStatusCodeEnum.UNAUTHORIZED);
