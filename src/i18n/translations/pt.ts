@@ -50,4 +50,6 @@ export const ptErrorMessages: MessageType = {
     // Mensagens de autenticação
     [GeneralMessages.FAILED_REFRESH_TOKEN]: 'Falha ao atualizar o token',
     [GeneralMessages.INVALID_GOOGLE_TOKEN]: 'Token do Google inválido',
+    [GeneralMessages.EMAIL_NOT_FOUND_IN_GOOGLE_TOKEN]: 'Email não encontrado no token do Google',
+    [GeneralMessages.REFRESH_TOKEN_NOT_FOUND]: 'Token de atualização não encontrado'    
 };

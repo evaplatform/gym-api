@@ -59,6 +59,11 @@ const UserSchema = new mongoose.Schema<IUser>(
       default: null, 
       description: 'The ID of the academy the user is associated with, if any.' 
     },
+    refreshToken: { 
+      type: String, 
+      required: false, 
+      description: 'The refresh token for the user, used for authentication with Google.' 
+    }
   }, { ...MONGO_DEFAULT_PROPERTIES }
 );
 

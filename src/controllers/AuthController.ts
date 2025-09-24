@@ -34,7 +34,7 @@ export class AuthController {
   }
 
   @CatchErrors
-  static async refreshToken(req: AuthenticatedRequest<IRefreshToken>, res: Response) {
+  static async refreshToken(req: AuthenticatedRequest, res: Response) {
     const response = await authService.refreshToken(req);
 
     res.json(response);

@@ -49,5 +49,7 @@ export const enErrorMessages: MessageType = {
     // Auth Messages
     [GeneralMessages.FAILED_REFRESH_TOKEN]: 'Failed to refresh token',
     [GeneralMessages.INVALID_GOOGLE_TOKEN]: 'Invalid Google token',
+    [GeneralMessages.EMAIL_NOT_FOUND_IN_GOOGLE_TOKEN]: 'Email not found in Google token',
+    [GeneralMessages.REFRESH_TOKEN_NOT_FOUND]: 'Refresh token not found'
 };
 ;

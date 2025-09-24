@@ -4,7 +4,7 @@ import { IUser } from '../../models/user/IUser';
 import { IUserRepository } from '../../repositories/user/IUserRepository';
 import { IAuthService } from './IAuthService';
 import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
-import { OAuth2Client } from 'google-auth-library';
+import { LoginTicket, OAuth2Client, TokenPayload } from 'google-auth-library';
 import { getTokensFromAuthCode } from '../../shared/utils/getTokensFromAuthCode';
 import { IGoogleTokens } from '../../shared/interfaces/IGoogleTokens';
 import { log } from '../../shared/utils/log';
@@ -21,7 +21,7 @@ import { IResponseRefreshToken } from './interfaces';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-type SigningRequestType = UserWithToken & { authCode: string; }
+type SigningRequestType = UserWithToken & { authCode: string; };
 
 export class AuthServiceImpl implements IAuthService {
 
@@ -34,47 +34,57 @@ export class AuthServiceImpl implements IAuthService {
 
     log("Starting Google Signin/Signup process");
 
-    let googleUserData: {
-      sub: string;
-      name: string;
-      email: string;
-      picture: string;
-    } = {} as any;
+    let googleUserData: TokenPayload | undefined = undefined;
 
     try {
       // Call the Google API to validate the token and retrieve user data
-      const ticket = await client.verifyIdToken({
+      const ticket: LoginTicket = await client.verifyIdToken({
         idToken: user.token, // this is the id_token received from the frontend
         audience: process.env.GOOGLE_CLIENT_ID, // security check
       });
 
-      googleUserData = (ticket as any).payload;
+      googleUserData = ticket.getPayload();
     } catch (error) {
       log("Error verifying Google token: " + (error as any)?.message || "unknown error");
       throw new AppError(i18n.translate(GeneralMessages.INVALID_GOOGLE_TOKEN), HttpStatusCodeEnum.UNAUTHORIZED);
     }
 
-    // Check if the user exists in your database
-    let foundUser: IUser | null = await this.userRepository.getByEmail(googleUserData.email);
-
-    // If the user does not exist, you can create a new record or return an error
-    if (!foundUser) {
-      const newUserData: IUser = { ...user }
-
-      if (user.groupId) {
-        newUserData.groupId = user.groupId;
-      }
-
-      if (user.academyId) {
-        newUserData.academyId = user.academyId;
-      }
-
-      foundUser = await this.userRepository.create(newUserData);
+    if (!googleUserData?.email) {
+      throw new AppError(i18n.translate(GeneralMessages.EMAIL_NOT_FOUND_IN_GOOGLE_TOKEN), HttpStatusCodeEnum.UNAUTHORIZED);
     }
+
 
     // Remove the sensitive "password" property if it exists
     try {
-      const googleTokens = await getTokensFromAuthCode(user.authCode);
+      const googleTokens: IGoogleTokens | undefined = await getTokensFromAuthCode(user.authCode);
+
+      // Check if the user exists in your database
+      let foundUser: IUser | null = await this.userRepository.getByEmail(googleUserData.email);
+
+      // If the user does not exist, you can create a new record or return an error
+      if (foundUser && googleTokens?.refresh_token) {
+        foundUser.refreshToken = googleTokens.refresh_token;
+
+        await this.userRepository.update(foundUser.id, { refreshToken: googleTokens.refresh_token });
+      }
+
+      if (!foundUser) {
+        const newUserData: IUser = { ...user }
+
+        if (user.groupId) {
+          newUserData.groupId = user.groupId;
+        }
+
+        if (user.academyId) {
+          newUserData.academyId = user.academyId;
+        }
+
+        if (googleTokens?.access_token) {
+          newUserData.refreshToken = googleTokens.refresh_token;
+        }
+
+        foundUser = await this.userRepository.create(newUserData);
+      }
 
       if (!foundUser.profilePhoto) {
         foundUser.profilePhoto = user.profilePhoto;
@@ -125,14 +135,17 @@ export class AuthServiceImpl implements IAuthService {
     }
   }
 
-  async refreshToken(req: AuthenticatedRequest<IRefreshToken>): Promise<IResponseRefreshToken> {
+  async refreshToken(req: AuthenticatedRequest): Promise<IResponseRefreshToken> {
     try {
-      const refreshToken = req.body.refreshToken;
-      // Verifica e renova o token do Google usando o refresh_token
-      const googleTokens = await refreshGoogleTokens(refreshToken);
-
       // Extrai as informações do usuário do token renovado
       const user = await this.userService.getLoggedUser(req);
+
+      if (!user?.refreshToken) {
+        throw new AppError(i18n.translate(GeneralMessages.REFRESH_TOKEN_NOT_FOUND), HttpStatusCodeEnum.UNAUTHORIZED);
+      }
+
+      const googleTokens: IGoogleTokens = await refreshGoogleTokens(user.refreshToken);
+
 
       if (!user) {
         throw new AppError(i18n.translate(GeneralMessages.USER_NOT_FOUND), HttpStatusCodeEnum.NOT_FOUND);
