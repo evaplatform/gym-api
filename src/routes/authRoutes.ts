@@ -9,6 +9,6 @@ const router = express.Router();
 router.post('/signin-create', AuthController.signinOurCreate);
 router.post('/signout', (req, res, next) => AuthController.signout(req as unknown as AuthenticatedRequest, res).catch(next));
 router.post('/test-token', asyncRoute(AuthController.generateTestToken));
-router.post('/refresh-token', asyncRoute(AuthController.refreshToken));
+router.patch('/refresh-token', asyncRoute(AuthController.refreshToken));
 
 export default router;
