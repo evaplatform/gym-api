@@ -10,7 +10,6 @@ export interface IUser extends IDefaultEntityProperties {
   groupId?: string; // point to group collection
   cpf?: string; // unique
   academyId: IdType;
-  refreshToken?: string; // for auth with google
 }
 
 

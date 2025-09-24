@@ -54,6 +54,27 @@ export class AuthServiceImpl implements IAuthService {
       throw new AppError(i18n.translate(GeneralMessages.EMAIL_NOT_FOUND_IN_GOOGLE_TOKEN), HttpStatusCodeEnum.UNAUTHORIZED);
     }
 
+    let foundUser: IUser | null = await this.userRepository.getByEmail(googleUserData.email);
+
+    // If the user does not exist, you can create a new record or return an error
+
+    if (!foundUser) {
+      log("User not found, creating new user");
+      const newUserData: IUser = { ...user }
+
+      if (user.groupId) {
+        newUserData.groupId = user.groupId;
+      }
+
+      if (user.academyId) {
+        newUserData.academyId = user.academyId;
+      }
+
+      foundUser = await this.userRepository.create(newUserData);
+      log("New user created with ID: " + foundUser?.id);
+    }
+
+
 
     // Remove the sensitive "password" property if it exists
     try {
@@ -64,35 +85,6 @@ export class AuthServiceImpl implements IAuthService {
 
       log("searching for user with email: " + googleUserData.email);
       // Check if the user exists in your database
-      let foundUser: IUser | null = await this.userRepository.getByEmail(googleUserData.email);
-
-      // If the user does not exist, you can create a new record or return an error
-      if (foundUser && googleTokens?.refresh_token) {
-        log("User found, updating refresh token");
-        foundUser.refreshToken = googleTokens.refresh_token;
-
-        await this.userRepository.update(foundUser.id, { refreshToken: googleTokens.refresh_token });
-      }
-
-      if (!foundUser) {
-        log("User not found, creating new user");
-        const newUserData: IUser = { ...user }
-
-        if (user.groupId) {
-          newUserData.groupId = user.groupId;
-        }
-
-        if (user.academyId) {
-          newUserData.academyId = user.academyId;
-        }
-
-        if (googleTokens?.access_token) {
-          newUserData.refreshToken = googleTokens.refresh_token;
-        }
-
-        foundUser = await this.userRepository.create(newUserData);
-        log("New user created with ID: " + foundUser?.id);
-      }
 
       if (!foundUser.profilePhoto) {
         foundUser.profilePhoto = user.profilePhoto;
@@ -108,7 +100,7 @@ export class AuthServiceImpl implements IAuthService {
         isAdmin: updatedUser.isAdmin
       };
 
-      log("Generating JWT for user",jwtPayload);
+      log("Generating JWT for user", jwtPayload);
 
       const jwtToken = jwt.sign(
         jwtPayload,
@@ -119,7 +111,6 @@ export class AuthServiceImpl implements IAuthService {
       const userWithToken: UserWithToken & { googleTokens?: IGoogleTokens } = {
         ...updatedUser,
         token: jwtToken,
-        refreshToken: updatedUser.refreshToken,
         googleTokens,
       };
 
@@ -153,19 +144,24 @@ export class AuthServiceImpl implements IAuthService {
     try {
       log("Starting token refresh process");
       // Extrai as informações do usuário do token renovado
-      const user = await this.userService.getLoggedUser(req);
 
-      log("Logged user retrieved: " + JSON.stringify(user, null, 2));
 
-      if (!user?.refreshToken) {
+
+      const refreshToken = req.headers['x-refresh-token'];
+
+
+      if (!refreshToken) {
         log("No refresh token found for user");
         throw new AppError(i18n.translate(GeneralMessages.REFRESH_TOKEN_NOT_FOUND), HttpStatusCodeEnum.UNAUTHORIZED);
       }
 
-      log("Refreshing Google tokens using refresh token");
-      const googleTokens: IGoogleTokens = await refreshGoogleTokens(user.refreshToken);
+      const user = await this.userService.getLoggedUser(req);
 
+      const googleTokens = await refreshGoogleTokens(refreshToken as string);
+
+      log("refreshing Google tokens using refresh token", refreshToken);
       log("Google tokens refreshed: " + JSON.stringify(googleTokens, null, 2));
+
       if (!user) {
         throw new AppError(i18n.translate(GeneralMessages.USER_NOT_FOUND), HttpStatusCodeEnum.NOT_FOUND);
       }
