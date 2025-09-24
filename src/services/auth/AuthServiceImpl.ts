@@ -151,21 +151,27 @@ export class AuthServiceImpl implements IAuthService {
 
   async refreshToken(req: AuthenticatedRequest): Promise<IResponseRefreshToken> {
     try {
+      log("Starting token refresh process");
       // Extrai as informações do usuário do token renovado
       const user = await this.userService.getLoggedUser(req);
 
+      log("Logged user retrieved: " + JSON.stringify(user, null, 2));
+      
       if (!user?.refreshToken) {
+        log("No refresh token found for user");
         throw new AppError(i18n.translate(GeneralMessages.REFRESH_TOKEN_NOT_FOUND), HttpStatusCodeEnum.UNAUTHORIZED);
       }
 
+      log("Refreshing Google tokens using refresh token");
       const googleTokens: IGoogleTokens = await refreshGoogleTokens(user.refreshToken);
 
-
+      log("Google tokens refreshed: " + JSON.stringify(googleTokens, null, 2));
       if (!user) {
         throw new AppError(i18n.translate(GeneralMessages.USER_NOT_FOUND), HttpStatusCodeEnum.NOT_FOUND);
       }
 
       // Gera um novo JWT
+      log("Generating new JWT for user");
       const jwtPayload = {
         userId: user.id,
         academyId: user.academyId,
@@ -177,6 +183,7 @@ export class AuthServiceImpl implements IAuthService {
         process.env.JWT_SECRET as string,
         { expiresIn: EXPIRATION_TIME, algorithm: JWT_ALGORITHM }
       );
+      log("New JWT generated");
 
       // Retorna o novo token JWT
       return {
