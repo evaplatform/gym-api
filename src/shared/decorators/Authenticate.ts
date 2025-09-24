@@ -90,6 +90,8 @@ export function Authenticate(
           isAdmin: decoded.isAdmin
         };
 
+        log('Authenticated user:', req.user);
+
         // Chamar o método original
         return originalMethod.apply(this, arguments);
       } catch (error: any) {
