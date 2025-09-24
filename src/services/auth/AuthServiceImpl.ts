@@ -44,6 +44,7 @@ export class AuthServiceImpl implements IAuthService {
       });
 
       googleUserData = ticket.getPayload();
+      log("Google token verified successfully: " + JSON.stringify(googleUserData, null, 2));
     } catch (error) {
       log("Error verifying Google token: " + (error as any)?.message || "unknown error");
       throw new AppError(i18n.translate(GeneralMessages.INVALID_GOOGLE_TOKEN), HttpStatusCodeEnum.UNAUTHORIZED);
@@ -56,14 +57,10 @@ export class AuthServiceImpl implements IAuthService {
 
     // Remove the sensitive "password" property if it exists
     try {
-
-
       log('getting google tokens from auth code')
       const googleTokens: IGoogleTokens | undefined = await getTokensFromAuthCode(user.authCode);
 
-
       log("Google tokens retrieved: " + JSON.stringify(googleTokens, null, 2));
-
 
       log("searching for user with email: " + googleUserData.email);
       // Check if the user exists in your database
@@ -108,6 +105,8 @@ export class AuthServiceImpl implements IAuthService {
         academyId: foundUser.academyId,
         isAdmin: foundUser.isAdmin
       };
+
+      log("Generating JWT for user",jwtPayload);
 
       const jwtToken = jwt.sign(
         jwtPayload,

@@ -3,11 +3,15 @@ import { AppError } from "../../errors/AppError";
 import { AuthenticatedRequest } from "../interfaces/AuthenticatedRequest";
 import { i18n } from "@/i18n";
 import { GeneralMessages } from "@/errors/GeneralMessages";
+import { log } from "../utils/log";
 
 export function ValidateAcademy(target: any, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor {
     const originalMethod = descriptor.value;
 
     descriptor.value = async function (req: AuthenticatedRequest<any>, ...args: any[]) {
+
+        log(`Validating academy for user: ${req.user}`);
+
         // Verificar se o usuário tem academyId
         if (!req.user || !req.user.academyId) {
             throw new AppError(i18n.translate(GeneralMessages.ACADEMY_NOT_ASSOCIATED), HttpStatusCodeEnum.FORBIDDEN);
