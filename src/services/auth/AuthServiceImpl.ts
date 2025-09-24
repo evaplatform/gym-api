@@ -145,10 +145,7 @@ export class AuthServiceImpl implements IAuthService {
       log("Starting token refresh process");
       // Extrai as informações do usuário do token renovado
 
-
-
       const refreshToken = req.headers['x-refresh-token'];
-
 
       if (!refreshToken) {
         log("No refresh token found for user");

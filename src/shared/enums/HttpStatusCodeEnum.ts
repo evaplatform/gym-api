@@ -79,4 +79,10 @@ export enum HttpStatusCodeEnum {
    * @value 504
    */
   GATEWAY_TIMEOUT = 504,
+
+  /**
+   * Indicates that the JSON Web Token (JWT) has expired.
+   * @value 'jwt expired'
+   */
+  JWT_EXPIRED = 'jwt expired'
 }
