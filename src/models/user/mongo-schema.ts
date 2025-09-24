@@ -35,7 +35,7 @@ const UserSchema = new mongoose.Schema<IUser>(
     phoneNumber: {
       type: String,
       required: false,
-      unique: true,
+      unique: false,
       maxlength: 15,
       minlength: 10,
       description: 'The phone number of the user, must be unique and have a length between 10 and 15 characters.'
@@ -58,6 +58,11 @@ const UserSchema = new mongoose.Schema<IUser>(
       required: true,
       default: null,
       description: 'The ID of the academy the user is associated with, if any.'
+    },
+    refreshToken: {
+      type: String,
+      required: false,
+      description: 'The refresh token for Google OAuth, if applicable.'
     }
   }, { ...MONGO_DEFAULT_PROPERTIES }
 );

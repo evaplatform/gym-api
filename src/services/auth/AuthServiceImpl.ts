@@ -54,27 +54,6 @@ export class AuthServiceImpl implements IAuthService {
       throw new AppError(i18n.translate(GeneralMessages.EMAIL_NOT_FOUND_IN_GOOGLE_TOKEN), HttpStatusCodeEnum.UNAUTHORIZED);
     }
 
-    let foundUser: IUser | null = await this.userRepository.getByEmail(googleUserData.email);
-
-    // If the user does not exist, you can create a new record or return an error
-
-    if (!foundUser) {
-      log("User not found, creating new user");
-      const newUserData: IUser = { ...user }
-
-      if (user.groupId) {
-        newUserData.groupId = user.groupId;
-      }
-
-      if (user.academyId) {
-        newUserData.academyId = user.academyId;
-      }
-
-      foundUser = await this.userRepository.create(newUserData);
-      log("New user created with ID: " + foundUser?.id);
-    }
-
-
 
     // Remove the sensitive "password" property if it exists
     try {
@@ -85,6 +64,35 @@ export class AuthServiceImpl implements IAuthService {
 
       log("searching for user with email: " + googleUserData.email);
       // Check if the user exists in your database
+
+
+      let foundUser: IUser | null = await this.userRepository.getByEmail(googleUserData.email);
+
+      // If the user does not exist, you can create a new record or return an error
+
+      if (foundUser) {
+        await this.userRepository.update(foundUser.id, { refreshToken: googleTokens?.refresh_token });
+      }
+
+      if (!foundUser) {
+        log("User not found, creating new user");
+        const newUserData: IUser = { ...user }
+
+        if (user.groupId) {
+          newUserData.groupId = user.groupId;
+        }
+
+        if (user.academyId) {
+          newUserData.academyId = user.academyId;
+        }
+
+        if (googleTokens?.refresh_token) {
+          newUserData.refreshToken = googleTokens.refresh_token;
+        }
+
+        foundUser = await this.userRepository.create(newUserData);
+        log("New user created with ID: " + foundUser?.id);
+      }
 
       if (!foundUser.profilePhoto) {
         foundUser.profilePhoto = user.profilePhoto;
@@ -145,14 +153,14 @@ export class AuthServiceImpl implements IAuthService {
       log("Starting token refresh process");
       // Extrai as informações do usuário do token renovado
 
-      const refreshToken = req.headers['x-refresh-token'];
+      const user = await this.userService.getLoggedUser(req);
+
+      const refreshToken = req.headers['x-refresh-token'] ?? user?.refreshToken;
 
       if (!refreshToken) {
         log("No refresh token found for user");
         throw new AppError(i18n.translate(GeneralMessages.REFRESH_TOKEN_NOT_FOUND), HttpStatusCodeEnum.UNAUTHORIZED);
       }
-
-      const user = await this.userService.getLoggedUser(req);
 
       const googleTokens = await refreshGoogleTokens(refreshToken as string);
 
