@@ -191,6 +191,7 @@ export class AuthServiceImpl implements IAuthService {
         googleTokens
       };
     } catch (error) {
+      log("Error refreshing token: " + (error as any)?.message || "unknown error");
       throw new AppError(i18n.translate(GeneralMessages.FAILED_REFRESH_TOKEN), HttpStatusCodeEnum.UNAUTHORIZED);
     }
   }
