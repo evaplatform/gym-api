@@ -99,11 +99,13 @@ export class AuthServiceImpl implements IAuthService {
         await this.userRepository.update(foundUser.id, { profilePhoto: user.profilePhoto });
       }
 
+      const updatedUser = { ...foundUser, id: (foundUser as any)?._id || foundUser.id };
+
       // Generate JWT with user information
       const jwtPayload = {
-        userId: foundUser.id,
-        academyId: foundUser.academyId,
-        isAdmin: foundUser.isAdmin
+        userId: updatedUser.id,
+        academyId: updatedUser.academyId,
+        isAdmin: updatedUser.isAdmin
       };
 
       log("Generating JWT for user",jwtPayload);
@@ -115,13 +117,12 @@ export class AuthServiceImpl implements IAuthService {
       );
 
       const userWithToken: UserWithToken & { googleTokens?: IGoogleTokens } = {
-        ...foundUser,
+        ...updatedUser,
         token: jwtToken,
-        refreshToken: foundUser.refreshToken,
+        refreshToken: updatedUser.refreshToken,
         googleTokens,
       };
 
-      const updatedUser = { ...foundUser, id: (foundUser as any)?._id || foundUser.id };
 
       if ("_id" in updatedUser) {
         delete updatedUser._id;
