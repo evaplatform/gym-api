@@ -129,7 +129,7 @@ export class AuthServiceImpl implements IAuthService {
         delete updatedUser._id;
       }
 
-      log("User signin/signup process completed successfully");
+      log("User signin/signup process completed successfully", userWithToken);
 
       return userWithToken;
     } catch (error) {
