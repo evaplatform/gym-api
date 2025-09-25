@@ -74,6 +74,8 @@ export class AuthServiceImpl implements IAuthService {
         await this.userRepository.update(foundUser.id, { refreshToken: googleTokens?.refresh_token });
       }
 
+      log("User found in database: " + (foundUser ? JSON.stringify(foundUser, null, 2) : "No user found"));
+
       if (!foundUser) {
         log("User not found, creating new user");
         const newUserData: IUser = { ...user }
