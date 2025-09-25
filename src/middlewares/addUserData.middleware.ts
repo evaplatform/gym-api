@@ -21,7 +21,12 @@ export function addUserData(req: any, res: Response, next: NextFunction): void {
             try {
                 log('Optional authentication token found, verifying...');
                 // Verificar token e adicionar req.user
-                const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+                const decoded = jwt.decode(token) as JwtPayload;
+                if (!decoded || !decoded.userId) {
+                    log('Invalid token payload in optional authentication');
+                    return next();
+                }
+
                 req.user = {
                     id: decoded.userId,
                     academyId: decoded.academyId,
