@@ -7,4 +7,5 @@ export interface IExerciseBlockService {
   update(req: AuthenticatedRequest): Promise<IExerciseBlock | null>;
   delete(req: AuthenticatedRequest): Promise<void | null>;
   getById(req: AuthenticatedRequest): Promise<IExerciseBlock | null>;
+  getAllByUserWorkouts(req: AuthenticatedRequest): Promise<IExerciseBlock[]>;
 }

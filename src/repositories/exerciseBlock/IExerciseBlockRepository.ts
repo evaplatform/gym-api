@@ -7,4 +7,5 @@ export interface IExerciseBlockRepository {
   create(exerciseBlock: IExerciseBlock): Promise<IExerciseBlock>;
   update(id: IdType, exerciseBlock: Partial<IExerciseBlock>): Promise<IExerciseBlock | null>;
   delete(id: IdType): Promise<void | null>;
+  getByIdList(ids: IdType[], academyId?: IdType): Promise<IExerciseBlock[]>;
 }

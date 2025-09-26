@@ -36,4 +36,11 @@ export class ExerciseBlockRepositoryImpl implements IExerciseBlockRepository {
     async delete(id: IdType): Promise<void | null> {
         await ExerciseBlockModel.findByIdAndDelete(id);
     }
+
+    async getByIdList(ids: IdType[], academyId?: IdType): Promise<IExerciseBlock[]> {
+        const filter = academyId ? { _id: { $in: ids }, academyId } : { _id: { $in: ids } };
+        const exerciseBlocks = await ExerciseBlockModel.find(filter).exec();
+
+        return exerciseBlocks.map(exerciseBlock => exerciseBlock.toJSON());
+    }
 }

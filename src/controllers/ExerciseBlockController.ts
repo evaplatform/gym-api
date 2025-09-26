@@ -6,8 +6,9 @@ import { ExerciseBlockRepositoryImpl } from '../repositories/exerciseBlock/Exerc
 import { ExerciseBlockServiceImpl } from '../services/exerciseBlock/ExerciseBlockServiceImpl';
 import { IExerciseBlock } from '@/models/exerciseBlock/IExerciseBlock';
 import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
+import { ExerciseRepositoryImpl } from '@/repositories/exercise/ExerciseRepositoryImpl';
 
-const exerciseBlockService = new ExerciseBlockServiceImpl(new ExerciseBlockRepositoryImpl());
+const exerciseBlockService = new ExerciseBlockServiceImpl(new ExerciseBlockRepositoryImpl(), new ExerciseRepositoryImpl);
 
 export class ExerciseBlockController {
     @CatchErrors
@@ -43,5 +44,12 @@ export class ExerciseBlockController {
     static async getById(req: AuthenticatedRequest, res: Response) {
         const exerciseBlock = await exerciseBlockService.getById(req);
         res.status(HttpStatusCodeEnum.OK).json(exerciseBlock);
+    }
+
+    @CatchErrors
+    @Authenticate
+    static async getAllByUserWorkouts(req: AuthenticatedRequest, res: Response) {
+        const exerciseBlocks = await exerciseBlockService.getAllByUserWorkouts(req);
+        res.json(exerciseBlocks);
     }
 }

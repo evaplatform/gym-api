@@ -10,5 +10,6 @@ router.get('/:id', asyncRoute<void>(ExerciseBlockController.getById));
 router.post('/', asyncRoute<IExerciseBlock>(ExerciseBlockController.create));
 router.patch('/', asyncRoute<IExerciseBlock>(ExerciseBlockController.update));
 router.delete('/:id', asyncRoute<IExerciseBlock>(ExerciseBlockController.delete));
+router.get('/all-by-user-workout/', asyncRoute<void>(ExerciseBlockController.getAllByUserWorkouts));
 
 export default router;
