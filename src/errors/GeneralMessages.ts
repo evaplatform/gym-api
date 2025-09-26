@@ -6,6 +6,7 @@ export enum GeneralMessages {
     USER_CREATED_SUCCESSFULLY = 'User created successfully',
     USER_ID_REQUIRED_FOR_UPDATE = 'USER_ID_REQUIRED_FOR_UPDATE',
     ERROR_PROCESSING_USER_DATA = 'Error processing user data',
+    USER_ID_MUST_BE_A_NUMBER = 'USER_ID_MUST_BE_A_NUMBER',
 
     // academy messages
     ACADEMY_COURSE_NOT_FOUND = 'Academy course not found',

@@ -38,6 +38,7 @@ export const enErrorMessages: MessageType = {
     [GeneralMessages.USER_CREATED_SUCCESSFULLY]: 'User created successfully',
     [GeneralMessages.USER_ID_REQUIRED_FOR_UPDATE]: 'User ID is required for update',
     [GeneralMessages.ERROR_PROCESSING_USER_DATA]: 'Error processing user data',
+    [GeneralMessages.USER_ID_MUST_BE_A_NUMBER]: 'User ID must be a number',
 
     // Academy Messages
     [GeneralMessages.ACADEMY_COURSE_NOT_FOUND]: 'Academy course not found',

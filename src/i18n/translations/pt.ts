@@ -38,7 +38,8 @@ export const ptErrorMessages: MessageType = {
     [GeneralMessages.USER_UPDATED_SUCCESSFULLY]: 'Usuário atualizado com sucesso',
     [GeneralMessages.USER_CREATED_SUCCESSFULLY]: 'Usuário criado com sucesso',
     [GeneralMessages.USER_ID_REQUIRED_FOR_UPDATE]: 'ID do usuário é obrigatório para atualização',
-    [GeneralMessages.ERROR_PROCESSING_USER_DATA]: 'Erro ao processar os dados do usuário',
+    [GeneralMessages.ERROR_PROCESSING_USER_DATA]: 'Erro ao processar os dados do usuário', 
+    [GeneralMessages.USER_ID_MUST_BE_A_NUMBER]: 'ID do usuário deve ser um número',
 
     // Mensagens da academia
     [GeneralMessages.ACADEMY_COURSE_NOT_FOUND]: 'Curso da academia não encontrado',
@@ -51,5 +52,5 @@ export const ptErrorMessages: MessageType = {
     [GeneralMessages.FAILED_REFRESH_TOKEN]: 'Falha ao atualizar o token',
     [GeneralMessages.INVALID_GOOGLE_TOKEN]: 'Token do Google inválido',
     [GeneralMessages.EMAIL_NOT_FOUND_IN_GOOGLE_TOKEN]: 'Email não encontrado no token do Google',
-    [GeneralMessages.REFRESH_TOKEN_NOT_FOUND]: 'Token de atualização não encontrado'    
+    [GeneralMessages.REFRESH_TOKEN_NOT_FOUND]: 'Token de atualização não encontrado'
 };

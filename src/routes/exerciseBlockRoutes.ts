@@ -5,11 +5,13 @@ import { ExerciseBlockController } from '@/controllers/ExerciseBlockController';
 
 const router = express.Router();
 
-router.get('/', asyncRoute<void>(ExerciseBlockController.getAll));
+router.post('/all-by-user-workouts/', asyncRoute<void>(ExerciseBlockController.getAllByUserWorkouts));
+
 router.get('/:id', asyncRoute<void>(ExerciseBlockController.getById));
+router.delete('/:id', asyncRoute<IExerciseBlock>(ExerciseBlockController.delete));
+
+router.get('/', asyncRoute<void>(ExerciseBlockController.getAll));
 router.post('/', asyncRoute<IExerciseBlock>(ExerciseBlockController.create));
 router.patch('/', asyncRoute<IExerciseBlock>(ExerciseBlockController.update));
-router.delete('/:id', asyncRoute<IExerciseBlock>(ExerciseBlockController.delete));
-router.get('/all-by-user-workouts/', asyncRoute<void>(ExerciseBlockController.getAllByUserWorkouts));
 
 export default router;

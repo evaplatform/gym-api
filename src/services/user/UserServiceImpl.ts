@@ -9,6 +9,7 @@ import { ValidateAcademy } from '@/shared/decorators/ValidateAcademy';
 import { i18n } from '@/i18n';
 import { GeneralMessages } from '@/errors/GeneralMessages';
 import { log } from '@/shared/utils/log';
+import { isNumber } from '@/shared/utils/isNumber';
 
 export class UserServiceImpl implements IUserService {
   // Constructor
@@ -28,6 +29,7 @@ export class UserServiceImpl implements IUserService {
   async getById(req: AuthenticatedRequest): Promise<IUser | null> {
     const id = req.params.id;
     let user: IUser | null = null;
+
 
     if (req.user?.isAdmin) {
       user = await this.userRepository.getById(id);

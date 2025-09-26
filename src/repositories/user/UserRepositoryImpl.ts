@@ -3,11 +3,13 @@ import { IdType } from '@/shared/types/IdType';
 import { IUser } from '../../models/user/IUser';
 import { UserModel } from '../../models/user/mongo-schema';
 import { IUserRepository } from './IUserRepository';
+import { updateId } from '@/shared/utils/updateId';
 
 export class UserRepositoryImpl implements IUserRepository {
 
   async getByEmail(email: string): Promise<IUser | null> {
-    return UserModel.findOne({ email }).lean();
+    const user = await UserModel.findOne({ email }).lean();
+    return user ? updateId(user) : null;
   }
 
   async update(id: IdType, user: Partial<IUser>): Promise<IUser | null> {
@@ -17,7 +19,7 @@ export class UserRepositoryImpl implements IUserRepository {
       { new: true }
     ).exec();
 
-    return updated ? updated.toJSON() : null;
+    return updated ? updateId(updated.toObject()) : null;
   }
 
   async getById(id: IdType, academyId?: IdType): Promise<IUser | null> {
@@ -31,13 +33,17 @@ export class UserRepositoryImpl implements IUserRepository {
     const filter = academyId ? { academyId } : {};
     const users = await UserModel.find(filter).exec();
 
-    return users.map(user => user.toJSON());
+
+    const updatedUsers = users.map(user => updateId(user.toObject()));
+
+    return updatedUsers;
   }
 
 
   async create(user: Omit<IUser, 'id' | 'createdAt'>): Promise<IUser> {
     const created = await UserModel.create(user);
-    return created.toJSON();
+    const createdData = updateId(created.toObject());
+    return createdData;
   }
 
   async delete(id: IdType): Promise<void | null> {
