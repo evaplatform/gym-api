@@ -5,7 +5,7 @@ import { ExerciseBlockController } from '@/controllers/ExerciseBlockController';
 
 const router = express.Router();
 
-router.post('/all-by-user-workouts/', asyncRoute<void>(ExerciseBlockController.getAllByUserWorkouts));
+router.get('/all-by-user-workouts/', asyncRoute<void>(ExerciseBlockController.getAllByUserWorkouts));
 
 router.get('/:id', asyncRoute<void>(ExerciseBlockController.getById));
 router.delete('/:id', asyncRoute<IExerciseBlock>(ExerciseBlockController.delete));
