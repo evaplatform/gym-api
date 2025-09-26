@@ -71,7 +71,7 @@ export class AuthServiceImpl implements IAuthService {
       // If the user does not exist, you can create a new record or return an error
 
       if (foundUser) {
-        await this.userRepository.update(foundUser.id, { refreshToken: googleTokens?.refresh_token });
+        await this.userRepository.update(foundUser.id ?? (foundUser as any)._id, { refreshToken: googleTokens?.refresh_token });
       }
 
       log("User found in database: " + (foundUser ? JSON.stringify(foundUser, null, 2) : "No user found"));
