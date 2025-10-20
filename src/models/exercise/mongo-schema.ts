@@ -25,8 +25,8 @@ const ExerciseSchema = new mongoose.Schema<IExercise>(
     description: {
       type: String,
       default: null,
-      maxlength: 500,
-      description: 'A brief description of the exercise, maximum length of 500 characters.'
+      maxlength: 2000,
+      description: 'A brief description of the exercise, maximum length of 2000 characters.'
     },
     imagePath: {
       type: String,

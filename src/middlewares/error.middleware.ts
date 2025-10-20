@@ -44,16 +44,7 @@ export function errorHandler(
       message: translatedMessage
     });
   }
-  // if (err.code === 11000 && err.keyValue) {
-  //   const field = Object.keys(err.keyValue)[0];
-  //   const value = err.keyValue[field];
-  //   return res.status(HttpStatusCodeEnum.CONFLICT).json({
-  //     status: 'error',
-  //     error: `Valor duplicado: '${value}' já existe para o campo '${field}'`,
-  //     code: HttpStatusCodeEnum.CONFLICT,
-  //     message: `Valor duplicado: '${value}' já existe para o campo '${field}'`
-  //   });
-  // }
+
 
   // 3. ValidationError do Mongoose
   if (err.name === 'ValidationError') {
@@ -77,6 +68,21 @@ export function errorHandler(
         .replace('{field}', fieldDisplayName)
         .replace('{type}', err.kind)
         .replace('{value}', err.value);
+
+      return res.status(HttpStatusCodeEnum.BAD_REQUEST).json({
+        status: 'error',
+        code: HttpStatusCodeEnum.BAD_REQUEST,
+        error: translatedMessage,
+        message: translatedMessage,
+      });
+    }
+
+    if(err.name === 'ValidationError' && err.errors.description.kind === "maxlength"){
+
+      const fieldDisplayName = getFieldDisplayName('description');
+      const translatedMessage = i18n.translate(ErrorCode.VALIDATION_MAX_LENGTH)
+        .replace('{field}', fieldDisplayName)
+        .replace('{max}', err.errors.description.properties.maxlength);
 
       return res.status(HttpStatusCodeEnum.BAD_REQUEST).json({
         status: 'error',
