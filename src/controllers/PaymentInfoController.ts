@@ -12,7 +12,7 @@ export class PaymentInfoController {
     @Authenticate
     static async getAll(req: Request, res: Response) {
         const paymentInfos = await paymentInfoService.getAll();
-        res.json(paymentInfos);
+        res.json(paymentInfos); 
     }
 
     @CatchErrors
