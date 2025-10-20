@@ -6,6 +6,7 @@ import { i18n } from '@/i18n';
 import { getFieldDisplayName, translateMongooseError } from '@/shared/utils/mongooseErrorTranslator';
 import { ErrorCode } from '@/errors/ErrorMessages';
 import { SupportedLanguagesEnum } from '@/shared/enums/LanguagesEnum';
+import { ExerciseModel } from '@/models/exercise/mongo-schema';
 
 export function errorHandler(
   err: any,
@@ -46,19 +47,36 @@ export function errorHandler(
   }
 
 
-  // 3. ValidationError do Mongoose
-  if (err.name === 'ValidationError' && err.errors.description.kind === "maxlength") {
-    const fieldDisplayName = getFieldDisplayName('description');
-    const translatedMessage = i18n.translate(ErrorCode.VALIDATION_MAX_LENGTH)
-      .replace('{field}', fieldDisplayName)
-      .replace('{max}', err.errors.description.properties.maxlength);
 
-    return res.status(HttpStatusCodeEnum.BAD_REQUEST).json({
-      status: 'error',
-      code: HttpStatusCodeEnum.BAD_REQUEST,
-      error: translatedMessage,
-      message: translatedMessage,
-    });
+  // 3. ValidationError do Mongoose
+  if (err.name === 'ValidationError') {
+    // Pegar o primeiro campo com erro
+    const errorField = Object.keys(err.errors)[0];
+    const errorInfo = err.errors[errorField];
+
+    if (errorInfo.kind === "maxlength") {
+      const fieldDisplayName = getFieldDisplayName(errorField);
+
+      // Obter a descrição do campo do schema, se disponível
+      const fieldSchema = ExerciseModel.schema.path(errorField);
+      const fieldDescription = fieldSchema && fieldSchema.options.description
+        ? fieldSchema.options.description
+        : '';
+
+      const translatedMessage = i18n.translate(ErrorCode.VALIDATION_MAX_LENGTH)
+        .replace('{field}', fieldDisplayName)
+        .replace('{max}', errorInfo.properties.maxlength)
+        .replace('{description}', fieldDescription);
+
+      return res.status(HttpStatusCodeEnum.BAD_REQUEST).json({
+        status: 'error',
+        code: HttpStatusCodeEnum.BAD_REQUEST,
+        error: translatedMessage,
+        message: translatedMessage,
+        fieldDescription: fieldDescription // Incluindo a descrição do campo na resposta
+      });
+    }
+    // Você pode adicionar outros tipos de validação aqui
   }
 
 
