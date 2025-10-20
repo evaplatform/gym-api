@@ -47,6 +47,21 @@ export function errorHandler(
 
 
   // 3. ValidationError do Mongoose
+  if (err.name === 'ValidationError' && err.errors.description.kind === "maxlength") {
+    const fieldDisplayName = getFieldDisplayName('description');
+    const translatedMessage = i18n.translate(ErrorCode.VALIDATION_MAX_LENGTH)
+      .replace('{field}', fieldDisplayName)
+      .replace('{max}', err.errors.description.properties.maxlength);
+
+    return res.status(HttpStatusCodeEnum.BAD_REQUEST).json({
+      status: 'error',
+      code: HttpStatusCodeEnum.BAD_REQUEST,
+      error: translatedMessage,
+      message: translatedMessage,
+    });
+  }
+
+
   if (err.name === 'ValidationError') {
     const details: Record<string, string> = {};
 
@@ -77,20 +92,7 @@ export function errorHandler(
       });
     }
 
-    if(err.name === 'ValidationError' && err.errors.description.kind === "maxlength"){
 
-      const fieldDisplayName = getFieldDisplayName('description');
-      const translatedMessage = i18n.translate(ErrorCode.VALIDATION_MAX_LENGTH)
-        .replace('{field}', fieldDisplayName)
-        .replace('{max}', err.errors.description.properties.maxlength);
-
-      return res.status(HttpStatusCodeEnum.BAD_REQUEST).json({
-        status: 'error',
-        code: HttpStatusCodeEnum.BAD_REQUEST,
-        error: translatedMessage,
-        message: translatedMessage,
-      });
-    }
 
     // 5. Mensagem geral de erro de validação
     const generalMessage = i18n.translate(ErrorCode.VALIDATION_ERROR);
