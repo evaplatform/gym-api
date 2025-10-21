@@ -40,6 +40,16 @@ const ExerciseSchema = new mongoose.Schema<IExercise>(
       maxlength: 255,
       description: 'The file path to the video demonstrating the exercise, maximum length of 255 characters.'
     },
+    hasStopwatch: {
+      type: Boolean,
+      default: false,
+      description: 'Indicates if the exercise includes a stopwatch feature.'
+    },
+    hasGps: {
+      type: Boolean,
+      default: false,
+      description: 'Indicates if the exercise includes GPS tracking feature.'
+    }
   },
   { ...MONGO_DEFAULT_PROPERTIES }
 );

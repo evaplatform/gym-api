@@ -45,7 +45,13 @@ export const ExerciseByUserSchema = new mongoose.Schema<IExerciseByUser>(
       description: 'Weight of the client for the exercise',
       maxlength: 10
     },
-    repetitions: {
+    repetitions: [{
+      type: Number,
+      required: false,
+      description: 'Array of repetitions for the exercise',
+      maxlength: 10
+    }],
+    sets: {
       type: Number,
       required: false,
       description: 'Number of repetitions for the exercise',

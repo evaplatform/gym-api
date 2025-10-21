@@ -14,7 +14,8 @@ export interface IExerciseByUser extends IDefaultEntityProperties {
     
     // bodybuilding | mobility | stretching
     clientWeight?: number;
-    repetitions?: number;
+    repetitions?: number[];
+    sets?: number;
     
     // all types
     duration?: number;
