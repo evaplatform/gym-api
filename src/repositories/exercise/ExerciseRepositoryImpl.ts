@@ -30,7 +30,7 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
         const filter = academyId ? { academyId } : {};
         const exercises = await ExerciseModel.find(filter).exec();
 
-        return exercises.map(exercise => exercise.toJSON());
+        return exercises.map(exercise => exercise.toJSON()); 
     }
 
     async create(exercise: IExercise): Promise<IExercise> {

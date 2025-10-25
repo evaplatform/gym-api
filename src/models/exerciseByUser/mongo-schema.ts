@@ -57,6 +57,12 @@ export const ExerciseByUserSchema = new mongoose.Schema<IExerciseByUser>(
       description: 'Number of repetitions for the exercise',
       maxlength: 10
     },
+    exerciseOrientations: {
+      type: String,
+      required: false,
+      description: 'Orientations for the exercise',
+      maxlength: 500
+    },
     duration: {
       type: Number,
       required: false,

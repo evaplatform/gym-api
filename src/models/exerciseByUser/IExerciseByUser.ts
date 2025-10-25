@@ -9,15 +9,16 @@ export interface IExerciseByUser extends IDefaultEntityProperties {
     exerciseId: IdType;
 
     // cardio
-    distance?: number; 
+    distance?: number;
     distanceUnit?: DistanceUnitEnum; // e.g., kilometers, miles
-    
+
     // bodybuilding | mobility | stretching
     clientWeight?: number;
     repetitions?: number[];
     sets?: number;
-    
+
     // all types
+    exerciseOrientations?: string;
     duration?: number;
     goal?: string;
     weekDays?: WeekDaysEnum[];
