@@ -63,6 +63,12 @@ export const ExerciseByUserSchema = new mongoose.Schema<IExerciseByUser>(
       description: 'Orientations for the exercise',
       maxlength: 500
     },
+    restTimeBetweenSets: {
+      type: Number,
+      required: false,
+      description: 'Rest time between sets in seconds',
+      maxlength: 10
+    },
     duration: {
       type: Number,
       required: false,
