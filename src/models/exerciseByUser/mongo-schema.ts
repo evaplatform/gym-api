@@ -81,6 +81,11 @@ export const ExerciseByUserSchema = new mongoose.Schema<IExerciseByUser>(
       description: 'Goal for the exercise',
       maxlength: 100
     },
+    hasUserNotes: {
+      type: Boolean,
+      required: false,
+      description: 'Indicates if the user has added notes for the exercise'
+    },
     weekDays: [{
       type: String,
       enum: Object.values(WeekDaysEnum),

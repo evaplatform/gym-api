@@ -19,8 +19,9 @@ export interface IExerciseByUser extends IDefaultEntityProperties {
 
     // all types
     exerciseOrientations?: string;
-    restTimeBetweenSets?: number; 
+    restTimeBetweenSets?: number;
     duration?: number;
     goal?: string;
     weekDays?: WeekDaysEnum[];
+    hasUserNotes?: boolean;
 }
