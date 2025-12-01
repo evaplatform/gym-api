@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
-import { IExerciseBlock } from './IExerciseBlock';
+import { ITraining } from './ITraining';
 import { BlockTypeEnum } from '../../shared/enums/BlockTypeEnum';
 import { MONGO_DEFAULT_PROPERTIES } from '../../shared/constants/mongoDefaultProperties';
 
-const ExerciseBlockSchema = new mongoose.Schema<IExerciseBlock>(
+const TrainingSchema = new mongoose.Schema<ITraining>(
   {
     name: { 
       type: String, 
@@ -33,4 +33,4 @@ const ExerciseBlockSchema = new mongoose.Schema<IExerciseBlock>(
   { ...MONGO_DEFAULT_PROPERTIES }
 );
 
-export const ExerciseBlockModel = mongoose.model<IExerciseBlock>('ExerciseBlock', ExerciseBlockSchema);
+export const TrainingModel = mongoose.model<ITraining>('Training', TrainingSchema);

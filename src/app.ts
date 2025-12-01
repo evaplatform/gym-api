@@ -8,7 +8,7 @@ import { MongooseClient } from './database/mongooseClient';
 import authRoutes from './routes/authRoutes';
 import groupRoutes from './routes/groupRoutes';
 import exerciseRoutes from './routes/exerciseRoutes';
-import exerciseBlockRoutes from './routes/exerciseBlockRoutes';
+import trainingRoutes from './routes/trainingRoutes';
 import paymentInfoRoutes from './routes/paymentInfoRoutes';
 import exerciseByUserRoutes from './routes/exerciseByUserRoutes';
 import { errorHandler } from './middlewares/error.middleware';
@@ -27,7 +27,7 @@ app.use('/user', userRoutes);
 app.use('/academy', academyRoutes);
 app.use('/group', groupRoutes);
 app.use('/exercise', exerciseRoutes);
-app.use('/exercise-block', exerciseBlockRoutes);
+app.use('/training', trainingRoutes);
 app.use('/payment-info', paymentInfoRoutes);
 app.use('/exercise-by-user', exerciseByUserRoutes);
 

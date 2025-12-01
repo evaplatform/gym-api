@@ -1,20 +1,22 @@
 // src/services/UserService.ts
 import { ValidateAcademy } from '@/shared/decorators/ValidateAcademy';
 import { AppError } from '../../errors/AppError';
-import { IExerciseBlock } from '../../models/exerciseBlock/IExerciseBlock';
-import { IExerciseBlockRepository } from '../../repositories/exerciseBlock/IExerciseBlockRepository';
+import { ITraining } from '../../models/training/ITraining';
+import { ITrainingRepository } from '../../repositories/training/ITrainingRepository';
 import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
-import { IExerciseBlockService } from './IExerciseBlockService';
+import { ITrainingService } from './ITrainingService';
 import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 import { IExerciseRepository } from '@/repositories/exercise/IExerciseRepository';
 import { i18n } from '@/i18n';
 import { GeneralMessages } from '@/errors/GeneralMessages';
 import { IExercise } from '@/models/exercise/IExercise';
-export class ExerciseBlockServiceImpl implements IExerciseBlockService {
-  constructor(private readonly exerciseBlockRepository: IExerciseBlockRepository, private readonly exerciseRepository: IExerciseRepository) { }
+
+
+export class TrainingServiceImpl implements ITrainingService {
+  constructor(private readonly exerciseBlockRepository: ITrainingRepository, private readonly exerciseRepository: IExerciseRepository) { }
 
   @ValidateAcademy
-  async getAll(req: AuthenticatedRequest): Promise<IExerciseBlock[]> {
+  async getAll(req: AuthenticatedRequest): Promise<ITraining[]> {
     if (req.user?.isAdmin) {
       return this.exerciseBlockRepository.getAll();
     }
@@ -23,9 +25,9 @@ export class ExerciseBlockServiceImpl implements IExerciseBlockService {
   }
 
   @ValidateAcademy
-  async getById(req: AuthenticatedRequest): Promise<IExerciseBlock | null> {
+  async getById(req: AuthenticatedRequest): Promise<ITraining | null> {
     const id = req.params.id;
-    let exercise: IExerciseBlock | null = null;
+    let exercise: ITraining | null = null;
 
     if (req.user?.isAdmin) {
       exercise = await this.exerciseBlockRepository.getById(id);
@@ -41,14 +43,14 @@ export class ExerciseBlockServiceImpl implements IExerciseBlockService {
   }
 
   @ValidateAcademy
-  async create(req: AuthenticatedRequest<IExerciseBlock>): Promise<IExerciseBlock> {
+  async create(req: AuthenticatedRequest<ITraining>): Promise<ITraining> {
     const exercise = req.body;
 
     return this.exerciseBlockRepository.create(exercise);
   }
 
   @ValidateAcademy
-  async update(req: AuthenticatedRequest<IExerciseBlock>): Promise<IExerciseBlock | null> {
+  async update(req: AuthenticatedRequest<ITraining>): Promise<ITraining | null> {
     const exercise = req.body;
 
     return this.exerciseBlockRepository.update(exercise.id, exercise);
@@ -64,7 +66,7 @@ export class ExerciseBlockServiceImpl implements IExerciseBlockService {
   }
 
   @ValidateAcademy
-  async getAllByUserWorkouts(req: AuthenticatedRequest): Promise<IExerciseBlock[]> {
+  async getAllByUserWorkouts(req: AuthenticatedRequest): Promise<ITraining[]> {
     const user = req.user;
 
     if (!user) {

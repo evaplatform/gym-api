@@ -15,7 +15,7 @@ import { IDefaultEntityProperties } from '../../shared/interfaces/IDefaulEntityP
  * @property {BlockTypeEnum} exerciseType - The type of exercise block, used for informational purposes 
  * (e.g., cardio, strength, endurance, mobility).
  */
-export interface IExerciseBlock extends IDefaultEntityProperties {
+export interface ITraining extends IDefaultEntityProperties {
   name: string;
   imagePath?: string;
   academyId: IdType;
