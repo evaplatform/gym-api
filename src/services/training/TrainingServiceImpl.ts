@@ -75,7 +75,7 @@ export class TrainingServiceImpl implements ITrainingService {
 
     const exercisesByUser: IExercise[] = await this.exerciseRepository.getAllByUserId(user.id, req.validatedAcademyId);
 
-    const exerciseBlockIds = exercisesByUser.map(exercise => exercise.exerciseBlockId).filter(id => id !== undefined) as string[];
+    const exerciseBlockIds = exercisesByUser.flatMap(exercise => exercise.trainingIds).filter(id => id !== undefined) as string[];
 
     return this.exerciseBlockRepository.getByIdList(exerciseBlockIds, req.validatedAcademyId);
   }

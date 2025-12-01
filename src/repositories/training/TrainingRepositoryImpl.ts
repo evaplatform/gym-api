@@ -23,7 +23,7 @@ export class TrainingRepositoryImpl implements ITrainingRepository {
 
     async getAll(academyId?: IdType): Promise<ITraining[]> {
         const filter = academyId ? { academyId } : {};
-        const exercises = await TrainingModel.find(filter).exec();
+        const exercises: any[] = await TrainingModel.find(filter).exec();
 
         return exercises.map(exercise => exercise.toJSON());
     }

@@ -16,12 +16,12 @@ const ExerciseSchema = new mongoose.Schema<IExercise>(
       required: true,
       description: 'The ID of the academy associated with the exercise.'
     },
-    exerciseBlockId: {
+    trainingIds: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'ExerciseBlock',
+      ref: 'Training',
       required: true,
-      description: 'The ID of the exercise block this exercise belongs to.'
-    },
+      description: 'The ID of the training this exercise belongs to.'
+    }],
     description: {
       type: String,
       default: null,

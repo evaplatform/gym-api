@@ -21,8 +21,8 @@ export class TrainingController {
     @CatchErrors
     @Authenticate
     static async create(req: AuthenticatedRequest<ITraining>, res: Response) {
-        const exerciseBlock = await trainingService.create(req);
-        res.status(HttpStatusCodeEnum.CREATED).json(exerciseBlock);
+        const training = await trainingService.create(req);
+        res.status(HttpStatusCodeEnum.CREATED).json(training);
     }
 
     @CatchErrors

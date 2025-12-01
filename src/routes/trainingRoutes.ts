@@ -1,7 +1,7 @@
 import express from 'express';
 import { asyncRoute } from '../shared/utils/asyncRoute';
 import { ITraining } from '@/models/training/ITraining';
-import { TrainingController } from '@/controllers/ExerciseBlockController';
+import { TrainingController } from '@/controllers/TrainingController';
 
 const router = express.Router();
 
