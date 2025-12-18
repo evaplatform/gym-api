@@ -5,8 +5,6 @@ import { TrainingController } from '@/controllers/TrainingController';
 
 const router = express.Router();
 
-router.get('/all-by-user-workouts/', asyncRoute<void>(TrainingController.getAllByUserWorkouts));
-
 router.get('/:id', asyncRoute<void>(TrainingController.getById));
 router.delete('/:id', asyncRoute<ITraining>(TrainingController.delete));
 
