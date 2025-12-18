@@ -2,6 +2,7 @@
 import { BlockTypeEnum } from '../../shared/enums/BlockTypeEnum';
 import { IdType } from '../../shared/types/IdType';
 import { IDefaultEntityProperties } from '../../shared/interfaces/IDefaulEntityProperties';
+import { WeekDaysEnum } from '@/shared/enums/WeekDayEnum';
 
 /**
  * Represents an exercise block entity with properties for identification,
@@ -20,4 +21,5 @@ export interface ITraining extends IDefaultEntityProperties {
   imagePath?: string;
   academyId: IdType;
   exerciseType: BlockTypeEnum;
+  weekDays?: WeekDaysEnum[];
 }

@@ -10,7 +10,6 @@ import groupRoutes from './routes/groupRoutes';
 import exerciseRoutes from './routes/exerciseRoutes';
 import trainingRoutes from './routes/trainingRoutes';
 import paymentInfoRoutes from './routes/paymentInfoRoutes';
-import exerciseByUserRoutes from './routes/exerciseByUserRoutes';
 import { errorHandler } from './middlewares/error.middleware';
 import { HttpStatusCodeEnum } from './shared/enums/HttpStatusCodeEnum';
 
@@ -29,7 +28,6 @@ app.use('/group', groupRoutes);
 app.use('/exercise', exerciseRoutes);
 app.use('/training', trainingRoutes);
 app.use('/payment-info', paymentInfoRoutes);
-app.use('/exercise-by-user', exerciseByUserRoutes);
 
 app.get('/ping', async (_, res) => {
   const dbState = mongoose.connection.readyState;

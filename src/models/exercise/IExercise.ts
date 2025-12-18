@@ -1,3 +1,4 @@
+import { DistanceUnitEnum } from '@/shared/enums/DistanceUnitEnum';
 import { IDefaultEntityProperties } from '../../shared/interfaces/IDefaulEntityProperties';
 import { IdType } from '../../shared/types/IdType';
 
@@ -11,4 +12,19 @@ export interface IExercise extends IDefaultEntityProperties {
 
   hasStopwatch?: boolean;
   hasGps?: boolean;
+
+  // cardio
+  distance?: number;
+  distanceUnit?: DistanceUnitEnum; // e.g., kilometers, miles
+
+  // bodybuilding | mobility | stretching
+  clientWeight?: number;
+  repetitions?: number[];
+  sets?: number;
+
+  // all types
+  exerciseOrientations?: string;
+  restTimeBetweenSets?: number;
+  duration?: number;
+  goal?: string;
 }

@@ -7,10 +7,6 @@ import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
 import { ITrainingService } from './ITrainingService';
 import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 import { IExerciseRepository } from '@/repositories/exercise/IExerciseRepository';
-import { i18n } from '@/i18n';
-import { GeneralMessages } from '@/errors/GeneralMessages';
-import { IExercise } from '@/models/exercise/IExercise';
-
 
 export class TrainingServiceImpl implements ITrainingService {
   constructor(private readonly exerciseBlockRepository: ITrainingRepository, private readonly exerciseRepository: IExerciseRepository) { }
@@ -63,21 +59,6 @@ export class TrainingServiceImpl implements ITrainingService {
     await this.getById(req);
 
     await this.exerciseBlockRepository.delete(id);
-  }
-
-  @ValidateAcademy
-  async getAllByUserWorkouts(req: AuthenticatedRequest): Promise<ITraining[]> {
-    const user = req.user;
-
-    if (!user) {
-      throw new AppError(i18n.translate(GeneralMessages.USER_NOT_FOUND), HttpStatusCodeEnum.NOT_FOUND);
-    }
-
-    const exercisesByUser: IExercise[] = await this.exerciseRepository.getAllByUserId(user.id, req.validatedAcademyId);
-
-    const exerciseBlockIds = exercisesByUser.flatMap(exercise => exercise.trainingIds).filter(id => id !== undefined) as string[];
-
-    return this.exerciseBlockRepository.getByIdList(exerciseBlockIds, req.validatedAcademyId);
   }
 }
 

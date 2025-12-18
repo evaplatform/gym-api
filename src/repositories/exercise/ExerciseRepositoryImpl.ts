@@ -1,12 +1,8 @@
-import { ExerciseByUserModel } from '@/models/exerciseByUser/mongo-schema';
+
 import { IExercise } from '../../models/exercise/IExercise';
 import { ExerciseModel } from '../../models/exercise/mongo-schema';
 import { IdType } from '../../shared/types/IdType';
 import { IExerciseRepository } from './IExerciseRepository';
-import { AppError } from '@/errors/AppError';
-import { log } from '@/shared/utils/log';
-import { UserModel } from '@/models/user/mongo-schema';
-import { HttpStatusCodeEnum } from '@/shared/enums/HttpStatusCodeEnum';
 
 export class ExerciseRepositoryImpl implements IExerciseRepository {
     async update(id: IdType, exercise: Partial<IExercise>): Promise<IExercise | null> {
@@ -40,23 +36,5 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
 
     async delete(id: IdType): Promise<void | null> {
         await ExerciseModel.findByIdAndDelete(id);
-    }
-
-    async getAllByUserId(userId: IdType, academyId?: IdType): Promise<IExercise[]> {
-        const exercises = await ExerciseModel.find({ academyId }).exec();
-
-        const filter = academyId ? { userId, academyId } : { userId };
-        const exercisesByUser = await ExerciseByUserModel.find(filter).exec();
-
-        if (exercisesByUser.length === 0) {
-            throw new AppError('Nenhum exercício encontrado para esse usuário', 404);
-        }
-
-        const filteredExercises = exercisesByUser.map(exByUser => {
-            const exerciseDetails = exercises.find(ex => ex._id.toString() === exByUser.exerciseId.toString());
-            return exerciseDetails ? exerciseDetails.toJSON() : null;
-        });
-
-        return filteredExercises.filter(exercise => exercise !== null);
     }
 }

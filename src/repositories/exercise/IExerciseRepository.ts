@@ -7,5 +7,4 @@ export interface IExerciseRepository {
   create(exercise: IExercise): Promise<IExercise>;
   update(id: IdType, exercise: Partial<IExercise>): Promise<IExercise | null>;
   delete(id: IdType): Promise<void | null>;
-  getAllByUserId(userId: IdType, academyId?: IdType): Promise<IExercise[]>;
 }

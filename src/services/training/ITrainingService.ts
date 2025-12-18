@@ -7,5 +7,4 @@ export interface ITrainingService {
   update(req: AuthenticatedRequest): Promise<ITraining | null>;
   delete(req: AuthenticatedRequest): Promise<void | null>;
   getById(req: AuthenticatedRequest): Promise<ITraining | null>;
-  getAllByUserWorkouts(req: AuthenticatedRequest): Promise<ITraining[]>;
 }
