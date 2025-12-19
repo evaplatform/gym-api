@@ -11,5 +11,6 @@ router.delete('/:id', asyncRoute<ITrainingByUser>(TrainingByUserController.delet
 router.get('/', asyncRoute<void>(TrainingByUserController.getAll));
 router.post('/', asyncRoute<ITrainingByUser>(TrainingByUserController.create));
 router.patch('/:id', asyncRoute<ITrainingByUser>(TrainingByUserController.update));
+router.get('/get-by-user/:userId', asyncRoute<void>(TrainingByUserController.getByUserId));
 
 export default router;

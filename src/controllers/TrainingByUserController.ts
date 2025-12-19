@@ -44,4 +44,14 @@ export class TrainingByUserController {
         const training = await TrainingByUserService.getById(req);
         res.status(HttpStatusCodeEnum.OK).json(training);
     }
+
+
+    @CatchErrors
+    @Authenticate
+    static async getByUserId(req: AuthenticatedRequest, res: Response) {
+        const userId = req.params.userId;
+        const trainingList = await TrainingByUserService.getAll(req);
+        const userTrainings = trainingList.filter(training => training.userId.toString() === userId);
+        res.status(HttpStatusCodeEnum.OK).json(userTrainings);
+    }
 }
