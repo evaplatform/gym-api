@@ -1,4 +1,4 @@
-import { IDefaultEntityProperties } from "../../shared/interfaces/IDefaulEntityProperties";
+import { IDefaultEntityProperties } from "../../shared/interfaces/IDefaultEntityProperties";
 
 export interface IAcademy extends IDefaultEntityProperties  {
   name: string;

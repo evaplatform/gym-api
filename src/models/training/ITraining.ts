@@ -1,7 +1,7 @@
 
 import { BlockTypeEnum } from '../../shared/enums/BlockTypeEnum';
 import { IdType } from '../../shared/types/IdType';
-import { IDefaultEntityProperties } from '../../shared/interfaces/IDefaulEntityProperties';
+import { IDefaultEntityProperties } from '../../shared/interfaces/IDefaultEntityProperties';
 import { WeekDaysEnum } from '@/shared/enums/WeekDayEnum';
 
 /**

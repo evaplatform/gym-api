@@ -17,6 +17,12 @@ const TrainingByUserSchema = new mongoose.Schema<ITrainingByUser>(
       required: true,
       description: 'The ID of the associated academy.'
     },
+    trainingId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Training',
+      required: true,
+      description: 'The IDs of the associated trainings.'
+    },
     weekDays: [{
       type: String,
       enum: Object.values(WeekDaysEnum),

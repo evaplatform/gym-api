@@ -1,5 +1,5 @@
 import { DistanceUnitEnum } from '@/shared/enums/DistanceUnitEnum';
-import { IDefaultEntityProperties } from '../../shared/interfaces/IDefaulEntityProperties';
+import { IDefaultEntityProperties } from '../../shared/interfaces/IDefaultEntityProperties';
 import { IdType } from '../../shared/types/IdType';
 
 export interface IExercise extends IDefaultEntityProperties {

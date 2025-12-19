@@ -1,5 +1,5 @@
 import { IdType } from "@/shared/types/IdType";
-import { IDefaultEntityProperties } from "../../shared/interfaces/IDefaulEntityProperties";
+import { IDefaultEntityProperties } from "../../shared/interfaces/IDefaultEntityProperties";
 
 export interface IPaymentInfo extends IDefaultEntityProperties {
   academyId: IdType; // point to academy collection
