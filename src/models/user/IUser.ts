@@ -7,7 +7,6 @@ export interface IUser extends IDefaultEntityProperties {
   isAdmin: boolean
   profilePhoto?: string;
   phoneNumber?: string; // unique
-  trainingIds: IdType[];
   groupId?: string; // point to group collection
   cpf?: string; // unique
   academyId: IdType;

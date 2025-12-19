@@ -46,12 +46,6 @@ const UserSchema = new mongoose.Schema<IUser>(
       default: false,
       description: 'Indicates whether the user has administrative privileges.'
     },
-    trainingIds: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Training',
-      required: true,
-      description: 'The ID of the training this exercise belongs to.'
-    }],
     groupId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Group',
