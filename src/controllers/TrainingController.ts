@@ -45,4 +45,11 @@ export class TrainingController {
         const exerciseBlock = await trainingService.getById(req);
         res.status(HttpStatusCodeEnum.OK).json(exerciseBlock);
     }
+
+    @CatchErrors
+    @Authenticate
+    static async getAllByUserWorkouts(req: AuthenticatedRequest, res: Response) {
+        const trainings = await trainingService.getAllByUserWorkouts(req);
+        res.status(HttpStatusCodeEnum.OK).json(trainings);
+    }
 }

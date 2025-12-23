@@ -2,6 +2,7 @@ import { IdType } from '@/shared/types/IdType';
 import { ITraining } from '../../models/training/ITraining';
 import { TrainingModel } from '../../models/training/mongo-schema';
 import { ITrainingRepository } from './ITrainingRepository';
+import { TrainingByUserModel } from '@/models/trainingByUser/mongo-schema';
 
 export class TrainingRepositoryImpl implements ITrainingRepository {
     async update(id: IdType, exercise: Partial<ITraining>): Promise<ITraining | null> {
@@ -43,4 +44,23 @@ export class TrainingRepositoryImpl implements ITrainingRepository {
 
         return exerciseBlocks.map(exerciseBlock => exerciseBlock.toJSON());
     }
+
+    async getAllByUserWorkouts(userId: IdType, academyId?: IdType): Promise<ITraining[]> {
+        const filter: any = { userId };
+        if (academyId) {
+            filter.academyId = academyId;
+        }
+
+        const trainingsByUser = await TrainingByUserModel.find(filter).exec();
+        const trainingIds = trainingsByUser.map(training => training.trainingId);
+
+        const trainingFilter: any = { _id: { $in: trainingIds } };
+        if (academyId) {
+            trainingFilter.academyId = academyId;
+        }
+
+        const trainings: any[] = await TrainingModel.find(trainingFilter).exec();
+
+        return trainings.map(training => training.toJSON());
+    }   
 }

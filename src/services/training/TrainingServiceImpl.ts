@@ -60,6 +60,13 @@ export class TrainingServiceImpl implements ITrainingService {
 
     await this.exerciseBlockRepository.delete(id);
   }
+
+  @ValidateAcademy
+  async getAllByUserWorkouts(req: AuthenticatedRequest): Promise<ITraining[]> {
+    const userId = req.user?.id as string;
+
+    return this.exerciseBlockRepository.getAllByUserWorkouts(userId, req.validatedAcademyId);
+  }
 }
 
 
