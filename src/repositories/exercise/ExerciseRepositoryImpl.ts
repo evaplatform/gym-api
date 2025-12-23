@@ -1,4 +1,5 @@
 
+import { TrainingByUserModel } from '@/models/trainingByUser/mongo-schema';
 import { IExercise } from '../../models/exercise/IExercise';
 import { ExerciseModel } from '../../models/exercise/mongo-schema';
 import { IdType } from '../../shared/types/IdType';
@@ -26,7 +27,7 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
         const filter = academyId ? { academyId } : {};
         const exercises = await ExerciseModel.find(filter).exec();
 
-        return exercises.map(exercise => exercise.toJSON()); 
+        return exercises.map(exercise => exercise.toJSON());
     }
 
     async create(exercise: IExercise): Promise<IExercise> {
@@ -36,5 +37,20 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
 
     async delete(id: IdType): Promise<void | null> {
         await ExerciseModel.findByIdAndDelete(id);
+    }
+
+    async getAllByUserExercises(userId: IdType, academyId?: IdType): Promise<IExercise[]> {
+        const filter: any = { userId };
+        if (academyId) {
+            filter.academyId = academyId;
+        }
+
+        const trainingsByUser = await TrainingByUserModel.find({ userId }).exec();
+
+        const filterExercise = { trainingIds: trainingsByUser.map(t => t.trainingId) };
+
+        const exercises: any[] = await ExerciseModel.find(filterExercise).exec();
+
+        return exercises.map(exercise => exercise.toJSON());
     }
 }

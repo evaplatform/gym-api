@@ -46,4 +46,11 @@ export class ExerciseController {
         res.status(HttpStatusCodeEnum.OK).json(exercise);
     }
 
+    @CatchErrors
+    @Authenticate
+    static async getAllByUserExercises(req: AuthenticatedRequest, res: Response) {
+        const exercises = await exerciseService.getAllByUserExercises(req);
+        res.status(HttpStatusCodeEnum.OK).json(exercises);
+    }
+
 }
