@@ -45,9 +45,13 @@ export class ExerciseRepositoryImpl implements IExerciseRepository {
             filter.academyId = academyId;
         }
 
-        const trainingsByUser = await TrainingByUserModel.find({ userId }).exec();
+        const trainingsByUserList = await TrainingByUserModel.find({ userId }).exec();
 
-        const filterExercise = { trainingIds: trainingsByUser.map(t => t.trainingId) };
+        const filterExercise = {
+            trainingIds: trainingsByUserList
+                .map(t => t.trainingId)
+                .filter(id => !!id)
+        };
 
         const exercises: any[] = await ExerciseModel.find(filterExercise).exec();
 
