@@ -13,6 +13,7 @@ import paymentInfoRoutes from './routes/paymentInfoRoutes';
 import trainingByUserRoutes from './routes/trainingByUserRoutes';
 import { errorHandler } from './middlewares/error.middleware';
 import { HttpStatusCodeEnum } from './shared/enums/HttpStatusCodeEnum';
+import exerciseHistoryRoutes from './routes/exerciseHistoryRoutes';
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use('/user', userRoutes);
 app.use('/academy', academyRoutes);
 app.use('/group', groupRoutes);
 app.use('/exercise', exerciseRoutes);
+app.use('/exercise-history', exerciseHistoryRoutes);
 app.use('/training', trainingRoutes);
 app.use('/payment-info', paymentInfoRoutes);
 app.use('/training-by-user', trainingByUserRoutes);
