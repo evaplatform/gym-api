@@ -63,7 +63,7 @@ export class TrainingServiceImpl implements ITrainingService {
 
   @ValidateAcademy
   async getAllByUser(req: AuthenticatedRequest): Promise<ITraining[]> {
-    const userId = req.params.userId ?? req.user?.id as string;
+    const userId = req?.params?.userId ?? req.user?.id as string;
 
     return this.exerciseBlockRepository.getAllByUser(userId, req.validatedAcademyId);
   }
