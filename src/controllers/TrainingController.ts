@@ -48,8 +48,8 @@ export class TrainingController {
 
     @CatchErrors
     @Authenticate
-    static async getAllByUserWorkouts(req: AuthenticatedRequest, res: Response) {
-        const trainings = await trainingService.getAllByUserWorkouts(req);
+    static async getAllByUser(req: AuthenticatedRequest, res: Response) {
+        const trainings = await trainingService.getAllByUser(req);
         res.status(HttpStatusCodeEnum.OK).json(trainings);
     }
 }

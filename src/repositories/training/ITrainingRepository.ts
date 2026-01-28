@@ -8,5 +8,5 @@ export interface ITrainingRepository {
   update(id: IdType, exerciseBlock: Partial<ITraining>): Promise<ITraining | null>;
   delete(id: IdType): Promise<void | null>;
   getByIdList(ids: IdType[], academyId?: IdType): Promise<ITraining[]>;
-  getAllByUserWorkouts(userId: IdType, academyId?: IdType): Promise<ITraining[]>;
+  getAllByUser(userId: IdType, academyId?: IdType): Promise<ITraining[]>;
 }

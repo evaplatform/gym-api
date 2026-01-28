@@ -45,7 +45,7 @@ export class TrainingRepositoryImpl implements ITrainingRepository {
         return exerciseBlocks.map(exerciseBlock => exerciseBlock.toJSON());
     }
 
-    async getAllByUserWorkouts(userId: IdType, academyId?: IdType): Promise<ITraining[]> {
+    async getAllByUser(userId: IdType, academyId?: IdType): Promise<ITraining[]> {
         const filter: any = { userId };
         if (academyId) {
             filter.academyId = academyId;
