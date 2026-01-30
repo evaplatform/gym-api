@@ -5,8 +5,6 @@ import { asyncRoute } from '../shared/utils/asyncRoute';
 
 const router = express.Router();
 
-
-
 router.get('/', asyncRoute<void>(ExerciseController.getAll));
 router.post('/', asyncRoute<IExercise>(ExerciseController.create));
 router.patch('/', asyncRoute<IExercise>(ExerciseController.update));
