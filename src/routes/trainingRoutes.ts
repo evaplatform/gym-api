@@ -9,7 +9,8 @@ const router = express.Router();
 router.get('/', asyncRoute<void>(TrainingController.getAll));
 router.post('/', asyncRoute<ITraining>(TrainingController.create));
 router.patch('/', asyncRoute<ITraining>(TrainingController.update));
-    router.get('/all-by-user/:userId', asyncRoute<void>(TrainingController.getAllByUser));
+router.get('/all-by-user/', asyncRoute<void>(TrainingController.getAllByUser));
+router.get('/all-by-user/:userId', asyncRoute<void>(TrainingController.getAllByUser));
 
 // Depois as rotas com parâmetros
 router.get('/:id', asyncRoute<void>(TrainingController.getById));
