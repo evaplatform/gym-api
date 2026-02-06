@@ -14,7 +14,7 @@ const GroupSchema = new mongoose.Schema<IGroup>(
     academyId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Academy',
-      required: true,
+      required: false,
       description: 'The ID of the academy this group belongs to'
     },
     permissions: {
