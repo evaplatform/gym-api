@@ -7,7 +7,7 @@ export interface IUser extends IDefaultEntityProperties {
   isAdmin: boolean
   profilePhoto?: string;
   phoneNumber?: string; // unique
-  groupId?: string; // point to group collection
+  groupId?: string[]; // point to group collection
   cpf?: string; // unique
   academyId: IdType;
   refreshToken?: string; // token to refresh Google OAuth tokens

@@ -47,10 +47,10 @@ const UserSchema = new mongoose.Schema<IUser>(
       description: 'Indicates whether the user has administrative privileges.'
     },
     groupId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: [mongoose.Schema.Types.ObjectId],
       ref: 'Group',
-      default: null,
-      description: 'The ID of the group the user belongs to, if any.'
+      default: [],
+      description: 'The IDs of the groups the user belongs to.'
     },
     academyId: {
       type: mongoose.Schema.Types.ObjectId,
