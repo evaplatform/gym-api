@@ -80,8 +80,8 @@ export class AuthServiceImpl implements IAuthService {
         log("User not found, creating new user");
         const newUserData: IUser = { ...user }
 
-        if (user.groupId) {
-          newUserData.groupId = user.groupId;
+        if (user.groupIds) {
+          newUserData.groupIds = user.groupIds;
         }
 
         if (user.academyId) {
