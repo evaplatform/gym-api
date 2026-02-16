@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import { IGroup } from './IGroup';
 import { MONGO_DEFAULT_PROPERTIES } from '../../shared/constants/mongoDefaultProperties';
 
+const PermissionNode = { permitted: { type: Boolean, default: false } };
+
 const GroupSchema = new mongoose.Schema<IGroup>(
   {
     name: {
@@ -18,76 +20,74 @@ const GroupSchema = new mongoose.Schema<IGroup>(
       description: 'The ID of the academy this group belongs to'
     },
     permissions: {
-      changeAcademy: {
-        permitted: { type: Boolean, default: false }
-      },
+      changeAcademy: PermissionNode,
       drawerMenu: {
-        permitted: { type: Boolean, default: false },
+        permitted: PermissionNode,
         home: {
-          permitted: { type: Boolean, default: false },
+          permitted: PermissionNode,
           tabs: {
-            home: {
-              permitted: { type: Boolean, default: false }
-            },
-            calendar: {
-              permitted: { type: Boolean, default: false }
-            },
+            permitted: PermissionNode,
+            home: PermissionNode,
+            calendar: PermissionNode,
             exercises: {
-              permitted: { type: Boolean, default: false },
-              finalizeTrainingButton: { permitted: { type: Boolean, default: false } },
-              finalizeExerciseButton: { permitted: { type: Boolean, default: false } },
-              userGpsButton: { permitted: { type: Boolean, default: false } }
+              permitted: PermissionNode,
+              finalizeTrainingButton: PermissionNode,
+              finalizeExerciseButton: PermissionNode,
+              userGpsButton: PermissionNode
             },
-            cardio: {
-              permitted: { type: Boolean, default: false }
-            },
-            financial: {
-              permitted: { type: Boolean, default: false }
-            }
+            cardio: PermissionNode,
+            financial: PermissionNode
           }
         },
         users: {
-          permitted: { type: Boolean, default: false },
-          add: { permitted: { type: Boolean, default: false } },
-          delete: { permitted: { type: Boolean, default: false } },
-          update: { permitted: { type: Boolean, default: false } }
+          permitted: PermissionNode,
+          add: PermissionNode,
+          delete: PermissionNode,
+          update: PermissionNode
         },
         academies: {
-          permitted: { type: Boolean, default: false },
-          add: { permitted: { type: Boolean, default: false } },
-          delete: { permitted: { type: Boolean, default: false } },
-          update: { permitted: { type: Boolean, default: false } }
+          permitted: PermissionNode,
+          add: PermissionNode,
+          delete: PermissionNode,
+          update: PermissionNode
         },
         exercises: {
-          permitted: { type: Boolean, default: false },
-          add: { permitted: { type: Boolean, default: false } },
-          delete: { permitted: { type: Boolean, default: false } },
-          update: { permitted: { type: Boolean, default: false } }
+          permitted: PermissionNode,
+          add: PermissionNode,
+          delete: PermissionNode,
+          update: PermissionNode
         },
         trainings: {
-          permitted: { type: Boolean, default: false },
-          add: { permitted: { type: Boolean, default: false } },
-          delete: { permitted: { type: Boolean, default: false } },
-          update: { permitted: { type: Boolean, default: false } }
+          permitted: PermissionNode,
+          add: PermissionNode,
+          delete: PermissionNode,
+          update: PermissionNode
+        },
+        trainingByUserList: {
+          permitted: PermissionNode,
+          add: PermissionNode,
+          delete: PermissionNode,
+          update: PermissionNode
         },
         userSettings: {
-          permitted: { type: Boolean, default: false },
-          resetDataButton: { permitted: { type: Boolean, default: false } }
+          permitted: PermissionNode,
+          resetDataButton: PermissionNode
         },
         charts: {
-          permitted: { type: Boolean, default: false },
-          deleteHistoryButton: { permitted: { type: Boolean, default: false } },
-          deleteAllHistoryButton: { permitted: { type: Boolean, default: false } }
+          permitted: PermissionNode,
+          deleteHistoryButton: PermissionNode,
+          deleteAllHistoryButton: PermissionNode
         },
         groups: {
-          permitted: { type: Boolean, default: false },
-          changeAcademyButton: { permitted: { type: Boolean, default: false } },
-          add: { permitted: { type: Boolean, default: false } },
-          delete: { permitted: { type: Boolean, default: false } },
-          update: { permitted: { type: Boolean, default: false } }
+          permitted: PermissionNode,
+          changeAcademyButton: PermissionNode,
+          add: PermissionNode,
+          delete: PermissionNode,
+          update: PermissionNode
         }
       }
     }
-  }, { ...MONGO_DEFAULT_PROPERTIES });
+  }, { ...MONGO_DEFAULT_PROPERTIES }
+);
 
 export const GroupModel = mongoose.model<IGroup>('Group', GroupSchema);
