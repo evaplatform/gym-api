@@ -41,30 +41,35 @@ const GroupSchema = new mongoose.Schema<IGroup>(
         },
         users: {
           permitted: PermissionNode,
+          visualize: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
           update: PermissionNode
         },
         academies: {
           permitted: PermissionNode,
+          visualize: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
           update: PermissionNode
         },
         exercises: {
           permitted: PermissionNode,
+          visualize: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
           update: PermissionNode
         },
         trainings: {
           permitted: PermissionNode,
+          visualize: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
           update: PermissionNode
         },
         trainingByUserList: {
           permitted: PermissionNode,
+          visualize: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
           update: PermissionNode
@@ -75,6 +80,7 @@ const GroupSchema = new mongoose.Schema<IGroup>(
         },
         charts: {
           permitted: PermissionNode,
+          visualize: PermissionNode,
           deleteHistoryButton: PermissionNode,
           deleteAllHistoryButton: PermissionNode
         },

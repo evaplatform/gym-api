@@ -1,5 +1,6 @@
 import { IdType } from "@/shared/types/IdType";
 import { IDefaultEntityProperties } from "../../shared/interfaces/IDefaultEntityProperties";
+
 export interface PermissionNode {
   permitted: boolean;
 }
@@ -28,30 +29,35 @@ export interface IGroupPermissions {
     };
     users: {
       permitted: boolean;
+      visualize: PermissionNode;
       add: PermissionNode;
       delete: PermissionNode;
       update: PermissionNode;
     };
     academies: {
       permitted: boolean;
+      visualize: PermissionNode;
       add: PermissionNode;
       delete: PermissionNode;
       update: PermissionNode;
     };
     exercises: {
       permitted: boolean;
+      visualize: PermissionNode;
       add: PermissionNode;
       delete: PermissionNode;
       update: PermissionNode;
     };
     trainings: {
       permitted: boolean;
+      visualize: PermissionNode;
       add: PermissionNode;
       delete: PermissionNode;
       update: PermissionNode;
     };
     trainingByUserList: {
       permitted: boolean;
+      visualize: PermissionNode;
       add: PermissionNode;
       delete: PermissionNode;
       update: PermissionNode;
@@ -61,6 +67,7 @@ export interface IGroupPermissions {
       resetDataButton: PermissionNode;
     };
     charts: {
+      visualize: PermissionNode;
       permitted: boolean;
       deleteHistoryButton: PermissionNode;
       deleteAllHistoryButton: PermissionNode;
@@ -76,8 +83,8 @@ export interface IGroupPermissions {
 }
 
 export interface IGroup extends IDefaultEntityProperties {
-  name: string;
-  academyId: IdType; 
+  name: string; // unique
+  academyId: IdType; // point to academy collection
   permissions: IGroupPermissions
 }
 
