@@ -22,15 +22,15 @@ const GroupSchema = new mongoose.Schema<IGroup>(
     permissions: {
       changeAcademy: PermissionNode,
       drawerMenu: {
-        permitted: PermissionNode,
+        permitted: { type: Boolean, default: false },
         home: {
-          permitted: PermissionNode,
+          permitted: { type: Boolean, default: false },
           tabs: {
-            permitted: PermissionNode,
+            permitted: { type: Boolean, default: false },
             home: PermissionNode,
             calendar: PermissionNode,
             exercises: {
-              permitted: PermissionNode,
+              permitted: { type: Boolean, default: false },
               finalizeTrainingButton: PermissionNode,
               finalizeExerciseButton: PermissionNode,
               userGpsButton: PermissionNode
@@ -40,52 +40,52 @@ const GroupSchema = new mongoose.Schema<IGroup>(
           }
         },
         users: {
-          permitted: PermissionNode,
+          permitted: { type: Boolean, default: false },
           visualize: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
           update: PermissionNode
         },
         academies: {
-          permitted: PermissionNode,
+          permitted: { type: Boolean, default: false },
           visualize: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
           update: PermissionNode
         },
         exercises: {
-          permitted: PermissionNode,
+          permitted: { type: Boolean, default: false },
           visualize: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
           update: PermissionNode
         },
         trainings: {
-          permitted: PermissionNode,
+          permitted: { type: Boolean, default: false },
           visualize: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
           update: PermissionNode
         },
         trainingByUserList: {
-          permitted: PermissionNode,
+          permitted: { type: Boolean, default: false },
           visualize: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
           update: PermissionNode
         },
         userSettings: {
-          permitted: PermissionNode,
+          permitted: { type: Boolean, default: false },
           resetDataButton: PermissionNode
         },
         charts: {
-          permitted: PermissionNode,
+          permitted: { type: Boolean, default: false },
           visualize: PermissionNode,
           deleteHistoryButton: PermissionNode,
           deleteAllHistoryButton: PermissionNode
         },
         groups: {
-          permitted: PermissionNode,
+          permitted: { type: Boolean, default: false },
           changeAcademyButton: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
