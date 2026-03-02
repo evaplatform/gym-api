@@ -23,7 +23,7 @@ export class GroupController {
         const group = await groupService.create(req);
         res.status(HttpStatusCodeEnum.CREATED).json(group);
     }
-
+//
     @CatchErrors
     @Authenticate
     static async update(req: AuthenticatedRequest<IGroup>, res: Response) {
