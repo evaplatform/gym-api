@@ -7,4 +7,5 @@ export interface IGroupRepository {
   update(id: string, group: Partial<IGroup>): Promise<IGroup | null>;
   delete(id: string): Promise<void | null>;
   getAll(academyId?: IdType): Promise<IGroup[]>;
+  getByUserId(userId: IdType,  academyId?: IdType): Promise<IGroup[] | null>;
 }

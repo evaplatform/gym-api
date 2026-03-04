@@ -7,4 +7,5 @@ export interface IGroupService {
   update(req: AuthenticatedRequest): Promise<IGroup | null>;
   delete(req: AuthenticatedRequest): Promise<void | null>;
   getById(req: AuthenticatedRequest): Promise<IGroup | null>;
+  getByUserId(req: AuthenticatedRequest): Promise<IGroup[] | null>;
 }

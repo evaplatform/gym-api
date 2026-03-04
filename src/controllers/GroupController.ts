@@ -45,4 +45,11 @@ export class GroupController {
         res.status(HttpStatusCodeEnum.OK).json(group);
     }
 
+    @CatchErrors
+    @Authenticate
+    static async getByUserId(req: AuthenticatedRequest, res: Response) {
+        const groups = await groupService.getByUserId(req);
+        res.status(HttpStatusCodeEnum.OK).json(groups);
+    }
+
 }

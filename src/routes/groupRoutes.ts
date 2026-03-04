@@ -8,6 +8,7 @@ const router = express.Router();
 router.get('/', asyncRoute<void>(GroupController.getAll));
 router.post('/', asyncRoute<IGroup>(GroupController.create));
 router.patch('/', asyncRoute<IGroup>(GroupController.update));
+router.get('/user/:id', asyncRoute<IGroup>(GroupController.getByUserId));
 
 router.get('/:id', asyncRoute<void>(GroupController.getById));
 router.delete('/:id', asyncRoute<IGroup>(GroupController.delete));
