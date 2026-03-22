@@ -16,10 +16,11 @@ help:	      # This help
 dev:     # run api // http://localhost:3000/api-docs/
 	@npm run dev
 
-commit:  # Commit changes
-	@set /p message="Enter commit message: " && \
+commit: # Commit changes
+	@set /p message="Enter commit message: " && echo %message% > .commitmsg && \
     git add . && \
-    git commit -m "%message%" && \
+    git commit -F .commitmsg && \
+    del .commitmsg && \
     git push origin main
 
 startDocker: # Start Docker containers
