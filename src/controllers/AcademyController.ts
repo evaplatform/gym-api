@@ -16,7 +16,7 @@ export class AcademyController {
   }
 
   @CatchErrors
-  // @Authenticate
+  @Authenticate
   static async create(req: Request, res: Response) {
     const user = await academyService.create(req.body);
     res.status(HttpStatusCodeEnum.CREATED).json(user);

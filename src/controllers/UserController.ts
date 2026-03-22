@@ -31,7 +31,7 @@ export class UserController {
   }
 
   @CatchErrors
-  // @Authenticate
+  @Authenticate
   static async create(req: AuthenticatedRequest<IUser>, res: Response) {
     const user = await userService.create(req);
     res.status(HttpStatusCodeEnum.CREATED).json(user);

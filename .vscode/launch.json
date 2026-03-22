@@ -4,7 +4,7 @@
     {
       "name": "Launch Program (ts-node)",
       "type": "node",
-      "runtimeExecutable": "/home/murilordsp/.nvm/versions/node/v24.11.0/bin/node",
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
       "request": "launch",
       "runtimeArgs": [
         "-r", "ts-node/register",

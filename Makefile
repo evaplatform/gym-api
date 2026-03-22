@@ -10,57 +10,31 @@ help:	      # This help
 	@echo "     \/                  \/     \/     \/     \/        \/              "
 	@echo ""
 	@type $(MAKEFILE_LIST) | findstr "^[a-zA-Z_\-]*: *.*"
+
 ############################################################################### Project support
 
-dev:     # run api // http://localhost:3000/api-docs/S
+dev:     # run api // http://localhost:3000/api-docs/
 	@npm run dev
 
-commit:
+commit:  # Commit changes
 	@set /p message="Enter commit message: " && \
     git add . && \
     git commit -m "%message%" && \
-    git push origin main;
+    git push origin main
 
-startDocker: 
+startDocker: # Start Docker containers
 	@docker-compose up -d  
 
-killPort:
+killPort: # Kill process using port 3000
 	@netstat -ano | findstr :3000 | findstr LISTENING && for /f "tokens=5" %a in ('netstat -ano ^| findstr :3000 ^| findstr LISTENING') do taskkill /PID %a /F
 
-format: # format code
+format: # Format code
 	@npm run format
 
-reset: # reset packages
+reset: # Reset packages
 	@rmdir /S /Q node_modules
 	@del /F /Q package-lock.json
-	@npm i
+	@npm install
     
-build: # build project
-	@npm run build
-
-dev:     # run api // http://localhost:3000/api-docs/S
-	@npm run dev
-
-commit:
-	@read -p "Enter commit message: " message; \
-	git add .; \
-	git commit -m "$$message"; \
-	git push origin main;
-
-startDocker: 
-	@docker-compose up -d  
-
-killPort:
-	@netstat -ano | findstr :3000 | findstr LISTENING && for /f "tokens=5" %a in ('netstat -ano ^| findstr :3000 ^| findstr LISTENING') do taskkill /PID %a /F
-
-
-format: # format code
-	@npm run format
-
-reset: # reset packages
-	@rmdir /S /Q node_modules
-	@del /F /Q package-lock.json
-	@npm i
-	
-build: # build project
+build: # Build project
 	@npm run build
