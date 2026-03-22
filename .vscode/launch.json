@@ -12,13 +12,6 @@
       "args": ["${workspaceFolder}/src/index.ts"],
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"],
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
-      "sourceMaps": true,
-      "resolveSourceMapLocations": [
-        "${workspaceFolder}/**",
-        "!**/node_modules/**"
-      ],
-      "internalConsoleOptions": "openOnSessionStart",
       "console": "integratedTerminal",
       "env": {
         "TS_NODE_PROJECT": "${workspaceFolder}/tsconfig.json",

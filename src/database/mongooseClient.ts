@@ -16,7 +16,7 @@ export const MongooseClient = {
     const db = process.env.MONGODB_DB || 'gym-db';
 
     if (process.env.NODE_ENV === 'development') {
-      connectionString = `mongodb://${host}/${db}`;
+ connectionString = `mongodb://${host}/${db}`;
     }
 
     if (process.env.NODE_ENV === 'production') {
