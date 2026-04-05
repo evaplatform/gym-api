@@ -2,8 +2,6 @@ import { IdType } from '../../shared/types/IdType';
 import { IGroup } from '@/models/group/IGroup';
 import { IGroupRepository } from './IGroupRepository';
 import { GroupModel } from '@/models/group/mongo-schema';
-import { UserModel } from '@/models/user/mongo-schema';
-import { IUser } from '@/models/user/IUser';
 
 export class GroupRepositoryImpl implements IGroupRepository {
     async update(id: IdType, group: Partial<IGroup>): Promise<IGroup | null> {
@@ -21,17 +19,6 @@ export class GroupRepositoryImpl implements IGroupRepository {
         const group = await GroupModel.findOne(filter).exec();
 
         return group ? group.toJSON() : null;
-    }
-
-    async getByUserId(id: IdType, academyId?: IdType): Promise<IGroup[] | null> {
-        const filter = academyId ? { _id: id, academyId } : { _id: id };
-        const user = await UserModel.findOne(filter).exec() as unknown as IUser;
-
-        const groups = await GroupModel.find({ _id: { $in: user.groupIds } }).exec();
-
-        return groups.map((group: { toJSON: () => any; }) => group.toJSON());
-
-
     }
 
     async getAll(academyId?: IdType): Promise<IGroup[]> {

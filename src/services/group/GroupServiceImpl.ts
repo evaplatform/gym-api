@@ -8,10 +8,10 @@ import { HttpStatusCodeEnum } from '@/shared/enums/HttpStatusCodeEnum';
 import { AppError } from '@/errors/AppError';
 
 export class GroupServiceImpl implements IGroupService {
-  // Constructor
-  constructor(private readonly groupRepository: IGroupRepository) { }
+    // Constructor
+    constructor(private readonly groupRepository: IGroupRepository) { }
 
-  // Methods
+    // Methods
 
   @ValidateAcademy
   async getAll(req: AuthenticatedRequest): Promise<IGroup[]> {
@@ -61,12 +61,5 @@ export class GroupServiceImpl implements IGroupService {
     await this.getById(req);
 
     await this.groupRepository.delete(id);
-  }
-
-  @ValidateAcademy
-  async getByUserId(req: AuthenticatedRequest): Promise<IGroup[] | null> {
-    const id = req.params.id;
-
-    return this.groupRepository.getByUserId(id, req.validatedAcademyId);
   }
 }
