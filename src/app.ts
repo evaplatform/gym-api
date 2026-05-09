@@ -14,6 +14,7 @@ import trainingByUserRoutes from './routes/trainingByUserRoutes';
 import { errorHandler } from './middlewares/error.middleware';
 import { HttpStatusCodeEnum } from './shared/enums/HttpStatusCodeEnum';
 import exerciseHistoryRoutes from './routes/exerciseHistoryRoutes';
+import settingsRoutes from './routes/settingsRoutes';
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use('/exercise-history', exerciseHistoryRoutes);
 app.use('/training', trainingRoutes);
 app.use('/payment-info', paymentInfoRoutes);
 app.use('/training-by-user', trainingByUserRoutes);
+app.use('/settings', settingsRoutes);
 
 app.get('/ping', async (_, res) => {
   const dbState = mongoose.connection.readyState;
