@@ -8,4 +8,5 @@ export interface IExerciseService {
   delete(req: AuthenticatedRequest): Promise<void | null>;
   getById(req: AuthenticatedRequest): Promise<IExercise | null>;
   getAllByUserExercises(req: AuthenticatedRequest): Promise<IExercise[]>;
+  getAllByTraining(req: AuthenticatedRequest): Promise<IExercise[]>;
 }

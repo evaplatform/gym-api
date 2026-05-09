@@ -9,6 +9,8 @@ router.get('/', asyncRoute<void>(ExerciseController.getAll));
 router.post('/', asyncRoute<IExercise>(ExerciseController.create));
 router.patch('/', asyncRoute<IExercise>(ExerciseController.update));
 router.get('/:userId/all-by-user', asyncRoute<void>(ExerciseController.getAllByUserExercises));
+router.get('/:trainingId/all-by-training', asyncRoute<void>(ExerciseController.getAllByTraining));
+
 
 router.get('/:id', asyncRoute<void>(ExerciseController.getById));
 router.delete('/:id', asyncRoute<IExercise>(ExerciseController.delete));

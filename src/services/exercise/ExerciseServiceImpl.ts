@@ -1,4 +1,3 @@
-
 import { AppError } from '../../errors/AppError';
 import { IExercise } from '../../models/exercise/IExercise';
 import { IExerciseRepository } from '../../repositories/exercise/IExerciseRepository';
@@ -7,9 +6,8 @@ import { IExerciseService } from './IExerciseService';
 import { ValidateAcademy } from '../../shared/decorators/ValidateAcademy';
 import { AuthenticatedRequest } from '@/shared/interfaces/AuthenticatedRequest';
 
-
 export class ExerciseServiceImpl implements IExerciseService {
-  constructor(private readonly exerciseRepository: IExerciseRepository) { }
+  constructor(private readonly exerciseRepository: IExerciseRepository) {}
 
   @ValidateAcademy
   async getAll(req: AuthenticatedRequest): Promise<IExercise[]> {
@@ -67,5 +65,12 @@ export class ExerciseServiceImpl implements IExerciseService {
     const academyId = req.validatedAcademyId;
 
     return this.exerciseRepository.getAllByUserExercises(userId, academyId);
+  }
+
+  @ValidateAcademy
+  async getAllByTraining(req: AuthenticatedRequest): Promise<IExercise[]> {
+    const trainingId = req.params.trainingId;
+    const academyId = req.validatedAcademyId;
+    return this.exerciseRepository.getAllByTraining(trainingId, academyId);
   }
 }
