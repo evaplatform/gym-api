@@ -15,13 +15,15 @@ import { errorHandler } from './middlewares/error.middleware';
 import { HttpStatusCodeEnum } from './shared/enums/HttpStatusCodeEnum';
 import exerciseHistoryRoutes from './routes/exerciseHistoryRoutes';
 import settingsRoutes from './routes/settingsRoutes';
+import paymentSubscriptionRoutes from './routes/paymentSubscriptionRoutes';
+
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// conecta banco
+// conecta banco;
 MongooseClient.connect();
 
 app.use('/auth', authRoutes);
@@ -34,6 +36,7 @@ app.use('/training', trainingRoutes);
 app.use('/payment-info', paymentInfoRoutes);
 app.use('/training-by-user', trainingByUserRoutes);
 app.use('/settings', settingsRoutes);
+app.use('/payment-subscription', paymentSubscriptionRoutes);
 
 app.get('/ping', async (_, res) => {
   const dbState = mongoose.connection.readyState;
