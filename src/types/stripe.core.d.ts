@@ -65,11 +65,14 @@ declare module 'stripe' {
 
     interface Invoice {
       payment_intent?: string | PaymentIntent | null;
+      status?: string;
+      paid?: boolean;
     }
 
     interface Subscription {
       id: string;
       status: string;
+      customer: string;
       latest_invoice?: string | Invoice | null;
     }
 
@@ -115,6 +118,7 @@ declare module 'stripe' {
       create(params: Stripe.CustomerCreateParams): Promise<Stripe.Customer>;
       list(params: Stripe.CustomerListParams): Promise<Stripe.ListResponse<Stripe.Customer>>;
       update(id: string, params: Stripe.CustomerUpdateParams): Promise<Stripe.Customer>;
+      retrieve(id: string): Promise<Stripe.Customer>;
     };
 
     paymentMethods: {
@@ -125,8 +129,15 @@ declare module 'stripe' {
     subscriptions: {
       create(params: Stripe.SubscriptionCreateParams): Promise<Stripe.Subscription>;
       cancel(id: string): Promise<Stripe.Subscription>;
-      list(params: Stripe.SubscriptionListParams): Promise<Stripe.ListResponse<Stripe.Subscription>>;
+      list(
+        params: Stripe.SubscriptionListParams
+      ): Promise<Stripe.ListResponse<Stripe.Subscription>>;
       update(id: string, params: Stripe.SubscriptionUpdateParams): Promise<Stripe.Subscription>;
+      retrieve(id: string, params?: { expand?: string[] }): Promise<Stripe.Subscription>;
+    };
+
+    invoices: {
+      pay(id: string, params?: { expand?: string[] }): Promise<Stripe.Invoice>;
     };
 
     setupIntents: {

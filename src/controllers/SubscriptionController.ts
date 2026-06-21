@@ -36,7 +36,10 @@ export class SubscriptionController {
   @CatchErrors
   static async createTestPaymentMethod(req: Request, res: Response) {
     try {
-      const response = await subscriptionService.createTestPaymentMethod(req as any, res as any) as any;
+      const response = (await subscriptionService.createTestPaymentMethod(
+        req as any,
+        res as any
+      )) as any;
 
       return res.json({
         paymentMethodId: response.id,
@@ -158,7 +161,7 @@ export class SubscriptionController {
         });
       }
 
-      const setupIntent = await subscriptionService.confirmSetupIntentTest(id) as any;
+      const setupIntent = (await subscriptionService.confirmSetupIntentTest(id)) as any;
 
       return res.json({
         paymentMethodId: setupIntent.payment_method,
@@ -170,6 +173,68 @@ export class SubscriptionController {
       return res.status(500).json({
         error: error.message || 'Erro ao confirmar setup intent',
       });
+    }
+  }
+
+  @CatchErrors
+  static async updatePaymentMethod(req: Request, res: Response) {
+    try {
+      const { subscriptionId } = req.params;
+      const { paymentMethodId } = req.body;
+
+      if (!paymentMethodId) {
+        return res.status(400).json({
+          error: 'paymentMethodId é obrigatório',
+        });
+      }
+
+      const result = await subscriptionService.updatePaymentMethod(subscriptionId, paymentMethodId);
+
+      return res.json({
+        message: '✅ Método de pagamento atualizado com sucesso',
+        subscription: result,
+      });
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
+  @CatchErrors
+  static async retryPayment(req: Request, res: Response) {
+    try {
+      const { subscriptionId } = req.params;
+
+      const result = await subscriptionService.retryPayment(subscriptionId);
+
+      return res.json({
+        message: '✅ Cobrança processada',
+        status: result.status,
+      });
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
+  @CatchErrors
+  static async reactivateSubscription(req: Request, res: Response) {
+    try {
+      const { customerId, priceId, paymentMethodId } = req.body;
+
+      if (!customerId || !priceId) {
+        return res.status(400).json({
+          error: 'customerId e priceId são obrigatórios',
+        });
+      }
+
+      const subscription = await subscriptionService.reactivateSubscription({
+        customerId,
+        priceId,
+        paymentMethodId,
+      });
+
+      return res.status(201).json(subscription);
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
     }
   }
 }

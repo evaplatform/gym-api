@@ -37,4 +37,19 @@ router.post(
   asyncRoute((req, res) => SubscriptionController.confirmSetupIntentTest(req as any, res))
 );
 
+router.put(
+  '/:subscriptionId/payment-method',
+  asyncRoute((req, res) => SubscriptionController.updatePaymentMethod(req as any, res))
+);
+
+router.post(
+  '/:subscriptionId/retry-payment',
+  asyncRoute((req, res) => SubscriptionController.retryPayment(req as any, res))
+);
+
+router.post(
+  '/reactivate',
+  asyncRoute((req, res) => SubscriptionController.reactivateSubscription(req as any, res))
+);
+
 export default router;

@@ -156,14 +156,29 @@ export class SubscriptionService {
     }
   }
 
-  // Atualizar método de pagamento
   async updatePaymentMethod(subscriptionId: string, paymentMethodId: string) {
     try {
-      const subscription = await stripe.subscriptions.update(subscriptionId, {
+      // 1. Pegar a assinatura
+      const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+
+      // 2. Anexar novo método ao cliente
+      await stripe.paymentMethods.attach(paymentMethodId, {
+        customer: subscription.customer as string,
+      });
+
+      // 3. Atualizar método padrão do cliente
+      await stripe.customers.update(subscription.customer as string, {
+        invoice_settings: {
+          default_payment_method: paymentMethodId,
+        },
+      });
+
+      // 4. Atualizar método padrão da assinatura
+      const updatedSubscription = await stripe.subscriptions.update(subscriptionId, {
         default_payment_method: paymentMethodId,
       });
 
-      return subscription;
+      return updatedSubscription;
     } catch (error) {
       console.error('Erro ao atualizar método de pagamento:', error);
       throw error;
@@ -256,6 +271,72 @@ export class SubscriptionService {
       return setupIntent;
     } catch (error: any) {
       console.error('❌ Erro ao confirmar setup intent:', error.message);
+      throw error;
+    }
+  }
+
+  // Tentar cobrar novamente
+  async retryPayment(subscriptionId: string) {
+    try {
+      // Pegar a última invoice
+      const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+        expand: ['latest_invoice'],
+      });
+
+      const invoice = subscription.latest_invoice as any;
+
+      if (!invoice) {
+        throw new Error('Nenhuma fatura encontrada');
+      }
+
+      // Tentar cobrar novamente
+      const paidInvoice = await stripe.invoices.pay(invoice.id);
+
+      return {
+        status: paidInvoice.status,
+        paid: paidInvoice.paid,
+      };
+    } catch (error: any) {
+      console.error('Erro ao tentar cobrar:', error);
+      throw new Error(error.message || 'Falha ao processar pagamento');
+    }
+  }
+
+  // Reativar assinatura
+  async reactivateSubscription(data: {
+    customerId: string;
+    priceId: string;
+    paymentMethodId?: string;
+  }) {
+    try {
+      // Se forneceu novo cartão, anexar
+      if (data.paymentMethodId) {
+        await stripe.paymentMethods.attach(data.paymentMethodId, {
+          customer: data.customerId,
+        });
+
+        await stripe.customers.update(data.customerId, {
+          invoice_settings: {
+            default_payment_method: data.paymentMethodId,
+          },
+        });
+      }
+
+      // Criar nova assinatura
+      const subscription = await stripe.subscriptions.create({
+        customer: data.customerId,
+        items: [{ price: data.priceId }],
+        default_payment_method: data.paymentMethodId,
+        expand: ['latest_invoice.payment_intent'],
+      });
+
+      return {
+        subscriptionId: subscription.id,
+        status: subscription.status,
+        message: '✅ Assinatura reativada com sucesso!',
+      };
+    } catch (error) {
+      console.error('Erro ao reativar assinatura:', error);
       throw error;
     }
   }
