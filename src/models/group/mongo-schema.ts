@@ -11,13 +11,13 @@ const GroupSchema = new mongoose.Schema<IGroup>(
       required: true,
       unique: true,
       maxlength: 100,
-      description: 'The name of the group, must be unique and up to 100 characters long.'
+      description: 'The name of the group, must be unique and up to 100 characters long.',
     },
     academyId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Academy',
       required: false,
-      description: 'The ID of the academy this group belongs to'
+      description: 'The ID of the academy this group belongs to',
     },
     permissions: {
       changeAcademy: PermissionNode,
@@ -33,67 +33,71 @@ const GroupSchema = new mongoose.Schema<IGroup>(
               permitted: { type: Boolean, default: false },
               finalizeTrainingButton: PermissionNode,
               finalizeExerciseButton: PermissionNode,
-              userGpsButton: PermissionNode
+              userGpsButton: PermissionNode,
             },
             cardio: PermissionNode,
-            financial: PermissionNode
-          }
+            financial: PermissionNode,
+          },
         },
         users: {
           permitted: { type: Boolean, default: false },
           visualize: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
-          update: PermissionNode
+          update: PermissionNode,
         },
         academies: {
           permitted: { type: Boolean, default: false },
           visualize: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
-          update: PermissionNode
+          update: PermissionNode,
         },
         exercises: {
           permitted: { type: Boolean, default: false },
           visualize: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
-          update: PermissionNode
+          update: PermissionNode,
         },
         trainings: {
           permitted: { type: Boolean, default: false },
           visualize: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
-          update: PermissionNode
+          update: PermissionNode,
         },
         trainingByUserList: {
           permitted: { type: Boolean, default: false },
           visualize: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
-          update: PermissionNode
+          update: PermissionNode,
         },
         userSettings: {
           permitted: { type: Boolean, default: false },
-          resetDataButton: PermissionNode
+          resetDataButton: PermissionNode,
         },
         charts: {
           permitted: { type: Boolean, default: false },
           visualize: PermissionNode,
           deleteHistoryButton: PermissionNode,
-          deleteAllHistoryButton: PermissionNode
+          deleteAllHistoryButton: PermissionNode,
         },
         groups: {
           permitted: { type: Boolean, default: false },
           changeAcademyButton: PermissionNode,
           add: PermissionNode,
           delete: PermissionNode,
-          update: PermissionNode
-        }
-      }
-    }
-  }, { ...MONGO_DEFAULT_PROPERTIES }
+          update: PermissionNode,
+        },
+        mySubscription: {
+          permitted: { type: Boolean, default: false },
+        },
+      },
+    },
+  },
+  { ...MONGO_DEFAULT_PROPERTIES }
 );
 
 export const GroupModel = mongoose.model<IGroup>('Group', GroupSchema);

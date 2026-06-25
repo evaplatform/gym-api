@@ -1,5 +1,5 @@
-import { IdType } from "@/shared/types/IdType";
-import { IDefaultEntityProperties } from "../../shared/interfaces/IDefaultEntityProperties";
+import { IdType } from '@/shared/types/IdType';
+import { IDefaultEntityProperties } from '../../shared/interfaces/IDefaultEntityProperties';
 
 export interface PermissionNode {
   permitted: boolean;
@@ -8,7 +8,7 @@ export interface PermissionNode {
 export interface IGroupPermissions {
   changeAcademy: {
     permitted: boolean;
-  }
+  };
   drawerMenu: {
     permitted: boolean;
     home: {
@@ -79,12 +79,14 @@ export interface IGroupPermissions {
       delete: PermissionNode;
       update: PermissionNode;
     };
+    mySubscription: {
+      permitted: boolean;
+    };
   };
 }
 
 export interface IGroup extends IDefaultEntityProperties {
   name: string; // unique
   academyId: IdType; // point to academy collection
-  permissions: IGroupPermissions
+  permissions: IGroupPermissions;
 }
-
