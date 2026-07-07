@@ -18,7 +18,15 @@ export class SubscriptionService {
     const safeBillingDay = Math.min(Math.max(1, billingDay), 28);
     const now = new Date();
 
-    const targetDate = new Date(now.getFullYear(), now.getMonth(), safeBillingDay, 0, 0, 0, 0);
+    const targetDate = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      safeBillingDay,
+      0,
+      0,
+      0,
+      0
+    );
 
     // Se o dia já passou neste mês, avançar para o próximo mês
     if (targetDate <= now) {
@@ -97,23 +105,14 @@ export class SubscriptionService {
   // PAYMENT METHOD
   // ─────────────────────────────────────────────
 
-  // async createTestPaymentMethod(req: Request, res: Response) {
-  //   return stripe.paymentMethods.create({
-  //     type: 'card',
-  //     card: {
-  //       number: '4242424242424242',
-  //       exp_month: 12,
-  //       exp_year: 2025,
-  //       cvc: '123',
-  //     },
-  //   });
-  // }
-
-  async createTestPaymentMethod() {
+  async createTestPaymentMethod(req: Request, res: Response) {
     return stripe.paymentMethods.create({
       type: 'card',
       card: {
-        token: 'tok_visa', // ✅ Token de teste em vez de número do cartão
+        number: '4242424242424242',
+        exp_month: 12,
+        exp_year: 2025,
+        cvc: '123',
       },
     });
   }
@@ -274,7 +273,11 @@ export class SubscriptionService {
 
     // Calcular valor proporcional dos dias até a próxima cobrança
     // (apenas informativo, pois usamos proration_behavior: 'none')
-    const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+    const daysInMonth = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth() + 1,
+      0
+    ).getDate();
 
     const prorationAmount = Math.round((unitAmount / daysInMonth) * daysUntilBilling);
 
@@ -354,12 +357,7 @@ export class SubscriptionService {
     }
   }
 
-  async reactivateSubscription(data: {
-    customerId: string;
-    priceId: string;
-    paymentMethodId?: string;
-    billingDay?: number;
-  }) {
+  async reactivateSubscription(data: { customerId: string; priceId: string; paymentMethodId?: string; billingDay?: number; }) {
     try {
       if (data.paymentMethodId) {
         await stripe.paymentMethods.attach(data.paymentMethodId, {
