@@ -83,6 +83,8 @@ declare module 'stripe' {
       payment_behavior?: string;
       expand?: string[];
       coupon?: string;
+      billing_cycle_anchor?: number;
+      proration_behavior?: 'create_prorations' | 'none' | 'always_invoice';
     }
 
     interface SubscriptionUpdateParams {

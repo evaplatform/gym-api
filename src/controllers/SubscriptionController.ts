@@ -8,13 +8,21 @@ export class SubscriptionController {
   @CatchErrors
   static async create(req: Request, res: Response) {
     try {
-      const { email, paymentMethodId, priceId, couponCode } = req.body;
+      const { email, paymentMethodId, priceId, couponCode, billingDay } = req.body;
 
-      // Validações
       if (!email || !paymentMethodId || !priceId) {
         return res.status(400).json({
           error: 'Email, paymentMethodId e priceId são obrigatórios',
         });
+      }
+
+      if (billingDay !== undefined) {
+        const day = Number(billingDay);
+        if (isNaN(day) || day < 1 || day > 28) {
+          return res.status(400).json({
+            error: 'billingDay deve ser um número entre 1 e 28',
+          });
+        }
       }
 
       const subscription = await subscriptionService.createSubscription({
@@ -22,14 +30,13 @@ export class SubscriptionController {
         paymentMethodId,
         priceId,
         couponCode,
+        billingDay: billingDay ? Number(billingDay) : undefined,
       });
 
       return res.status(201).json(subscription);
     } catch (error: any) {
       console.error('Erro no controller:', error);
-      return res.status(500).json({
-        error: error.message || 'Erro ao criar assinatura',
-      });
+      return res.status(500).json({ error: error.message || 'Erro ao criar assinatura' });
     }
   }
 
@@ -43,10 +50,7 @@ export class SubscriptionController {
 
       return res.json({
         paymentMethodId: response.id,
-        card: {
-          brand: response.card?.brand,
-          last4: response.card?.last4,
-        },
+        card: { brand: response.card?.brand, last4: response.card?.last4 },
         message: '✅ Use este paymentMethodId para criar a assinatura',
       });
     } catch (error: any) {
@@ -58,17 +62,11 @@ export class SubscriptionController {
   static async cancelSubscription(req: Request, res: Response) {
     try {
       const { subscriptionId } = req.params;
-
       const subscription = await subscriptionService.cancelSubscription(subscriptionId);
 
-      return res.json({
-        message: 'Assinatura cancelada com sucesso',
-        subscription,
-      });
+      return res.json({ message: 'Assinatura cancelada com sucesso', subscription });
     } catch (error: any) {
-      return res.status(500).json({
-        error: error.message || 'Erro ao cancelar assinatura',
-      });
+      return res.status(500).json({ error: error.message || 'Erro ao cancelar assinatura' });
     }
   }
 
@@ -78,18 +76,13 @@ export class SubscriptionController {
       const { email } = req.query;
 
       if (!email || typeof email !== 'string') {
-        return res.status(400).json({
-          error: 'Email é obrigatório',
-        });
+        return res.status(400).json({ error: 'Email é obrigatório' });
       }
 
       const subscriptions = await subscriptionService.getCustomerSubscriptions(email);
-
       return res.json({ subscriptions });
     } catch (error: any) {
-      return res.status(500).json({
-        error: error.message || 'Erro ao buscar assinaturas',
-      });
+      return res.status(500).json({ error: error.message || 'Erro ao buscar assinaturas' });
     }
   }
 
@@ -117,7 +110,7 @@ export class SubscriptionController {
   @CatchErrors
   static async createSubscriptionFromSetup(req: Request, res: Response) {
     try {
-      const { customerId, paymentMethodId, priceId, couponCode } = req.body;
+      const { customerId, paymentMethodId, priceId, couponCode, billingDay } = req.body;
 
       if (!customerId || !paymentMethodId || !priceId) {
         return res.status(400).json({
@@ -125,16 +118,27 @@ export class SubscriptionController {
         });
       }
 
+      if (billingDay !== undefined) {
+        const day = Number(billingDay);
+        if (isNaN(day) || day < 1 || day > 28) {
+          return res.status(400).json({
+            error: 'billingDay deve ser um número entre 1 e 28',
+          });
+        }
+      }
+
       const subscription = await subscriptionService.createSubscriptionFromSetup({
         paymentMethodId,
         priceId,
         couponCode,
         customerId,
+        billingDay: billingDay ? Number(billingDay) : undefined,
       });
 
       return res.status(201).json({
-        subscriptionId: (subscription as any).id,
+        subscriptionId: subscription.subscriptionId,
         status: subscription.status,
+        clientSecret: subscription.clientSecret,
         message: '✅ Assinatura criada com sucesso!',
       });
     } catch (error: any) {
@@ -147,11 +151,9 @@ export class SubscriptionController {
     try {
       const { setupIntentId, clientSecret } = req.body;
 
-      // ✅ Aceitar tanto o ID quanto o clientSecret
       let id = setupIntentId;
 
       if (!id && clientSecret) {
-        // Extrair ID do clientSecret (antes do _secret_)
         id = clientSecret.split('_secret_')[0];
       }
 
@@ -170,9 +172,7 @@ export class SubscriptionController {
         message: '✅ Setup confirmado! Use o paymentMethodId para criar assinatura',
       });
     } catch (error: any) {
-      return res.status(500).json({
-        error: error.message || 'Erro ao confirmar setup intent',
-      });
+      return res.status(500).json({ error: error.message || 'Erro ao confirmar setup intent' });
     }
   }
 
@@ -183,9 +183,7 @@ export class SubscriptionController {
       const { paymentMethodId } = req.body;
 
       if (!paymentMethodId) {
-        return res.status(400).json({
-          error: 'paymentMethodId é obrigatório',
-        });
+        return res.status(400).json({ error: 'paymentMethodId é obrigatório' });
       }
 
       const result = await subscriptionService.updatePaymentMethod(subscriptionId, paymentMethodId);
@@ -203,13 +201,9 @@ export class SubscriptionController {
   static async retryPayment(req: Request, res: Response) {
     try {
       const { subscriptionId } = req.params;
-
       const result = await subscriptionService.retryPayment(subscriptionId);
 
-      return res.json({
-        message: '✅ Cobrança processada',
-        status: result.status,
-      });
+      return res.json({ message: '✅ Cobrança processada', status: result.status });
     } catch (error: any) {
       return res.status(500).json({ error: error.message });
     }
@@ -218,21 +212,82 @@ export class SubscriptionController {
   @CatchErrors
   static async reactivateSubscription(req: Request, res: Response) {
     try {
-      const { customerId, priceId, paymentMethodId } = req.body;
+      const { customerId, priceId, paymentMethodId, billingDay } = req.body;
 
       if (!customerId || !priceId) {
-        return res.status(400).json({
-          error: 'customerId e priceId são obrigatórios',
-        });
+        return res.status(400).json({ error: 'customerId e priceId são obrigatórios' });
       }
 
       const subscription = await subscriptionService.reactivateSubscription({
         customerId,
         priceId,
         paymentMethodId,
+        billingDay: billingDay ? Number(billingDay) : undefined,
       });
 
       return res.status(201).json(subscription);
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
+  // ─────────────────────────────────────────────
+  // BILLING DAY
+  // ─────────────────────────────────────────────
+
+  @CatchErrors
+  static async previewBillingDay(req: Request, res: Response) {
+    try {
+      const { billingDay, priceId, email } = req.body;
+
+      if (!billingDay || !priceId || !email) {
+        return res.status(400).json({
+          error: 'billingDay, priceId e email são obrigatórios',
+        });
+      }
+
+      const day = Number(billingDay);
+      if (isNaN(day) || day < 1 || day > 28) {
+        return res.status(400).json({
+          error: 'billingDay deve ser um número entre 1 e 28',
+        });
+      }
+
+      const preview = await subscriptionService.previewBillingDay({
+        billingDay: day,
+        priceId,
+        email,
+      });
+
+      return res.json(preview);
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
+  @CatchErrors
+  static async updateBillingDay(req: Request, res: Response) {
+    try {
+      const { subscriptionId } = req.params;
+      const { billingDay } = req.body;
+
+      if (!billingDay) {
+        return res.status(400).json({ error: 'billingDay é obrigatório' });
+      }
+
+      const day = Number(billingDay);
+      if (isNaN(day) || day < 1 || day > 28) {
+        return res.status(400).json({
+          error: 'billingDay deve ser um número entre 1 e 28',
+        });
+      }
+
+      const subscription = await subscriptionService.updateBillingDay(subscriptionId, day);
+
+      return res.json({
+        message: `✅ Dia de cobrança atualizado para o dia ${day}`,
+        subscription,
+      });
     } catch (error: any) {
       return res.status(500).json({ error: error.message });
     }

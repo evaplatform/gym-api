@@ -20,6 +20,28 @@ export interface SubscriptionResponse {
   status: Stripe.Subscription.Status;
 }
 
+export interface CreateSubscriptionFromSetupDTO {
+  customerId: string;
+  paymentMethodId: string;
+  priceId: string;
+  couponCode?: string;
+  billingDay?: number; // 1-28
+}
+
+export interface BillingDayPreviewDTO {
+  billingDay: number;
+  priceId: string;
+  email: string;
+}
+
+export interface BillingDayPreview {
+  billingDay: number;
+  nextBillingDate: string;
+  daysUntilBilling: number;
+  prorationAmount: number;
+  currency: string;
+}
+
 export interface ISubscriptionService {
   createCustomer(data: CreateCustomerDTO): Promise<Stripe.Customer>;
   createSubscription(data: CreateSubscriptionDTO): Promise<SubscriptionResponse>;
@@ -33,8 +55,7 @@ export interface ISubscriptionService {
   createSetupIntent(
     email: string
   ): Promise<{ setupIntent: Stripe.SetupIntent; customer: Stripe.Customer }>;
-
-  createSubscriptionFromSetup(
-    data: Omit<CreateSubscriptionDTO, 'email'> & { customerId: string }
-  ): Promise<SubscriptionResponse>;
+  createSubscriptionFromSetup(data: CreateSubscriptionFromSetupDTO): Promise<SubscriptionResponse>;
+  previewBillingDay(data: BillingDayPreviewDTO): Promise<BillingDayPreview>;
+  updateBillingDay(subscriptionId: string, billingDay: number): Promise<Stripe.Subscription>;
 }
