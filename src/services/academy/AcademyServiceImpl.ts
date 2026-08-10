@@ -1,6 +1,5 @@
 // src/services/UserService.ts
 import { AppError } from '../../errors/AppError';
-import { deleteAWSFile } from '../../middlewares/multer-s3';
 import { IAcademy } from '../../models/academy/IAcademy';
 import { IAcademyRepository } from '../../repositories/academy/IAcademyRepository';
 import { HttpStatusCodeEnum } from '../../shared/enums/HttpStatusCodeEnum';
