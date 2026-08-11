@@ -1,4 +1,4 @@
-import { stripe } from '@/config/stripe';
+import { stripe, stripeTest } from '@/config/stripe';
 import {
   BillingDayPreview,
   BillingDayPreviewDTO,
@@ -35,26 +35,34 @@ export class SubscriptionService {
     return Math.ceil((target - now) / (1000 * 60 * 60 * 24));
   }
 
+  private getStripe(isTest: boolean = false) {
+    return isTest ? stripeTest : stripe;
+  }
+
   /** * Busca ou cria um cliente no Stripe pelo email */
-  private async findOrCreateCustomer(email: string, paymentMethodId?: string) {
-    const customers = await stripe.customers.list({ email, limit: 1 });
+  private async findOrCreateCustomer(
+    email: string,
+    paymentMethodId?: string,
+    isTest: boolean = false
+  ) {
+    const stripeInstance = this.getStripe(isTest);
+
+    const customers = await stripeInstance.customers.list({ email, limit: 1 });
 
     if (customers.data.length > 0) {
       const customer = customers.data[0];
-
       if (paymentMethodId) {
-        await stripe.paymentMethods.attach(paymentMethodId, {
+        await stripeInstance.paymentMethods.attach(paymentMethodId, {
           customer: customer.id,
         });
-        await stripe.customers.update(customer.id, {
+        await stripeInstance.customers.update(customer.id, {
           invoice_settings: { default_payment_method: paymentMethodId },
         });
       }
-
       return customer;
     }
 
-    return stripe.customers.create({
+    return stripeInstance.customers.create({
       email,
       ...(paymentMethodId && {
         payment_method: paymentMethodId,
@@ -98,7 +106,7 @@ export class SubscriptionService {
   // ─────────────────────────────────────────────
 
   async createTestPaymentMethod(req: Request, res: Response) {
-    return stripe.paymentMethods.create({
+    return stripeTest.paymentMethods.create({
       type: 'card',
       card: {
         number: '4242424242424242',
@@ -112,11 +120,11 @@ export class SubscriptionService {
   // ─────────────────────────────────────────────
   // SETUP INTENT
   // ─────────────────────────────────────────────
+  async createSetupIntent(email: string, isTest: boolean = false) {
+    const stripeInstance = this.getStripe(isTest);
+    const customer = await this.findOrCreateCustomer(email, undefined, isTest);
 
-  async createSetupIntent(email: string) {
-    const customer = await this.findOrCreateCustomer(email);
-
-    const setupIntent = await stripe.setupIntents.create({
+    const setupIntent = await stripeInstance.setupIntents.create({
       customer: customer.id,
       payment_method_types: ['card'],
     });
@@ -183,35 +191,31 @@ export class SubscriptionService {
   }
 
   async createSubscriptionFromSetup(
-    data: CreateSubscriptionFromSetupDTO
+    data: CreateSubscriptionFromSetupDTO & { isTest?: boolean }
   ): Promise<SubscriptionResponse> {
-    // Anexar payment method ao cliente
-    await stripe.paymentMethods.attach(data.paymentMethodId, {
+    const stripeInstance = this.getStripe(data.isTest);
+
+    await stripeInstance.paymentMethods.attach(data.paymentMethodId, {
       customer: data.customerId,
     });
 
-    await stripe.customers.update(data.customerId, {
+    await stripeInstance.customers.update(data.customerId, {
       invoice_settings: { default_payment_method: data.paymentMethodId },
     });
 
-    const subscriptionData: Parameters<typeof stripe.subscriptions.create>[0] = {
+    const subscriptionData: Parameters<typeof stripeInstance.subscriptions.create>[0] = {
       customer: data.customerId,
       items: [{ price: data.priceId }],
       default_payment_method: data.paymentMethodId,
       expand: ['latest_invoice.payment_intent'],
     };
 
-    // ✅ Aplicar billing_cycle_anchor se billingDay fornecido
     if (data.billingDay) {
       subscriptionData.billing_cycle_anchor = this.calculateBillingAnchor(data.billingDay);
       subscriptionData.proration_behavior = 'none';
     }
 
-    if (data.couponCode) {
-      (subscriptionData as any).coupon = data.couponCode;
-    }
-
-    const subscription = await stripe.subscriptions.create(subscriptionData);
+    const subscription = await stripeInstance.subscriptions.create(subscriptionData);
 
     return {
       subscriptionId: subscription.id,
@@ -220,31 +224,32 @@ export class SubscriptionService {
     };
   }
 
-  async cancelSubscription(subscriptionId: string) {
+  async cancelSubscription(subscriptionId: string, isTest: boolean = false) {
     try {
-      return await stripe.subscriptions.cancel(subscriptionId);
+      return this.getStripe(isTest).subscriptions.cancel(subscriptionId);
     } catch (error) {
       console.error('Erro ao cancelar assinatura:', error);
       throw error;
     }
   }
 
-  async getCustomerSubscriptions(email: string) {
+  async getCustomerSubscriptions(email: string, isTest: boolean = false) {
     try {
-      const customers = await stripe.customers.list({ email, limit: 1 });
+      const stripeInstance = this.getStripe(isTest);
 
+      const customers = await stripeInstance.customers.list({ email, limit: 1 });
       if (customers.data.length === 0) return [];
 
-      const subscriptions = await stripe.subscriptions.list({
+      const subscriptions = await stripeInstance.subscriptions.list({
         customer: customers.data[0].id,
         status: 'all',
         expand: ['data.default_payment_method'],
       });
 
       return subscriptions.data;
-    } catch (error) {
-      console.error('Erro ao buscar assinaturas:', error);
-      throw error;
+    } catch (e) {
+      console.error('Erro ao buscar assinaturas:', e);
+      throw e;
     }
   }
 
@@ -308,19 +313,21 @@ export class SubscriptionService {
   // PAYMENT
   // ─────────────────────────────────────────────
 
-  async updatePaymentMethod(subscriptionId: string, paymentMethodId: string) {
+  async updatePaymentMethod(subscriptionId: string, paymentMethodId: string, isTest: boolean = false) {
     try {
-      const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+      const stripeInstance = this.getStripe(isTest);
 
-      await stripe.paymentMethods.attach(paymentMethodId, {
+      const subscription = await stripeInstance.subscriptions.retrieve(subscriptionId);
+
+      await stripeInstance.paymentMethods.attach(paymentMethodId, {
         customer: subscription.customer as string,
       });
 
-      await stripe.customers.update(subscription.customer as string, {
+      await stripeInstance.customers.update(subscription.customer as string, {
         invoice_settings: { default_payment_method: paymentMethodId },
       });
 
-      return await stripe.subscriptions.update(subscriptionId, {
+      return stripeInstance.subscriptions.update(subscriptionId, {
         default_payment_method: paymentMethodId,
       });
     } catch (error) {
@@ -329,18 +336,18 @@ export class SubscriptionService {
     }
   }
 
-  async retryPayment(subscriptionId: string) {
+  async retryPayment(subscriptionId: string, isTest: boolean = false) {
     try {
-      const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+      const stripeInstance = this.getStripe(isTest);
+
+      const subscription = await stripeInstance.subscriptions.retrieve(subscriptionId, {
         expand: ['latest_invoice'],
       });
 
       const invoice = subscription.latest_invoice as any;
-
       if (!invoice) throw new Error('Nenhuma fatura encontrada');
 
-      const paidInvoice = await stripe.invoices.pay(invoice.id);
-
+      const paidInvoice = await stripeInstance.invoices.pay(invoice.id);
       return { status: paidInvoice.status, paid: paidInvoice.paid };
     } catch (error: any) {
       console.error('Erro ao tentar cobrar:', error);
@@ -353,18 +360,21 @@ export class SubscriptionService {
     priceId: string;
     paymentMethodId?: string;
     billingDay?: number;
+    isTest?: boolean;
   }) {
     try {
+      const stripeInstance = this.getStripe(data.isTest);
+
       if (data.paymentMethodId) {
-        await stripe.paymentMethods.attach(data.paymentMethodId, {
+        await stripeInstance.paymentMethods.attach(data.paymentMethodId, {
           customer: data.customerId,
         });
-        await stripe.customers.update(data.customerId, {
+        await stripeInstance.customers.update(data.customerId, {
           invoice_settings: { default_payment_method: data.paymentMethodId },
         });
       }
 
-      const subscriptionData: Parameters<typeof stripe.subscriptions.create>[0] = {
+      const subscriptionData: Parameters<typeof stripeInstance.subscriptions.create>[0] = {
         customer: data.customerId,
         items: [{ price: data.priceId }],
         default_payment_method: data.paymentMethodId,
@@ -376,16 +386,16 @@ export class SubscriptionService {
         subscriptionData.proration_behavior = 'none';
       }
 
-      const subscription = await stripe.subscriptions.create(subscriptionData);
+      const subscription = await stripeInstance.subscriptions.create(subscriptionData);
 
       return {
         subscriptionId: subscription.id,
         status: subscription.status,
         message: '✅ Assinatura reativada com sucesso!',
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao reativar assinatura:', error);
-      throw error;
+      throw new Error(error.message || 'Falha ao reativar assinatura');
     }
   }
 }

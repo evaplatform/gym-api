@@ -62,7 +62,12 @@ export class SubscriptionController {
   static async cancelSubscription(req: Request, res: Response) {
     try {
       const { subscriptionId } = req.params;
-      const subscription = await subscriptionService.cancelSubscription(subscriptionId);
+      const { isTest } = req.body;
+
+      const subscription = await subscriptionService.cancelSubscription(
+        subscriptionId,
+        isTest ?? false
+      );
 
       return res.json({ message: 'Assinatura cancelada com sucesso', subscription });
     } catch (error: any) {
@@ -73,13 +78,16 @@ export class SubscriptionController {
   @CatchErrors
   static async getSubscriptions(req: Request, res: Response) {
     try {
-      const { email } = req.query;
+      const { email, isTest } = req.query;
 
       if (!email || typeof email !== 'string') {
         return res.status(400).json({ error: 'Email é obrigatório' });
       }
 
-      const subscriptions = await subscriptionService.getCustomerSubscriptions(email);
+      const subscriptions = await subscriptionService.getCustomerSubscriptions(
+        email,
+        isTest === 'true'
+      );
       return res.json({ subscriptions });
     } catch (error: any) {
       return res.status(500).json({ error: error.message || 'Erro ao buscar assinaturas' });
@@ -89,13 +97,16 @@ export class SubscriptionController {
   @CatchErrors
   static async createSetupIntent(req: Request, res: Response) {
     try {
-      const { email } = req.body;
+      const { email, isTest } = req.body;
 
       if (!email) {
         return res.status(400).json({ error: 'Email é obrigatório' });
       }
 
-      const { setupIntent, customer } = await subscriptionService.createSetupIntent(email);
+      const { setupIntent, customer } = await subscriptionService.createSetupIntent(
+        email,
+        isTest ?? false
+      );
 
       return res.json({
         clientSecret: setupIntent.client_secret,
@@ -110,7 +121,7 @@ export class SubscriptionController {
   @CatchErrors
   static async createSubscriptionFromSetup(req: Request, res: Response) {
     try {
-      const { customerId, paymentMethodId, priceId, couponCode, billingDay } = req.body;
+      const { customerId, paymentMethodId, priceId, couponCode, billingDay, isTest } = req.body;
 
       if (!customerId || !paymentMethodId || !priceId) {
         return res.status(400).json({
@@ -133,6 +144,7 @@ export class SubscriptionController {
         couponCode,
         customerId,
         billingDay: billingDay ? Number(billingDay) : undefined,
+        isTest: isTest ?? false,
       });
 
       return res.status(201).json({
@@ -212,7 +224,7 @@ export class SubscriptionController {
   @CatchErrors
   static async reactivateSubscription(req: Request, res: Response) {
     try {
-      const { customerId, priceId, paymentMethodId, billingDay } = req.body;
+      const { customerId, priceId, paymentMethodId, billingDay, isTest } = req.body;
 
       if (!customerId || !priceId) {
         return res.status(400).json({ error: 'customerId e priceId são obrigatórios' });
@@ -223,6 +235,7 @@ export class SubscriptionController {
         priceId,
         paymentMethodId,
         billingDay: billingDay ? Number(billingDay) : undefined,
+        isTest: isTest ?? false,
       });
 
       return res.status(201).json(subscription);
