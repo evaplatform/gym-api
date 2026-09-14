@@ -1,5 +1,6 @@
 import { SubscriptionService } from '@/services/stripe/SubscriptionService';
 import { CatchErrors } from '@/shared/decorators/CatchErrors';
+import { log } from '@/shared/utils/log';
 import { Request, Response } from 'express';
 
 const subscriptionService = new SubscriptionService();
@@ -114,6 +115,7 @@ export class SubscriptionController {
         message: '✅ Use este clientSecret no app mobile para coletar o cartão',
       });
     } catch (error: any) {
+      log(error.message, error.stack);
       return res.status(500).json({ error: error.message });
     }
   }

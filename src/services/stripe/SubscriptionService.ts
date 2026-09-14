@@ -120,14 +120,23 @@ export class SubscriptionService {
   // ─────────────────────────────────────────────
   // SETUP INTENT
   // ─────────────────────────────────────────────
+
   async createSetupIntent(email: string, isTest: boolean = false) {
     const stripeInstance = this.getStripe(isTest);
+
+    // ✅ Log para confirmar qual ambiente está sendo usado
+    console.log(
+      `[SetupIntent] Criando para ${email}, isTest=${isTest}, key_prefix=${isTest ? process.env.STRIPE_SECRET_KEY_TEST?.substring(0, 12) : process.env.STRIPE_SECRET_KEY?.substring(0, 12)}`
+    );
+
     const customer = await this.findOrCreateCustomer(email, undefined, isTest);
 
     const setupIntent = await stripeInstance.setupIntents.create({
       customer: customer.id,
       payment_method_types: ['card'],
     });
+
+    console.log(`[SetupIntent] Criado: ${setupIntent.id}, customer: ${customer.id}`);
 
     return { setupIntent, customer };
   }
@@ -313,7 +322,11 @@ export class SubscriptionService {
   // PAYMENT
   // ─────────────────────────────────────────────
 
-  async updatePaymentMethod(subscriptionId: string, paymentMethodId: string, isTest: boolean = false) {
+  async updatePaymentMethod(
+    subscriptionId: string,
+    paymentMethodId: string,
+    isTest: boolean = false
+  ) {
     try {
       const stripeInstance = this.getStripe(isTest);
 
