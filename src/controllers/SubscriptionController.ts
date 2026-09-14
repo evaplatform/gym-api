@@ -105,7 +105,7 @@ export class SubscriptionController {
 
       const { setupIntent, customer } = await subscriptionService.createSetupIntent(
         email,
-        isTest ?? false
+        true
       );
 
       return res.json({
