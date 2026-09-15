@@ -100,6 +100,13 @@ export class SubscriptionController {
     try {
       const { email, isTest } = req.body;
 
+      console.log('[SetupIntent] Body recebido:', {
+        email,
+        isTest,
+        isTestType: typeof isTest,
+        bodyCompleto: req.body,
+      });
+
       if (!email) {
         return res.status(400).json({ error: 'Email é obrigatório' });
       }
