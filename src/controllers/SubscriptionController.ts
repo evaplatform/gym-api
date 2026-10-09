@@ -42,12 +42,9 @@ export class SubscriptionController {
   }
 
   @CatchErrors
-  static async createTestPaymentMethod(req: Request, res: Response) {
+  static async createTestPaymentMethod(_: Request, res: Response) {
     try {
-      const response = (await subscriptionService.createTestPaymentMethod(
-        req as any,
-        res as any
-      )) as any;
+      const response = await subscriptionService.createTestPaymentMethod() as any;
 
       return res.json({
         paymentMethodId: response.id,
