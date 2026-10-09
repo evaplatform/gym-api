@@ -1,4 +1,5 @@
-import { stripe, stripeTest } from '@/config/stripe';
+import Stripe from 'stripe';
+import { getStripe, getStripeTest } from '@/config/stripe';
 import {
   BillingDayPreview,
   BillingDayPreviewDTO,
@@ -13,14 +14,12 @@ export class SubscriptionService {
   // HELPERS
   // ─────────────────────────────────────────────
 
-  /** * Calcula o billing_cycle_anchor para um dia específico do mês. * Sempre retorna uma data futura. * Limita o dia ao máximo de 28 para evitar problemas com fevereiro. */
   private calculateBillingAnchor(billingDay: number): number {
     const safeBillingDay = Math.min(Math.max(1, billingDay), 28);
     const now = new Date();
 
     const targetDate = new Date(now.getFullYear(), now.getMonth(), safeBillingDay, 0, 0, 0, 0);
 
-    // Se o dia já passou neste mês, avançar para o próximo mês
     if (targetDate <= now) {
       targetDate.setMonth(targetDate.getMonth() + 1);
     }
@@ -28,18 +27,21 @@ export class SubscriptionService {
     return Math.floor(targetDate.getTime() / 1000);
   }
 
-  /** * Calcula quantos dias faltam para uma data Unix timestamp */
   private daysUntil(unixTimestamp: number): number {
     const now = Date.now();
     const target = unixTimestamp * 1000;
     return Math.ceil((target - now) / (1000 * 60 * 60 * 24));
   }
 
-  private getStripe(isTest: boolean = false) {
-    return isTest ? stripeTest : stripe;
+  /**
+   * Single entry point for a Stripe client.
+   * Calls the lazy getters in config/stripe.ts, which create the
+   * Stripe instance (via makeStripe) on first use — never at import time.
+   */
+  private getStripe(isTest: boolean = false): Stripe {
+    return isTest ? getStripeTest() : getStripe();
   }
 
-  /** * Busca ou cria um cliente no Stripe pelo email */
   private async findOrCreateCustomer(
     email: string,
     paymentMethodId?: string,
@@ -71,7 +73,6 @@ export class SubscriptionService {
     });
   }
 
-  /** * Extrai clientSecret da subscription expandida */
   private extractClientSecret(subscription: any): string {
     const invoice = subscription.latest_invoice;
     const paymentIntent = invoice?.payment_intent;
@@ -80,7 +81,6 @@ export class SubscriptionService {
       return paymentIntent.client_secret;
     }
 
-    // Subscription com trial ou billing_cycle_anchor pode não ter payment_intent imediato
     return '';
   }
 
@@ -90,7 +90,7 @@ export class SubscriptionService {
 
   async createCustomer(data: CreateCustomerDTO) {
     try {
-      return await stripe.customers.create({
+      return await this.getStripe().customers.create({
         email: data.email,
         name: data.name,
         phone: data.phone,
@@ -105,8 +105,8 @@ export class SubscriptionService {
   // PAYMENT METHOD
   // ─────────────────────────────────────────────
 
-  async createTestPaymentMethod(req: Request, res: Response) {
-    return stripeTest.paymentMethods.create({
+  async createTestPaymentMethod() {
+    return this.getStripe(true).paymentMethods.create({
       type: 'card',
       card: {
         number: '4242424242424242',
@@ -124,7 +124,6 @@ export class SubscriptionService {
   async createSetupIntent(email: string, isTest: boolean = false) {
     const stripeInstance = this.getStripe(isTest);
 
-    // ✅ Log para confirmar qual ambiente está sendo usado
     console.log(
       `[SetupIntent] Criando para ${email}, isTest=${isTest}, key_prefix=${isTest ? process.env.STRIPE_SECRET_KEY_TEST?.substring(0, 12) : process.env.STRIPE_SECRET_KEY?.substring(0, 12)}`
     );
@@ -143,14 +142,15 @@ export class SubscriptionService {
 
   async confirmSetupIntentTest(setupIntentId: string) {
     try {
+      const stripeInstance = this.getStripe(true);
       const cleanId = setupIntentId.split('_secret_')[0];
 
-      const paymentMethod = await stripe.paymentMethods.create({
+      const paymentMethod = await stripeInstance.paymentMethods.create({
         type: 'card',
         card: { token: 'tok_visa' },
       });
 
-      const setupIntent = await stripe.setupIntents.confirm(cleanId, {
+      const setupIntent = await stripeInstance.setupIntents.confirm(cleanId, {
         payment_method: paymentMethod.id,
       });
 
@@ -167,9 +167,10 @@ export class SubscriptionService {
 
   async createSubscription(data: CreateSubscriptionDTO): Promise<SubscriptionResponse> {
     try {
+      const stripeInstance = this.getStripe();
       const customer = await this.findOrCreateCustomer(data.email, data.paymentMethodId);
 
-      const subscriptionData: Parameters<typeof stripe.subscriptions.create>[0] = {
+      const subscriptionData: Parameters<Stripe['subscriptions']['create']>[0] = {
         customer: customer.id,
         items: [{ price: data.priceId }],
         default_payment_method: data.paymentMethodId,
@@ -186,7 +187,7 @@ export class SubscriptionService {
         (subscriptionData as any).coupon = data.couponCode;
       }
 
-      const subscription = await stripe.subscriptions.create(subscriptionData);
+      const subscription = await stripeInstance.subscriptions.create(subscriptionData);
 
       return {
         subscriptionId: subscription.id,
@@ -212,7 +213,7 @@ export class SubscriptionService {
       invoice_settings: { default_payment_method: data.paymentMethodId },
     });
 
-    const subscriptionData: Parameters<typeof stripeInstance.subscriptions.create>[0] = {
+    const subscriptionData: Parameters<Stripe['subscriptions']['create']>[0] = {
       customer: data.customerId,
       items: [{ price: data.priceId }],
       default_payment_method: data.paymentMethodId,
@@ -266,19 +267,15 @@ export class SubscriptionService {
   // BILLING DAY
   // ─────────────────────────────────────────────
 
-  /** * Retorna preview de quando será a próxima cobrança para um determinado dia */
   async previewBillingDay(data: BillingDayPreviewDTO): Promise<BillingDayPreview> {
     const safeBillingDay = Math.min(Math.max(1, data.billingDay), 28);
     const anchorTimestamp = this.calculateBillingAnchor(safeBillingDay);
     const daysUntilBilling = this.daysUntil(anchorTimestamp);
 
-    // Buscar preço para obter a moeda
-    const price = await (stripe as any).prices.retrieve(data.priceId);
+    const price = await (this.getStripe() as any).prices.retrieve(data.priceId);
     const currency = price.currency;
     const unitAmount = price.unit_amount ?? 0;
 
-    // Calcular valor proporcional dos dias até a próxima cobrança
-    // (apenas informativo, pois usamos proration_behavior: 'none')
     const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
 
     const prorationAmount = Math.round((unitAmount / daysInMonth) * daysUntilBilling);
@@ -298,15 +295,11 @@ export class SubscriptionService {
     };
   }
 
-  /** * Atualiza o dia de cobrança de uma assinatura existente */
   async updateBillingDay(subscriptionId: string, billingDay: number) {
     try {
       const anchorTimestamp = this.calculateBillingAnchor(billingDay);
 
-      // ✅ No update, usar trial_end no lugar de billing_cycle_anchor
-      // O Stripe vai pausar a cobrança até a data informada
-      // e a partir daí o ciclo passa a ser nesse dia
-      const subscription = await stripe.subscriptions.update(subscriptionId, {
+      const subscription = await this.getStripe().subscriptions.update(subscriptionId, {
         trial_end: anchorTimestamp,
         proration_behavior: 'none',
       } as any);
@@ -387,7 +380,7 @@ export class SubscriptionService {
         });
       }
 
-      const subscriptionData: Parameters<typeof stripeInstance.subscriptions.create>[0] = {
+      const subscriptionData: Parameters<Stripe['subscriptions']['create']>[0] = {
         customer: data.customerId,
         items: [{ price: data.priceId }],
         default_payment_method: data.paymentMethodId,
@@ -404,7 +397,7 @@ export class SubscriptionService {
       return {
         subscriptionId: subscription.id,
         status: subscription.status,
-        message: '✅ Assinatura reativada com sucesso!',
+        message: 'Assinatura reativada com sucesso!',
       };
     } catch (error: any) {
       console.error('Erro ao reativar assinatura:', error);
