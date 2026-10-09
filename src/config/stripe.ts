@@ -12,7 +12,6 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   typescript: true,
 });
 
-
 export const stripeTest  = new Stripe(process.env.STRIPE_SECRET_KEY_TEST || '', {
   apiVersion: "2026-05-27.dahlia",
   typescript: true,
