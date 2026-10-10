@@ -33,5 +33,5 @@ reset: ## reset packages
 	@powershell -Command "Remove-Item -Recurse -Force node_modules; Remove-Item -Force package-lock.json -ErrorAction SilentlyContinue"
 	@npm install
 
-build: ## build project
+build: ## build project 
 	@npm run build
