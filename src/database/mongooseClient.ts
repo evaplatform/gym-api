@@ -39,8 +39,8 @@ export const MongooseClient = {
     // ─── Debug logs ─────────────────────────────────────────────────────────
     console.log('🔧 [MongoDB] Connecting with:');
     console.log(` NODE_ENV : ${nodeEnv}`);
-    console.log(` HOST : ${host}`);
-    console.log(` DB : ${db}`);
+    console.log(` HOST     : ${host}`);
+    console.log(` DB       : ${db}`);
     console.log(` USERNAME : ${username}`);
     console.log(` PASSWORD : ${password ? '***set***' : '❌ NOT SET'}`);
 
@@ -48,9 +48,9 @@ export const MongooseClient = {
     if (!username || !password || !host) {
       throw new Error(
         `❌ Missing MongoDB env vars:\n` +
-        ` MONGODB_USERNAME : ${username ? '✅' : '❌ missing'}\n` +
-        ` MONGODB_PASSWORD : ${password ? '✅' : '❌ missing'}\n` +
-        ` MONGODB_HOST : ${host ? '✅' : '❌ missing'}`
+        `  MONGODB_USERNAME : ${username ? '✅' : '❌ missing'}\n` +
+        `  MONGODB_PASSWORD : ${password ? '✅' : '❌ missing'}\n` +
+        `  MONGODB_HOST     : ${host     ? '✅' : '❌ missing'}`
       );
     }
 
@@ -61,10 +61,8 @@ export const MongooseClient = {
     let connectionString = '';
 
     if (nodeEnv === 'production' || host.includes('mongodb.net')) {
-      // Atlas (SRV) — works for both production AND development pointing to Atlas
       connectionString = `mongodb+srv://${encodedUser}:${encodedPass}@${host}/${db}?retryWrites=true&w=majority&appName=Cluster0`;
     } else {
-      // Local MongoDB
       connectionString = `mongodb://${encodedUser}:${encodedPass}@${host}/${db}?authSource=admin`;
     }
 
@@ -73,7 +71,7 @@ export const MongooseClient = {
     // ─── Connect with global promise cache ──────────────────────────────────
     if (!global.mongooseCache.promise) {
       global.mongooseCache.promise = mongoose.connect(connectionString, {
-        bufferCommands: false,        // ✅ Don't buffer when disconnected (serverless)
+        bufferCommands: false,
         serverSelectionTimeoutMS: 10000,
         socketTimeoutMS: 45000,
         maxPoolSize: 10,
@@ -82,12 +80,12 @@ export const MongooseClient = {
     }
 
     try {
+      // ✅ Always await the promise — ensures connection is FULLY established
       global.mongooseCache.conn = await global.mongooseCache.promise;
       console.log('✅ Connected to MongoDB with Mongoose');
       console.log(`📍 Database : ${db}`);
-      console.log(`📍 Host : ${host}`);
+      console.log(`📍 Host     : ${host}`);
     } catch (error) {
-      // ✅ Reset promise so next call retries
       global.mongooseCache.promise = null;
       global.mongooseCache.conn = null;
       console.error('❌ Mongoose connection error:', error);
@@ -97,12 +95,9 @@ export const MongooseClient = {
 
   async disconnect(): Promise<void> {
     if (!global.mongooseCache.conn) return;
-
     await mongoose.disconnect();
-
     global.mongooseCache.conn = null;
     global.mongooseCache.promise = null;
-
     console.log('🔌 Disconnected from MongoDB');
   },
 
