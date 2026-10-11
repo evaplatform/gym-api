@@ -12,11 +12,5 @@
       "dest": "/api/index.js"
     }
   ],
-  "buildCommand": "npm run vercel-build",
-  "functions": {
-    "api/index.js": {
-      "maxDuration": 30,
-      "memory": 512
-    }
-  }
+  "buildCommand": "npm run vercel-build"
 }
