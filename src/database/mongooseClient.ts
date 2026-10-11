@@ -3,20 +3,40 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-let isConnected = false;
+// ─── Serverless-safe global cache ─────────────────────────────────────────────
+declare global {
+  // eslint-disable-next-line no-var
+  var mongooseCache: {
+    conn: typeof mongoose | null;
+    promise: Promise<typeof mongoose> | null;
+  };
+}
+
+if (!global.mongooseCache) {
+  global.mongooseCache = { conn: null, promise: null };
+}
 
 export const MongooseClient = {
   async connect(): Promise<void> {
-    if (isConnected) return;
+    // ✅ Return cached connection if already connected
+    if (global.mongooseCache.conn) {
+      const state = global.mongooseCache.conn.connection.readyState;
+      if (state === 1) {
+        console.log('✅ [MongoDB] Using cached connection');
+        return;
+      }
+      // Reset cache if connection is broken
+      global.mongooseCache.conn = null;
+      global.mongooseCache.promise = null;
+    }
 
     const username = process.env.MONGODB_USERNAME || '';
     const password = process.env.MONGODB_PASSWORD || '';
-    const host = process.env.MONGODB_HOST || 'localhost:27017';
+    const host = process.env.MONGODB_HOST || '';
     const db = process.env.MONGODB_DB || 'gym-db';
     const nodeEnv = process.env.NODE_ENV || 'development';
 
-    // ─── Debug logs ───────────────────────────────────────────────────────────
-    // Remove after confirming connection works
+    // ─── Debug logs ─────────────────────────────────────────────────────────
     console.log('🔧 [MongoDB] Connecting with:');
     console.log(` NODE_ENV : ${nodeEnv}`);
     console.log(` HOST : ${host}`);
@@ -24,51 +44,72 @@ export const MongooseClient = {
     console.log(` USERNAME : ${username}`);
     console.log(` PASSWORD : ${password ? '***set***' : '❌ NOT SET'}`);
 
-    // ─── Validate required vars ───────────────────────────────────────────────
+    // ─── Validate required vars ──────────────────────────────────────────────
     if (!username || !password || !host) {
       throw new Error(
-        `❌ Missing MongoDB env vars: MONGODB_USERNAME: ${username ? '✅' : '❌ missing'} MONGODB_PASSWORD: ${password ? '✅' : '❌ missing'} MONGODB_HOST : ${host ? '✅' : '❌ missing'} `
+        `❌ Missing MongoDB env vars:\n` +
+        ` MONGODB_USERNAME : ${username ? '✅' : '❌ missing'}\n` +
+        ` MONGODB_PASSWORD : ${password ? '✅' : '❌ missing'}\n` +
+        ` MONGODB_HOST : ${host ? '✅' : '❌ missing'}`
       );
     }
 
-    // ─── Build connection string ──────────────────────────────────────────────
+    // ─── Build connection string ─────────────────────────────────────────────
+    const encodedUser = encodeURIComponent(username);
+    const encodedPass = encodeURIComponent(password);
+
     let connectionString = '';
 
-    if (nodeEnv === 'production') {
-      connectionString = `mongodb+srv://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${host}/${db}?retryWrites=true&w=majority`;
+    if (nodeEnv === 'production' || host.includes('mongodb.net')) {
+      // Atlas (SRV) — works for both production AND development pointing to Atlas
+      connectionString = `mongodb+srv://${encodedUser}:${encodedPass}@${host}/${db}?retryWrites=true&w=majority&appName=Cluster0`;
     } else {
-      // development
-      if (username && password) {
-        connectionString = `mongodb://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${host}/${db}?authSource=admin`;
-      } else {
-        connectionString = `mongodb://${host}/${db}`;
-      }
+      // Local MongoDB
+      connectionString = `mongodb://${encodedUser}:${encodedPass}@${host}/${db}?authSource=admin`;
     }
 
     console.log(`🔧 [MongoDB] Connection string built for: ${nodeEnv}`);
 
-    // ─── Connect ──────────────────────────────────────────────────────────────
-    try {
-      await mongoose.connect(connectionString, {
+    // ─── Connect with global promise cache ──────────────────────────────────
+    if (!global.mongooseCache.promise) {
+      global.mongooseCache.promise = mongoose.connect(connectionString, {
+        bufferCommands: false,        // ✅ Don't buffer when disconnected (serverless)
         serverSelectionTimeoutMS: 10000,
         socketTimeoutMS: 45000,
+        maxPoolSize: 10,
+        minPoolSize: 1,
       });
+    }
 
-      isConnected = true;
+    try {
+      global.mongooseCache.conn = await global.mongooseCache.promise;
       console.log('✅ Connected to MongoDB with Mongoose');
       console.log(`📍 Database : ${db}`);
       console.log(`📍 Host : ${host}`);
     } catch (error) {
-      isConnected = false;
+      // ✅ Reset promise so next call retries
+      global.mongooseCache.promise = null;
+      global.mongooseCache.conn = null;
       console.error('❌ Mongoose connection error:', error);
       throw error;
     }
   },
 
   async disconnect(): Promise<void> {
-    if (!isConnected) return;
+    if (!global.mongooseCache.conn) return;
+
     await mongoose.disconnect();
-    isConnected = false;
+
+    global.mongooseCache.conn = null;
+    global.mongooseCache.promise = null;
+
     console.log('🔌 Disconnected from MongoDB');
+  },
+
+  isConnected(): boolean {
+    return (
+      global.mongooseCache.conn !== null &&
+      global.mongooseCache.conn.connection.readyState === 1
+    );
   },
 };
