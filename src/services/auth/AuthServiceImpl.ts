@@ -21,102 +21,120 @@ import { IResponseRefreshToken } from './interfaces';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-type SigningRequestType = UserWithToken & { authCode: string; };
+type SigningRequestType = UserWithToken & { authCode: string };
 
 export class AuthServiceImpl implements IAuthService {
-
-  constructor(private readonly userRepository: IUserRepository, private readonly userService: IUserService) { }
+  constructor(
+    private readonly userRepository: IUserRepository,
+    private readonly userService: IUserService
+  ) {}
 
   // The parameter here can be the Google token received from the frontend
   async signinOrCreate(
     user: SigningRequestType
   ): Promise<UserWithToken & { googleTokens?: IGoogleTokens }> {
+    log('Starting Google Signin/Signup process');
 
-    log("Starting Google Signin/Signup process");
+    // ─── Validate env vars on startup ──────────────────────────────────────────
+    const googleClientId = process.env.GOOGLE_CLIENT_ID;
+    const jwtSecret = process.env.JWT_SECRET;
 
+    if (!googleClientId) {
+      throw new AppError(
+        'GOOGLE_CLIENT_ID is not set in environment variables',
+        HttpStatusCodeEnum.INTERNAL_SERVER_ERROR
+      );
+    }
+
+    if (!jwtSecret) {
+      throw new AppError(
+        'JWT_SECRET is not set in environment variables',
+        HttpStatusCodeEnum.INTERNAL_SERVER_ERROR
+      );
+    }
+
+    // ─── Verify Google token ────────────────────────────────────────────────────
     let googleUserData: TokenPayload | undefined = undefined;
 
     try {
-      // Call the Google API to validate the token and retrieve user data
       const ticket: LoginTicket = await client.verifyIdToken({
-        idToken: user.token, // this is the id_token received from the frontend
-        audience: process.env.GOOGLE_CLIENT_ID, // security check
+        idToken: user.token,
+        audience: googleClientId, // ✅ now uses validated env var
       });
 
       googleUserData = ticket.getPayload();
-      log("Google token verified successfully: " + JSON.stringify(googleUserData, null, 2));
+      log('Google token verified successfully: ' + JSON.stringify(googleUserData, null, 2));
     } catch (error) {
-      log("Error verifying Google token: " + (error as any)?.message || "unknown error");
-      throw new AppError(i18n.translate(GeneralMessages.INVALID_GOOGLE_TOKEN), HttpStatusCodeEnum.UNAUTHORIZED);
+      log('Error verifying Google token: ' + ((error as any)?.message || 'unknown error'));
+      throw new AppError(
+        i18n.translate(GeneralMessages.INVALID_GOOGLE_TOKEN),
+        HttpStatusCodeEnum.UNAUTHORIZED
+      );
     }
 
     if (!googleUserData?.email) {
-      throw new AppError(i18n.translate(GeneralMessages.EMAIL_NOT_FOUND_IN_GOOGLE_TOKEN), HttpStatusCodeEnum.UNAUTHORIZED);
+      throw new AppError(
+        i18n.translate(GeneralMessages.EMAIL_NOT_FOUND_IN_GOOGLE_TOKEN),
+        HttpStatusCodeEnum.UNAUTHORIZED
+      );
     }
 
-
-    // Remove the sensitive "password" property if it exists
+    // ─── Exchange auth code for tokens ─────────────────────────────────────────
     try {
-      log('getting google tokens from auth code')
+      log('getting google tokens from auth code');
       const googleTokens: IGoogleTokens | undefined = await getTokensFromAuthCode(user.authCode);
+      log(
+        'Google tokens retrieved successfully, has refresh_token: ' + !!googleTokens?.refresh_token
+      );
 
-      log("Google tokens retrieved: " + JSON.stringify(googleTokens, null, 2));
-
-      log("searching for user with email: " + googleUserData.email);
-      // Check if the user exists in your database
-
-
+      // ─── Find or create user ──────────────────────────────────────────────────
+      log('searching for user with email: ' + googleUserData.email);
       let foundUser: IUser | null = await this.userRepository.getByEmail(googleUserData.email);
 
-      // If the user does not exist, you can create a new record or return an error
-
       if (foundUser) {
-        await this.userRepository.update(foundUser.id ?? (foundUser as any)._id, { refreshToken: googleTokens?.refresh_token });
-      }
+        log('User found, updating refresh token');
+        await this.userRepository.update(foundUser.id ?? (foundUser as any)._id, {
+          refreshToken: googleTokens?.refresh_token,
+        });
+      } else {
+        log('User not found, creating new user');
+        const newUserData: IUser = { ...user };
 
-      log("User found in database: " + (foundUser ? JSON.stringify(foundUser, null, 2) : "No user found"));
-
-      if (!foundUser) {
-        log("User not found, creating new user");
-        const newUserData: IUser = { ...user }
-
-        if (user.groupIds) {
-          newUserData.groupIds = user.groupIds;
-        }
-
-        if (user.academyId) {
-          newUserData.academyId = user.academyId;
-        }
-
-        if (googleTokens?.refresh_token) {
-          newUserData.refreshToken = googleTokens.refresh_token;
-        }
+        if (user.groupIds) newUserData.groupIds = user.groupIds;
+        if (user.academyId) newUserData.academyId = user.academyId;
+        if (googleTokens?.refresh_token) newUserData.refreshToken = googleTokens.refresh_token;
 
         foundUser = await this.userRepository.create(newUserData);
-        log("New user created with ID: " + foundUser?.id);
+        log('New user created with ID: ' + foundUser?.id);
       }
 
-      if (!foundUser.profilePhoto) {
+      if (!foundUser.profilePhoto && user.profilePhoto) {
         foundUser.profilePhoto = user.profilePhoto;
         await this.userRepository.update(foundUser.id, { profilePhoto: user.profilePhoto });
       }
 
-      const updatedUser = { ...foundUser, id: (foundUser as any)?._id || foundUser.id };
+      // ─── Generate JWT ─────────────────────────────────────────────────────────
+      const updatedUser = {
+        ...foundUser,
+        id: (foundUser as any)?._id || foundUser.id,
+      };
 
-      // Generate JWT with user information
       const jwtPayload = {
         userId: updatedUser.id,
         academyId: updatedUser.academyId,
-        isAdmin: updatedUser.isAdmin
+        isAdmin: updatedUser.isAdmin,
       };
 
-      log("Generating JWT for user", jwtPayload);
+      log('Generating JWT for user', jwtPayload);
 
-      const jwtToken = jwt.sign(
-        jwtPayload,
-        process.env.JWT_SECRET as string,
-        { expiresIn: EXPIRATION_TIME, algorithm: JWT_ALGORITHM } // You can adjust the expiration time
-      );
+      const jwtToken = jwt.sign(jwtPayload, jwtSecret, {
+        expiresIn: EXPIRATION_TIME,
+        algorithm: JWT_ALGORITHM,
+      });
+
+      if ('_id' in updatedUser) {
+        delete (updatedUser as any)._id;
+      }
 
       const userWithToken: UserWithToken & { googleTokens?: IGoogleTokens } = {
         ...updatedUser,
@@ -124,35 +142,28 @@ export class AuthServiceImpl implements IAuthService {
         googleTokens,
       };
 
-
-      if ("_id" in updatedUser) {
-        delete updatedUser._id;
-      }
-
-      log("User signin/signup process completed successfully", userWithToken);
-
+      log('User signin/signup process completed successfully');
       return userWithToken;
     } catch (error) {
-
       if (error instanceof AppError) {
-
-        log("Error processing user data " + error.message)
-        log(JSON.stringify((error as any)?.response?.data, null, 2) || error.message)
-
-        throw new AppError(i18n.translate(GeneralMessages.ERROR_PROCESSING_USER_DATA), error.statusCode);
-      } else {
-
-        log(JSON.stringify((error as any)?.response?.data, null, 2) || (error as any)?.message || 'Unknown error');
-        log("Error processing user data: Unknown error");
-        throw new AppError(i18n.translate(GeneralMessages.ERROR_PROCESSING_USER_DATA), HttpStatusCodeEnum.INTERNAL_SERVER_ERROR);
+        log('AppError processing user data: ' + error.message);
+        throw error; // re-throw as-is, don't wrap again
       }
 
+      log(
+        'Unknown error: ' +
+          (JSON.stringify((error as any)?.response?.data) || (error as any)?.message)
+      );
+      throw new AppError(
+        i18n.translate(GeneralMessages.ERROR_PROCESSING_USER_DATA),
+        HttpStatusCodeEnum.INTERNAL_SERVER_ERROR
+      );
     }
   }
 
   async refreshToken(req: AuthenticatedRequest<IRefreshToken>): Promise<IResponseRefreshToken> {
     try {
-      log("Starting token refresh process");
+      log('Starting token refresh process');
       // Extrai as informações do usuário do token renovado
 
       const user = await this.userService.getLoggedUser(req);
@@ -160,42 +171,50 @@ export class AuthServiceImpl implements IAuthService {
       const refreshToken = req.headers['x-refresh-token'] ?? user?.refreshToken;
 
       if (!refreshToken) {
-        log("No refresh token found for user");
-        throw new AppError(i18n.translate(GeneralMessages.REFRESH_TOKEN_NOT_FOUND), HttpStatusCodeEnum.UNAUTHORIZED);
+        log('No refresh token found for user');
+        throw new AppError(
+          i18n.translate(GeneralMessages.REFRESH_TOKEN_NOT_FOUND),
+          HttpStatusCodeEnum.UNAUTHORIZED
+        );
       }
 
       const googleTokens = await refreshGoogleTokens(refreshToken as string);
 
-      log("refreshing Google tokens using refresh token", refreshToken);
-      log("Google tokens refreshed: " + JSON.stringify(googleTokens, null, 2));
+      log('refreshing Google tokens using refresh token', refreshToken);
+      log('Google tokens refreshed: ' + JSON.stringify(googleTokens, null, 2));
 
       if (!user) {
-        throw new AppError(i18n.translate(GeneralMessages.USER_NOT_FOUND), HttpStatusCodeEnum.NOT_FOUND);
+        throw new AppError(
+          i18n.translate(GeneralMessages.USER_NOT_FOUND),
+          HttpStatusCodeEnum.NOT_FOUND
+        );
       }
 
       // Gera um novo JWT
-      log("Generating new JWT for user");
+      log('Generating new JWT for user');
       const jwtPayload = {
         userId: user.id,
         academyId: user.academyId,
-        isAdmin: user.isAdmin
+        isAdmin: user.isAdmin,
       };
 
-      const jwtToken = jwt.sign(
-        jwtPayload,
-        process.env.JWT_SECRET as string,
-        { expiresIn: EXPIRATION_TIME, algorithm: JWT_ALGORITHM }
-      );
-      log("New JWT generated");
+      const jwtToken = jwt.sign(jwtPayload, process.env.JWT_SECRET as string, {
+        expiresIn: EXPIRATION_TIME,
+        algorithm: JWT_ALGORITHM,
+      });
+      log('New JWT generated');
 
       // Retorna o novo token JWT
       return {
         token: jwtToken,
-        googleTokens
+        googleTokens,
       };
     } catch (error) {
-      log("Error refreshing token: " + (error as any)?.message || "unknown error");
-      throw new AppError(i18n.translate(GeneralMessages.FAILED_REFRESH_TOKEN), HttpStatusCodeEnum.UNAUTHORIZED);
+      log('Error refreshing token: ' + (error as any)?.message || 'unknown error');
+      throw new AppError(
+        i18n.translate(GeneralMessages.FAILED_REFRESH_TOKEN),
+        HttpStatusCodeEnum.UNAUTHORIZED
+      );
     }
   }
 
@@ -205,10 +224,15 @@ export class AuthServiceImpl implements IAuthService {
     // This function can be kept for compatibility or to perform additional actions.
   }
 
-  async generateTestToken(req: AuthenticatedRequest<{ userId: string; email: string; isAdmin: boolean }>) {
+  async generateTestToken(
+    req: AuthenticatedRequest<{ userId: string; email: string; isAdmin: boolean }>
+  ) {
     // Check if in development environment
     if (process.env.NODE_ENV !== 'development') {
-      throw new AppError('This endpoint is only available in development mode', HttpStatusCodeEnum.FORBIDDEN);
+      throw new AppError(
+        'This endpoint is only available in development mode',
+        HttpStatusCodeEnum.FORBIDDEN
+      );
     }
 
     // You can allow specifying the user by ID or email//
@@ -232,14 +256,12 @@ export class AuthServiceImpl implements IAuthService {
     const jwtPayload = {
       userId: user.id,
       academyId: user.academyId,
-      isAdmin: isAdmin ? true : user.isAdmin
+      isAdmin: isAdmin ? true : user.isAdmin,
     };
 
-    const token = jwt.sign(
-      jwtPayload,
-      process.env.JWT_SECRET as string,
-      { expiresIn: EXPIRATION_TIME }
-    );
+    const token = jwt.sign(jwtPayload, process.env.JWT_SECRET as string, {
+      expiresIn: EXPIRATION_TIME,
+    });
 
     return {
       token,
@@ -248,9 +270,8 @@ export class AuthServiceImpl implements IAuthService {
         name: user.name,
         email: user.email,
         academyId: user.academyId,
-        isAdmin: isAdmin ? true : user.isAdmin
-      }
+        isAdmin: isAdmin ? true : user.isAdmin,
+      },
     };
   }
-
 }
