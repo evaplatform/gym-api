@@ -61,4 +61,15 @@ export class UserController {
       res.status(HttpStatusCodeEnum.NOT_FOUND).send(i18n.translate(GeneralMessages.USER_NOT_FOUND));
     }
   }
+
+  @CatchErrors
+  @Authenticate
+  static async getByEmail(req: AuthenticatedRequest, res: Response) {
+    const user = await userService.getByEmail(req);
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(HttpStatusCodeEnum.NOT_FOUND).send(i18n.translate(GeneralMessages.USER_NOT_FOUND));
+    }
+  }
 }

@@ -96,4 +96,20 @@ export class UserServiceImpl implements IUserService {
 
     return user;
   }
+
+  async getByEmail(req: AuthenticatedRequest): Promise<IUser | null> {
+    const email = req.params.email;
+
+    if (!email) {
+      throw new AppError(i18n.translate(GeneralMessages.USER_EMAIL_REQUIRED), HttpStatusCodeEnum.BAD_REQUEST);
+    }
+
+    const user = await this.userRepository.getByEmail(email);
+
+    if (!user) {
+      throw new AppError(i18n.translate(GeneralMessages.USER_NOT_FOUND), HttpStatusCodeEnum.NOT_FOUND);
+    }
+
+    return user;
+  }
 }

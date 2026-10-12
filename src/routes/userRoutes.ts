@@ -8,6 +8,7 @@ const router = express.Router();
 router.get('/logged-user', asyncRoute<void>(UserController.getLoggedUser))
 
 router.get('/:id', asyncRoute<void>(UserController.getById));
+router.get('/email/:email', asyncRoute<void>(UserController.getByEmail));
 router.delete('/:id', asyncRoute<IUser>(UserController.delete));
 
 router.get('/', asyncRoute<void>(UserController.getAll));
