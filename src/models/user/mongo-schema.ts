@@ -63,6 +63,11 @@ const UserSchema = new mongoose.Schema<IUser>(
       type: String,
       required: false,
       description: 'The refresh token for Google OAuth, if applicable.'
+    },
+    isFree: {
+      type: Boolean,
+      required: true,
+      description: 'verify if the access will be free'
     }
   }, {
   toJSON: {
