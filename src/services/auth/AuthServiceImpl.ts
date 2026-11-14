@@ -39,6 +39,8 @@ export class AuthServiceImpl implements IAuthService {
     const googleClientId = process.env.GOOGLE_CLIENT_ID;
     const jwtSecret = process.env.JWT_SECRET;
 
+    log('Validating environment variables: GOOGLE_CLIENT_ID=' + googleClientId?.substring(0, 20) + ', JWT_SECRET=' + (jwtSecret?.substring(0, 20) || ''));
+
     if (!googleClientId) {
       throw new AppError(
         'GOOGLE_CLIENT_ID is not set in environment variables',
