@@ -11,4 +11,5 @@ export interface AuthenticatedRequest<T = unknown> extends Omit<Request, 'body'>
   };
   body: T; // Redefined to avoid conflict with the Request interface
   params: { [key: string]: string };
+  originalUrl: string;
 }
